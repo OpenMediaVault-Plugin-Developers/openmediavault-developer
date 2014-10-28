@@ -265,6 +265,6 @@ OMV.WorkspaceManager.registerPanel({
     id        : "plugins",
     path      : "/service/developer",
     text      : _("Plugins"),
-    position  : 20,
+    position  : 10,
     className : "OMV.module.admin.service.developer.Plugins"
 });

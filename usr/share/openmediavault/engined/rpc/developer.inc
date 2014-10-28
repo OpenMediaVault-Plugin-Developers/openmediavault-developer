@@ -120,7 +120,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Prepare configuration data
         $object = array(
             "sharedfolderref" => $params["sharedfolderref"],
-            "remotehost"      => $params['server'],
+            "remotehost"      => $params['remotehost'],
             "remotepath"      => $params['remotepath'],
             "port"            => intval($params['port']),
             "username"        => $params['username'],

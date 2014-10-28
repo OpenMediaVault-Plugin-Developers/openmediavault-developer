@@ -34,7 +34,27 @@ case "$1" in
         fi
 
         if ! omv_config_exists "${SERVICE_XPATH}/sharedfolderref"; then
-            omv_config_add_element "${SERVICE_XPATH}" "sharedfolderref"
+            omv_config_add_element "${SERVICE_XPATH}" "sharedfolderref" ""
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/remotehost"; then
+            omv_config_add_element "${SERVICE_XPATH}" "remotehost" ""
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/remotepath"; then
+            omv_config_add_element "${SERVICE_XPATH}" "remotepath" ""
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/port"; then
+            omv_config_add_element "${SERVICE_XPATH}" "port" "22"
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/username"; then
+            omv_config_add_element "${SERVICE_XPATH}" "username" "nobody"
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/password"; then
+            omv_config_add_element "${SERVICE_XPATH}" "password" ""
         fi
 
         dpkg-trigger update-fixperms

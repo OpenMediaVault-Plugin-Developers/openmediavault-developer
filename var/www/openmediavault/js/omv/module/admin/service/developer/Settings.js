@@ -32,8 +32,8 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
     extend : "OMV.workspace.form.Panel",
     requires : [
         "OMV.form.field.SharedFolderComboBox",
-        "OMV.form.field.UserComboBox",
-    ],    
+        "OMV.form.field.UserComboBox"
+    ],
     uses   : [
         "OMV.Rpc",
         "OMV.data.Store",
@@ -58,9 +58,10 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 xtype      : "sharedfoldercombo",
                 name       : "sharedfolderref",
                 fieldLabel : _("Directory")
+            }]
         },{
             xtype    : "fieldset",
-            title    : _("Settings"),
+            title    : _("Upload Settings"),
             defaults : {
                 labelSeparator : ""
             },
@@ -104,6 +105,6 @@ OMV.WorkspaceManager.registerPanel({
     id        : "settings",
     path      : "/service/developer",
     text      : _("Settings"),
-    position  : 10,
+    position  : 20,
     className : "OMV.module.admin.service.developer.Settings"
 });

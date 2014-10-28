@@ -1,3 +1,9 @@
+openmediavault-developer (1.0.1) UNRELEASED; urgency=low
+
+  * Add upload
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 28 Oct 2014 12:41:18 -0500
+
 openmediavault-developer (1.0) stable; urgency=low
 
   * Initial release

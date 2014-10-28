@@ -32,7 +32,7 @@ sfpath=$(omv_get_sharedfolder_path "${sfref}")
 temppath="/tmp/"
 
 if [ ! -d "${sfpath}${package}" ]; then
-    echo "Cloning ${package} from github..."
+    echo "Cloning ${package} from github to ${sfpath} ..."
     cd ${sfpath}
     git clone https://github.com/OpenMediaVault-Plugin-Developers/${package}.git
 fi
@@ -51,6 +51,14 @@ build()
     rm -rf ${temppath}${package}
 }
 
+update()
+{
+    cd ${sfpath}${package}
+    echo "Updating ${package} from github..."
+    git pull
+    git status
+}
+
 upload()
 {
     remotehost=$(omv_config_get "//services/developer/remotehost")
@@ -65,10 +73,7 @@ upload()
 
 case ${command} in
     update)
-        cd ${sfpath}${package}
-        echo "Updating ${package} from github..."
-        git pull
-        git status
+        update
     ;;
 
     build)
