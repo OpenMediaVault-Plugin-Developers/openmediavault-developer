@@ -67,8 +67,11 @@ upload()
     username=$(omv_config_get "//services/developer/username")
     password=$(omv_config_get "//services/developer/password")
 
-    echo "Uploading ${package} to remote host..."
-    sshpass -p "${password}" scp -P ${port} "${sfpath}${package}*.deb" username@${remotehost}:"${remotepath}"
+    search="${sfpath}${package}_*"
+    version=`ls ${search}`
+
+    echo "Uploading ${version} to ${remotehost} ..."
+    sshpass -p ${password} scp -P ${port} -o StrictHostKeyChecking=no "${version}" ${username}@${remotehost}:"${remotepath}"
 }
 
 case ${command} in

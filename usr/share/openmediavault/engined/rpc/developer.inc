@@ -238,14 +238,14 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
             if ($params['command'] != "all")
             {
-                $cmd = sprintf("omv-mkconf developer update %s 2>&1", $params['command']);
+                $cmd = sprintf("omv-mkconf developer %s %s 2>&1", $params['command'], $params['plugin']);
                 $this->exec($cmd, $output, $bgOutputFilename);
             }
             else
             {
                 foreach (self::$plugins as $plugin)
                 {
-                    $cmd = sprintf("omv-mkconf developer %s %s 2>&1", $cmdType, $plugin);
+                    $cmd = sprintf("omv-mkconf developer update %s 2>&1",$plugin);
                     $this->exec($cmd, $output, $bgOutputFilename);
                 }
             }
