@@ -29,6 +29,7 @@ package="openmediavault-${name}"
 
 sfref=$(omv_config_get "//services/developer/sharedfolderref")
 sfpath=$(omv_get_sharedfolder_path "${sfref}")
+temppath="/tmp/"
 
 if [ ! -d "${sfpath}${package}" ]; then
     echo "Cloning ${package} from github..."
@@ -36,10 +37,9 @@ if [ ! -d "${sfpath}${package}" ]; then
     git clone https://github.com/OpenMediaVault-Plugin-Developers/${package}.git
 fi
 
-cd ${sfpath}${package}
-
 case ${command} in
     update)
+        cd ${sfpath}${package}
         echo "Updating ${package} from github..."
         git pull
         git status
@@ -47,7 +47,14 @@ case ${command} in
 
     build)
         echo "Building ${package}..."
+        rm -f ${temppath}${package}*.deb
+        rm -rf ${temppath}${package}
+        cp -r ${sfpath}${package} ${temppath}
+        cd ${temppath}${package}
         fakeroot debian/rules clean binary
+        cp ${temppath}${package}*.deb ${sfpath}
+        rm -f ${temppath}${package}*.deb
+        rm -rf ${temppath}${package}        
     ;;
 
     *)

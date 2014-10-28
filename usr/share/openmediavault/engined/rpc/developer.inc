@@ -28,17 +28,16 @@ require_once("openmediavault/notify.inc");
 class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 {
     private static $plugins = array("acestream","active-directory","anacron","aufs",
-        "autoshutdown","backup","btsync","calibre", "couchpotato","cups",
-        "deluge","dnsmasq","downloader","extplorer","fail2ban","git",
-        "glusterfs","greyhole","headphones","jdownloader","links",
-        "mcmyadmin","mediabrowser","mhddfs","minidlna","mumble","mysql",
-        "nginx","offlineimap","omvextrasorg","openvpn","openvpnas",
-        "openvpn-old","plexmediaserver","pptp","processlist","pxe",
-        "pyload","remotenfs-share","remoteshare","roundcube","rsnapshot",
+        "autoshutdown","backup","btsync","calibre", "couchpotato","cups","deluge",
+        "developer","dnsmasq","downloader","extplorer","fail2ban","git","glusterfs",
+        "greyhole","headphones","jdownloader","links","mcmyadmin","mediabrowser",
+        "mhddfs","minidlna","mumble","mysql","nginx","offlineimap","omvextrasorg",
+        "openvpn","openvpnas","openvpn-old","plexmediaserver","pptp","processlist",
+        "pxe","pyload","remotenfs-share","remoteshare","roundcube","rsnapshot",
         "sabnzbd","sensors","shellinabox","sickbeard","skeleton","snapraid",
-        "subsonic","subversion","supportinfo","teamspeak3","transmissionbt",
-        "vdr","virtualbox","virtualhosts","wakealarm","webdav","website",
-        "wol","wordpress","zfs");
+        "subsonic","subversion","supportinfo","teamspeak3","transmissionbt","vdr",
+        "virtualbox","virtualhosts","wakealarm","webdav","website","wol",
+        "wordpress","zfs");
 
     public function getName()
     {
