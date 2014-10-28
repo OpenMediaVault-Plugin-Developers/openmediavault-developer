@@ -9,7 +9,7 @@ Homepage: http://omv-extras.org/
 Package: openmediavault-developer
 Architecture: all
 Depends: ${misc:Depends}, fakeroot, build-essential, devscripts, git,
- debhelper, openmediavault (>= 1.0.29), sshpass
+ debhelper, openmediavault (>= 1.0.29), sshpass, python-pip
 Description: OpenMediaVault Developer plugin
  Plugin to help developer download/ plugin code and setup system for
  plugin development.

@@ -31,11 +31,14 @@ sfref=$(omv_config_get "//services/developer/sharedfolderref")
 sfpath=$(omv_get_sharedfolder_path "${sfref}")
 temppath="/tmp/"
 
-if [ ! -d "${sfpath}${package}" ]; then
-    echo "Cloning ${package} from github to ${sfpath} ..."
-    cd ${sfpath}
-    git clone https://github.com/OpenMediaVault-Plugin-Developers/${package}.git
-fi
+initial()
+{
+    if [ ! -d "${sfpath}${package}" ]; then
+        echo "Cloning ${package} from github to ${sfpath} ..."
+        cd ${sfpath}
+        git clone https://github.com/OpenMediaVault-Plugin-Developers/${package}.git
+    fi
+}
 
 build()
 {
@@ -49,6 +52,7 @@ build()
     cp -f ${temppath}${package}*.deb ${sfpath}
     rm -f ${temppath}${package}*.deb
     rm -rf ${temppath}${package}
+    chmod 776 ${sfpath}*.deb
 }
 
 update()
@@ -74,18 +78,56 @@ upload()
     sshpass -p ${password} scp -P ${port} -o StrictHostKeyChecking=no "${version}" ${username}@${remotehost}:"${remotepath}"
 }
 
+tx()
+{
+    repos="/tmp/repos"
+    tx_dir="${sfpath}.tx"
+    tx_file="${tx_dir}/config"
+
+    mkdir -p "${tx_dir}"
+
+    cat <<EOF > ${tx_file}
+[main]
+host = https://www.transifex.com
+lang_map = de: de_DE, it: it_IT, ru: ru_RU, uk: uk_UK, da: da_DA, no: no_NO, sv: sv_SV
+type = PO
+
+EOF
+
+    # repos
+    while read repo; do
+
+    cat <<EOF >> ${tx_file}
+[${repo}.${repo}pot]
+file_filter = ${repo}/usr/share/openmediavault/locale/<lang>/${repo}.po
+source_file = ${repo}/usr/share/openmediavault/locale/${repo}.pot
+source_lang = en
+
+EOF
+    done < ${repos}
+
+    rm -f ${repos}
+}
+
 case ${command} in
     update)
+        initial
         update
     ;;
 
     build)
+        initial
         build
     ;;
 
     upload)
+        initial
         build
         upload
+    ;;
+
+    tx)
+        tx
     ;;
 
     *)

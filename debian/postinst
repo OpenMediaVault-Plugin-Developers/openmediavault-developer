@@ -57,6 +57,32 @@ case "$1" in
             omv_config_add_element "${SERVICE_XPATH}" "password" ""
         fi
 
+        if ! omv_config_exists "${SERVICE_XPATH}/gitname"; then
+            omv_config_add_element "${SERVICE_XPATH}" "gitname" ""
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/gitemail"; then
+            omv_config_add_element "${SERVICE_XPATH}" "gitemail" ""
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/txthostname"; then
+            omv_config_add_element "${SERVICE_XPATH}" "txhostname" "https://www.transifex.com"
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/txpassword"; then
+            omv_config_add_element "${SERVICE_XPATH}" "txpassword" ""
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/txtoken"; then
+            omv_config_add_element "${SERVICE_XPATH}" "txtoken" ""
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/txusername"; then
+            omv_config_add_element "${SERVICE_XPATH}" "txusername" ""
+        fi
+
+        pip install transifex-client || :
+
         dpkg-trigger update-fixperms
         dpkg-trigger update-locale
     ;;

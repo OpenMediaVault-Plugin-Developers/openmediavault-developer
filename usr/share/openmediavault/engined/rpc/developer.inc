@@ -67,6 +67,9 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $this->registerMethod("setSettings");
         $this->registerMethod("getPluginList");
         $this->registerMethod("doCommand");
+
+        $this->registerMethod("createGitConfig");
+        $this->registerMethod("createTxConfig");
     }
 
     public function getSettings($params, $context)
@@ -113,7 +116,13 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                 "remotepath"      : { "type" : "string" },
                 "port"            : { "type" : "integer" },
                 "username"        : { "type" : "string" },
-                "password"        : { "type" : "string" }
+                "password"        : { "type" : "string" },
+                "gitname"         : { "type" : "string" },
+                "gitemail"        : { "type" : "string" },
+                "txhostname"      : { "type" : "string" },
+                "txpassword"      : { "type" : "string" },
+                "txtoken"         : { "type" : "string", "optional" : true },
+                "txusername"      : { "type" : "string" }
             }
         }');
 
@@ -124,7 +133,13 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             "remotepath"      => $params['remotepath'],
             "port"            => intval($params['port']),
             "username"        => $params['username'],
-            "password"        => $params['password']
+            "password"        => $params['password'],
+            "gitname"         => $params['gitname'],
+            "gitemail"        => $params['gitemail'],
+            "txhostname"      => $params['txhostname'],
+            "txpassword"      => $params['txpassword'],
+            "txtoken"         => $params['txtoken'],
+            "txusername"      => $params['txusername']
         );
 
         // Set configuration object
@@ -255,6 +270,65 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
             exit(1);
         }
+    }
+
+    public function createGitConfig($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Get configuration object
+        $object = $xmlConfig->get($this->getXPath());
+        if (is_null($object))
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXPath()
+            );
+        }
+
+        $config = sprintf("[user]\n\tname = %s\n\temail = %s\n", $object['gitname'], $object['gitemail']);
+        file_put_contents("/root/.gitconfig", $config);
+    }
+
+    public function createTxConfig($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Get configuration object
+        $object = $xmlConfig->get($this->getXPath());
+        if (is_null($object))
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXPath()
+            );
+        }
+
+        $config = sprintf("[%s]\nhostname = %s\npassword = %s\ntoken = %s\nusername = %s\n",
+            $object['txhostname'], $object['txhostname'], $object['txpassword'],
+            $object['txtoken'], $object['txusername']);
+        file_put_contents("/root/.transifexrc", $config);
+
+        foreach (self::$plugins as $plugin)
+        {
+            $repo = sprintf("openmediavault-%s\n", $plugin);
+            file_put_contents("/tmp/repos", $repo, FILE_APPEND);
+        }
+
+        $cmd = "omv-mkconf developer tx 2>&1";
+        OMVUtil::exec($cmd, $output, $result);
     }
 }
 

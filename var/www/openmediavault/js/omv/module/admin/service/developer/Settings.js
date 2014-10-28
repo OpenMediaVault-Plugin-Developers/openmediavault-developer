@@ -98,8 +98,102 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 fieldLabel : _("Password"),
                 allowBlank : false
             }]
+        },{
+            xtype    : "fieldset",
+            title    : _("git Config"),
+            defaults : {
+                labelSeparator : ""
+            },
+            items : [{
+                xtype      : "textfield",
+                name       : "gitname",
+                fieldLabel : _("Name"),
+                allowBlank : false
+            },{
+                xtype      : "textfield",
+                name       : "gitemail",
+                fieldLabel : _("Email"),
+                allowBlank : false
+            },{
+                xtype   : "button",
+                name    : "gitconfig",
+                text    : _("Create .gitconfig"),
+                scope   : this,
+                handler : Ext.Function.bind(me.onGitConfigButton, me, [ me ]),
+                margin  : "5 0 8 0"
+            }]
+        },{
+            xtype    : "fieldset",
+            title    : _("Transifex Config"),
+            defaults : {
+                labelSeparator : ""
+            },
+            items : [{
+                xtype      : "textfield",
+                name       : "txhostname",
+                fieldLabel : _("Hostname"),
+                allowBlank : false
+            },{
+                xtype      : "passwordfield",
+                name       : "txpassword",
+                fieldLabel : _("Password"),
+                allowBlank : false
+            },{
+                xtype      : "textfield",
+                name       : "txtoken",
+                fieldLabel : _("Token"),
+                allowBlank : true
+            },{
+                xtype      : "textfield",
+                name       : "txusername",
+                fieldLabel : _("Username"),
+                allowBlank : false
+            },{
+                xtype   : "button",
+                name    : "txconfig",
+                text    : _("Create Transifex configs"),
+                scope   : this,
+                handler : Ext.Function.bind(me.onTxConfigButton, me, [ me ]),
+                margin  : "5 0 8 0"
+            }]
         }];
-    }
+    },
+    
+    onGitConfigButton : function() {
+        var me = this;
+
+        OMV.MessageBox.wait(null, _("Creating .gitconfig file ..."));
+        OMV.Rpc.request({
+            scope       : me,
+            relayErrors : false,
+            rpcData     : {
+                service  : "Developer",
+                method   : "createGitConfig"
+            },
+            success : function(id, success, response) {
+                me.doReload();
+                OMV.MessageBox.hide();
+            }
+        });
+    },
+
+    onTxConfigButton : function() {
+        var me = this;
+
+        OMV.MessageBox.wait(null, _("Creating Transifex configs ..."));
+        OMV.Rpc.request({
+            scope       : me,
+            relayErrors : false,
+            rpcData     : {
+                service  : "Developer",
+                method   : "createTxConfig"
+            },
+            success : function(id, success, response) {
+                me.doReload();
+                OMV.MessageBox.hide();
+            }
+        });
+    }    
 });
 
 OMV.WorkspaceManager.registerPanel({
