@@ -92,7 +92,7 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 value      : "nobody",
                 userType   : "normal"
             },{
-                xtype      : "textfield",
+                xtype      : "passwordfield",
                 name       : "password",
                 fieldLabel : _("Password"),
                 allowBlank : false
