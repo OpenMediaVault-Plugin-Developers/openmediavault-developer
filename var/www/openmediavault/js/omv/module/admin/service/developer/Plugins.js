@@ -29,7 +29,7 @@
 // require("js/omv/data/proxy/Rpc.js")
 // require("js/omv/form/field/SharedFolderComboBox.js")
 
-Ext.define("OMV.module.admin.service.wol.Plugins", {
+Ext.define("OMV.module.admin.service.developer.Plugins", {
     extend   : "OMV.workspace.grid.Panel",
     requires : [
         "OMV.Rpc",
@@ -103,8 +103,7 @@ Ext.define("OMV.module.admin.service.wol.Plugins", {
             icon     : "images/refresh.png",
             iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
             handler  : Ext.Function.bind(me.onUpdateButton, me, [ "all" ]),
-            scope    : me,
-            disabled : true
+            scope    : me
         },{
             id       : me.getId() + "-update",
             xtype    : "button",
@@ -121,7 +120,8 @@ Ext.define("OMV.module.admin.service.wol.Plugins", {
             icon     : "images/software.png",
             iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
             handler  : Ext.Function.bind(me.onBuildButton, me, [ me ]),
-            scope    : me
+            scope    : me,
+            disabled : true
         }]);
         return items;
     },
@@ -162,8 +162,8 @@ Ext.define("OMV.module.admin.service.wol.Plugins", {
             rpcService      : "Developer",
             rpcMethod       : "doCommand",
             rpcParams       : {
-                build   : false,
-                command : cmd
+                "build"   : false,
+                "command" : cmd
             },
             rpcIgnoreErrors : true,
             hideStartButton : true,
@@ -193,8 +193,8 @@ Ext.define("OMV.module.admin.service.wol.Plugins", {
             rpcService      : "Developer",
             rpcMethod       : "doCommand",
             rpcParams       : {
-                build   : true,
-                command : record.get("name")
+                "build"   : true,
+                "command" : record.get("name")
             },
             rpcIgnoreErrors : true,
             hideStartButton : true,

@@ -23,28 +23,30 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
-package="openmediavault-$3"
+command=`echo $2 | cut -d \  -f 1`
+name=`echo $2 | cut -d \  -f 2`
+package="openmediavault-${name}"
 
 sfref=$(omv_config_get "//services/developer/sharedfolderref")
 sfpath=$(omv_get_sharedfolder_path "${sfref}")
-developer="OpenMediaVault-Plugin-Developers"
-
-echo ${package}
 
 if [ ! -d "${sfpath}${package}" ]; then
+    echo "Cloning ${package} from github..."
     cd ${sfpath}
-    git clone https://github.com/${developer}/${package}.git
+    git clone https://github.com/OpenMediaVault-Plugin-Developers/${package}.git
 fi
 
 cd ${sfpath}${package}
 
-case $2 in
+case ${command} in
     update)
+        echo "Updating ${package} from github..."
         git pull
         git status
     ;;
 
     build)
+        echo "Building ${package}..."
         fakeroot debian/rules clean binary
     ;;
 

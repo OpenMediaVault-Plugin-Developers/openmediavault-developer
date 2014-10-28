@@ -27,6 +27,19 @@ require_once("openmediavault/notify.inc");
 
 class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 {
+    private static $plugins = array("acestream","active-directory","anacron","aufs",
+        "autoshutdown","backup","btsync","calibre", "couchpotato","cups",
+        "deluge","dnsmasq","downloader","extplorer","fail2ban","git",
+        "glusterfs","greyhole","headphones","jdownloader","links",
+        "mcmyadmin","mediabrowser","mhddfs","minidlna","mumble","mysql",
+        "nginx","offlineimap","omvextrasorg","openvpn","openvpnas",
+        "openvpn-old","plexmediaserver","pptp","processlist","pxe",
+        "pyload","remotenfs-share","remoteshare","roundcube","rsnapshot",
+        "sabnzbd","sensors","shellinabox","sickbeard","skeleton","snapraid",
+        "subsonic","subversion","supportinfo","teamspeak3","transmissionbt",
+        "vdr","virtualbox","virtualhosts","wakealarm","webdav","website",
+        "wol","wordpress","zfs");
+
     public function getName()
     {
         return "Developer";
@@ -47,31 +60,12 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         return sprintf( "org.openmediavault.services.%s", $this->getPluginName() );
     }
 
-    private function getPlugins()
-    {
-        return array("acestream","active-directory","anacron","aufs",
-            "autoshutdown","backup","btsync","calibre", "couchpotato","cups",
-            "deluge","dnsmasq","downloader","extplorer","fail2ban","git",
-            "glusterfs","greyhole","headphones","jdownloader","links",
-            "mcmyadmin","mediabrowser","mhddfs","minidlna","mumble","mysql",
-            "nginx","offlineimap","omvextrasorg","openvpn","openvpnas",
-            "openvpn-old","plexmediaserver","pptp","processlist","pxe",
-            "pyload","remotenfs-share","remoteshare","roundcube","rsnapshot",
-            "sabnzbd","sensors","shellinabox","sickbeard","skeleton","snapraid",
-            "subsonic","subversion","supportinfo","teamspeak3","transmissionbt",
-            "vdr","virtualbox","virtualhosts","wakealarm","webdav","website",
-            "wol","wordpress","zfs");
-    }
-
     public function initialize()
     {
         $this->registerMethod("getSettings");
         $this->registerMethod("setSettings");
-
         $this->registerMethod("getPluginList");
-
-        $this->registerMethod("doUpdate");
-        $this->registerMethod("doBuild");
+        $this->registerMethod("doCommand");
     }
 
     public function getSettings($params, $context)
@@ -162,11 +156,10 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         }');
 
         $objects = array();
-        $plugins = $this->getPlugins();
-        
-        foreach ($plugins as $plugin)
+
+        foreach (self::$plugins as $plugin)
         {
-            $objects = array(
+            $objects[] = array(
                 "name"     => $plugin,
                 "fullname" => sprintf("openmediavault-%s", $plugin),
                 "url"      => sprintf("https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-%s", $plugin)
@@ -196,12 +189,10 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                 "command" : { "type" : "string" }
             }
         }');
-        
-        $plugins = $this->getPlugins();
-        
+
         if ($params['command'] != "all")
         {
-            if (!in_array($params['command'], $plugins))
+            if (!in_array($params['command'], self::$plugins))
             {
                 throw new OMVException(
                     OMVErrorMsg::E_MISC_OPERATION_DENIED,
@@ -210,11 +201,13 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             }
         }
 
-        if (boolval($params['build'] === true)
-            $type = "build";
+        $cmdType = "";
+
+        if (boolval($params['build']) === true)
+            $cmdType = "build";
         else
-            $type = "update";
-            
+            $cmdType = "update";
+
         // Create a background process.
         $bgStatusFilename = $this->createBgProcStatus();
         $pid = $this->fork();
@@ -231,20 +224,18 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
             if ($params['command'] != "all")
             {
-                $cmd = sprintf("omv-mkconf developer %s %s 2>&1", $type, $params['command']);
+                $cmd = sprintf("omv-mkconf developer %s %s 2>&1", $cmdType, $params['command']);
                 $this->exec($cmd, $output, $bgOutputFilename);
-                $this->finalizeBgProcStatus($bgStatusFilename, $output);            
             }
             else
             {
-                foreach ($plugins as $plugin)
-                {   
-                    $cmd = sprintf("omv-mkconf developer %s %s 2>&1", $type, $plugin);
+                foreach (self::$plugins as $plugin)
+                {
+                    $cmd = sprintf("omv-mkconf developer %s %s 2>&1", $cmdType, $plugin);
                     $this->exec($cmd, $output, $bgOutputFilename);
-                    $this->finalizeBgProcStatus($bgStatusFilename, $output);
                 }
             }
-            
+            $this->finalizeBgProcStatus($bgStatusFilename, $output);
             exit(0);
         } catch(Exception $e) {
             $this->finalizeBgProcStatus($bgStatusFilename, "", $e);

@@ -26,7 +26,7 @@
 // require("js/omv/data/proxy/Rpc.js")
 // require("js/omv/workspace/window/plugin/ConfigObject.js")
 
-Ext.define("OMV.module.admin.service.devloper.Settings", {
+Ext.define("OMV.module.admin.service.developer.Settings", {
     extend : "OMV.workspace.form.Panel",
     uses   : [
         "OMV.Rpc",
