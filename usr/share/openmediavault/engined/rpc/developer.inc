@@ -27,6 +27,8 @@ require_once("openmediavault/notify.inc");
 
 class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 {
+    private static $commands = array("build","update","upload");
+
     private static $plugins = array("acestream","active-directory","anacron","aufs",
         "autoshutdown","backup","btsync","calibre", "couchpotato","cups","deluge",
         "developer","dnsmasq","downloader","extplorer","fail2ban","git","glusterfs",
@@ -87,6 +89,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             );
         }
 
+        $object['port'] = intval($object['port']);
+
         return $object;
     }
 
@@ -104,13 +108,23 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $this->validateMethodParams($params, '{
             "type"       : "object",
             "properties" : {
-                "sharedfolderref" : { ' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . ' }
+                "sharedfolderref" : { ' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . ' },
+                "remotehost"      : { "type" : "string" },
+                "remotepath"      : { "type" : "string" },
+                "port"            : { "type" : "integer" },
+                "username"        : { "type" : "string" },
+                "password"        : { "type" : "string" }
             }
         }');
 
         // Prepare configuration data
         $object = array(
-            "sharedfolderref" => $params["sharedfolderref"]
+            "sharedfolderref" => $params["sharedfolderref"],
+            "remotehost"      => $params['server'],
+            "remotepath"      => $params['remotepath'],
+            "port"            => intval($params['port']),
+            "username"        => $params['username'],
+            "password"        => $params['password']
         );
 
         // Set configuration object
@@ -184,28 +198,29 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $this->validateMethodParams($params, '{
             "type"       : "object",
             "properties" : {
-                "build"   : { "type" : "boolean" },
-                "command" : { "type" : "string" }
+                "command" : { "type" : "string" },
+                "plugin"  : { "type" : "string" }
             }
         }');
 
-        if ($params['command'] != "all")
+        if (!in_array($params['command'], self::$commands))
         {
-            if (!in_array($params['command'], self::$plugins))
+            throw new OMVException(
+                OMVErrorMsg::E_MISC_OPERATION_DENIED,
+                sprinf("Unknown command - %s", $params['command'])
+            );
+        }
+
+        if ($params['plugin'] != "all")
+        {
+            if (!in_array($params['plugin'], self::$plugins))
             {
                 throw new OMVException(
                     OMVErrorMsg::E_MISC_OPERATION_DENIED,
-                    sprinf("Unknown plugin - %s", $params['command'])
+                    sprinf("Unknown plugin - %s", $params['plugin'])
                 );
             }
         }
-
-        $cmdType = "";
-
-        if (boolval($params['build']) === true)
-            $cmdType = "build";
-        else
-            $cmdType = "update";
 
         // Create a background process.
         $bgStatusFilename = $this->createBgProcStatus();
@@ -223,7 +238,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
             if ($params['command'] != "all")
             {
-                $cmd = sprintf("omv-mkconf developer %s %s 2>&1", $cmdType, $params['command']);
+                $cmd = sprintf("omv-mkconf developer update %s 2>&1", $params['command']);
                 $this->exec($cmd, $output, $bgOutputFilename);
             }
             else

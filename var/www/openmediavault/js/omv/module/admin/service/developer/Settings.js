@@ -25,14 +25,21 @@
 // require("js/omv/data/Model.js")
 // require("js/omv/data/proxy/Rpc.js")
 // require("js/omv/workspace/window/plugin/ConfigObject.js")
+// require("js/omv/form/field/SharedFolderComboBox.js")
+// require("js/omv/form/field/UserComboBox.js")
 
 Ext.define("OMV.module.admin.service.developer.Settings", {
     extend : "OMV.workspace.form.Panel",
+    requires : [
+        "OMV.form.field.SharedFolderComboBox",
+        "OMV.form.field.UserComboBox",
+    ],    
     uses   : [
         "OMV.Rpc",
         "OMV.data.Store",
         "OMV.data.Model",
-        "OMV.data.proxy.Rpc"
+        "OMV.data.proxy.Rpc",
+        "OMV.workspace.window.plugin.ConfigObject"
     ],
 
     rpcService   : "Developer",
@@ -51,6 +58,43 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 xtype      : "sharedfoldercombo",
                 name       : "sharedfolderref",
                 fieldLabel : _("Directory")
+        },{
+            xtype    : "fieldset",
+            title    : _("Settings"),
+            defaults : {
+                labelSeparator : ""
+            },
+            items : [{
+                xtype      : "textfield",
+                name       : "remotehost",
+                fieldLabel : _("Remote Host"),
+                allowBlank : false
+            },{
+                xtype      : "textfield",
+                name       : "remotepath",
+                fieldLabel : _("Remote Path"),
+                allowBlank : false
+            },{
+                xtype         : "numberfield",
+                name          : "port",
+                fieldLabel    : _("Port"),
+                vtype         : "port",
+                minValue      : 1,
+                maxValue      : 65535,
+                allowDecimals : false,
+                allowBlank    : false,
+                value         : 22
+            },{
+                xtype      : "usercombo",
+                name       : "username",
+                fieldLabel : _("User"),
+                value      : "nobody",
+                userType   : "normal"
+            },{
+                xtype      : "textfield",
+                name       : "password",
+                fieldLabel : _("Password"),
+                allowBlank : false
             }]
         }];
     }

@@ -24,8 +24,8 @@ set -e
 . /usr/share/openmediavault/scripts/helper-functions
 
 command=`echo $2 | cut -d \  -f 1`
-name=`echo $2 | cut -d \  -f 2`
-package="openmediavault-${name}"
+plugin=`echo $2 | cut -d \  -f 2`
+package="openmediavault-${plugin}"
 
 sfref=$(omv_config_get "//services/developer/sharedfolderref")
 sfpath=$(omv_get_sharedfolder_path "${sfref}")
@@ -37,6 +37,32 @@ if [ ! -d "${sfpath}${package}" ]; then
     git clone https://github.com/OpenMediaVault-Plugin-Developers/${package}.git
 fi
 
+build()
+{
+    echo "Building ${package}..."
+    rm -f ${temppath}${package}*.deb
+    rm -rf ${temppath}${package}
+    cp -r ${sfpath}${package} ${temppath}
+    cd ${temppath}${package}
+    fakeroot debian/rules clean binary
+    rm -f ${sfpath}${package}*.deb
+    cp -f ${temppath}${package}*.deb ${sfpath}
+    rm -f ${temppath}${package}*.deb
+    rm -rf ${temppath}${package}
+}
+
+upload()
+{
+    remotehost=$(omv_config_get "//services/developer/remotehost")
+    remotepath=$(omv_config_get "//services/developer/remotepath")
+    port=$(omv_config_get "//services/developer/port")
+    username=$(omv_config_get "//services/developer/username")
+    password=$(omv_config_get "//services/developer/password")
+
+    echo "Uploading ${package} to remote host..."
+    sshpass -p "${password}" scp -P ${port} "${sfpath}${package}*.deb" username@${remotehost}:"${remotepath}"
+}
+
 case ${command} in
     update)
         cd ${sfpath}${package}
@@ -46,15 +72,12 @@ case ${command} in
     ;;
 
     build)
-        echo "Building ${package}..."
-        rm -f ${temppath}${package}*.deb
-        rm -rf ${temppath}${package}
-        cp -r ${sfpath}${package} ${temppath}
-        cd ${temppath}${package}
-        fakeroot debian/rules clean binary
-        cp ${temppath}${package}*.deb ${sfpath}
-        rm -f ${temppath}${package}*.deb
-        rm -rf ${temppath}${package}        
+        build
+    ;;
+
+    upload)
+        build
+        upload
     ;;
 
     *)

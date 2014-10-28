@@ -122,6 +122,15 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             handler  : Ext.Function.bind(me.onBuildButton, me, [ me ]),
             scope    : me,
             disabled : true
+        },{
+            id       : me.getId() + "-upload",
+            xtype    : "button",
+            text     : _("Upload"),
+            icon     : "images/upload.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onUploadButton, me, [ me ]),
+            scope    : me,
+            disabled : true
         }]);
         return items;
     },
@@ -132,11 +141,13 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         // Process additional buttons.
         var tbarBtnDisabled = {
             "update" : true,
-            "build"  : true
+            "build"  : true,
+            "upload" : true
         };
         if(records.length == 1) {
             tbarBtnDisabled["update"] = false;
             tbarBtnDisabled["build"] = false;
+            tbarBtnDisabled["upload"] = false;
         }
         // Update the button controls.
         Ext.Object.each(tbarBtnDisabled, function(key, value) {
@@ -162,8 +173,8 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             rpcService      : "Developer",
             rpcMethod       : "doCommand",
             rpcParams       : {
-                "build"   : false,
-                "command" : cmd
+                "command" : "update",
+                "plugin"  : cmd
             },
             rpcIgnoreErrors : true,
             hideStartButton : true,
@@ -194,8 +205,40 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             rpcService      : "Developer",
             rpcMethod       : "doCommand",
             rpcParams       : {
-                "build"   : true,
-                "command" : record.get("name")
+                "command" : "build",
+                "plugin"  : record.get("name")
+            },
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
+            }
+        });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
+    },
+
+    onUploadButton : function() {
+        var me = this;
+        var record = me.getSelected();
+        var title = _("Uploading ") + record.get("fullname") + "...";
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : title,
+            rpcService      : "Developer",
+            rpcMethod       : "doCommand",
+            rpcParams       : {
+                "command" : "upload",
+                "plugin"  : record.get("name")
             },
             rpcIgnoreErrors : true,
             hideStartButton : true,
