@@ -188,6 +188,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
     onBuildButton : function() {
         var me = this;
         var record = me.getSelected();
+        var title = _("Updating ") + record.get("fullname") + "...";
         var wnd = Ext.create("OMV.window.Execute", {
             title           : title,
             rpcService      : "Developer",
