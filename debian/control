@@ -1,0 +1,15 @@
+Source: openmediavault-developer
+Section: misc
+Priority: optional
+Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
+Build-Depends: debhelper (>= 9.0.0 )
+Standards-Version: 3.9.3
+Homepage: http://omv-extras.org/
+
+Package: openmediavault-developer
+Architecture: all
+Depends: ${misc:Depends}, fakeroot, build-essential, devscripts, git,
+ subversion, openmediavault (>= 1.0.29)
+Description: OpenMediaVault Developer plugin
+ Plugin to help developer download/ plugin code and setup system for
+ plugin development.
