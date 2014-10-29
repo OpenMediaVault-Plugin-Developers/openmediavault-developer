@@ -32,7 +32,6 @@ sfpath=$(omv_get_sharedfolder_path "${sfref}")
 temppath="/tmp/"
 localepath="usr/share/openmediavault/locale"
 txpath=".tx"
-archivepath="/var/cache/openmediavault/archives/"
 
 initial()
 {
@@ -157,8 +156,8 @@ install()
     version=`ls ${search}`
 
     echo "Installing ${package} ..."
-    cp -f "${version}" "${archivepath}"
-    apt-get --yes --force-yes --fix-missing install ${package}
+    dpkg -i "${version}"
+    apt-get --yes --force-yes --fix-missing -f install
 }
 
 case ${command} in
