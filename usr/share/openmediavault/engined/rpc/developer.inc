@@ -252,7 +252,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
 
-            if ($params['command'] != "all")
+            if ($params['plugin'] != "all")
             {
                 $cmd = sprintf("omv-mkconf developer %s %s 2>&1", $params['command'], $params['plugin']);
                 $this->exec($cmd, $output, $bgOutputFilename);
