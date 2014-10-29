@@ -27,6 +27,7 @@ command=`echo $2 | cut -d \  -f 1`
 plugin=`echo $2 | cut -d \  -f 2`
 package="openmediavault-${plugin}"
 
+owner=$(omv_config_get "//services/developer/owner")
 sfref=$(omv_config_get "//services/developer/sharedfolderref")
 sfpath=$(omv_get_sharedfolder_path "${sfref}")
 temppath="/tmp/"
@@ -54,7 +55,6 @@ build()
     cp -f ${temppath}${package}*.deb ${sfpath}
     rm -f ${temppath}${package}*.deb
     rm -rf ${temppath}${package}
-    chmod 776 ${sfpath}*.deb
 }
 
 update()
@@ -108,6 +108,7 @@ source_lang = en
 EOF
     done < ${repos}
 
+    chown -R ${owner}:users ${tx_dir}
     rm -f ${repos}
 }
 
@@ -161,8 +162,7 @@ install()
 
 fixowner()
 {
-    owner=$(omv_config_get "//services/developer/owner")
-    chown ${owner}:users ${sfpath}${package}
+    chown -R ${owner}:users ${sfpath}${package}
 }
 
 case ${command} in
@@ -176,12 +176,14 @@ case ${command} in
         initial
         fixowner
         build
+        fixowner
     ;;
 
     upload)
         initial
         fixowner
         build
+        fixowner
         upload
     ;;
 
@@ -211,6 +213,7 @@ case ${command} in
         initial
         fixowner
         build
+        fixowner
         install
     ;;
 
