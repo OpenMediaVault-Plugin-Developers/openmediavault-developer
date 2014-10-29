@@ -169,7 +169,7 @@ fixperms()
 {
     mkconfpath="/usr/share/openmediavault/mkconf"
     localbinpath="/usr/local/bin"
-
+    etcinitpath="/etc/init.d/"
     echo "Fixing permissions..."
 
     find "${sfpath}${package}" -type f -exec chmod 644 {} +
@@ -181,6 +181,10 @@ fixperms()
 
     if [ -d "${sfpath}${package}${localbinpath}" ]; then
         chmod 755 "${sfpath}${package}${localbinpath}"/*
+    fi
+
+    if [ -d "${sfpath}${package}${etcinitpath}" ]; then
+        chmod 755 "${sfpath}${package}${etcinitpath}"/*
     fi
 
     chmod 755 "${sfpath}${package}/debian/rules"
