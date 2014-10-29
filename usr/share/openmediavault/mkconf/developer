@@ -30,6 +30,8 @@ package="openmediavault-${plugin}"
 sfref=$(omv_config_get "//services/developer/sharedfolderref")
 sfpath=$(omv_get_sharedfolder_path "${sfref}")
 temppath="/tmp/"
+localepath="usr/share/openmediavault/locale"
+txpath=".tx"
 
 initial()
 {
@@ -109,22 +111,43 @@ EOF
     rm -f ${repos}
 }
 
+moveto()
+{
+    rm -rf ${temppath}${package}
+    rm -rf ${temppath}${txpath}
+    cp -r ${sfpath}${package} ${temppath}
+    cp -r ${sfpath}${txpath} ${temppath}
+}
+
+movefrom()
+{
+    cp -rf ${temppath}${package} ${sfpath}
+    rm -rf ${temppath}${package}
+    chmod 775 ${sfpath}${package}/${localepath}
+}
+
 buildpot()
 {
-    cd ${sfpath}${package}
+    moveto
+    cd ${temppath}${package}
     fakeroot debian/rules omv_build_pot
+    movefrom
 }
 
 pushpot()
 {
-    cd ${sfpath}${package}
+    moveto
+    cd ${temppath}${package}
     fakeroot debian/rules omv_push_pot
+    movefrom
 }
 
 pullpo()
 {
-    cd ${sfpath}${package}
+    moveto
+    cd ${temppath}${package}
     fakeroot debian/rules omv_pull_po
+    movefrom
 }
 
 case ${command} in

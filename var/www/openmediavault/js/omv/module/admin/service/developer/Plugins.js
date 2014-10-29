@@ -293,37 +293,46 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         wnd.start();
     },
 
-    onTxConfigButton : function(cmd) {
+    onTxButton : function(cmd) {
         var me = this;
-        var msg = "";
+        var title = "";
         var record = me.getSelected();
         switch(cmd) {
             case "buildpot":
-                msg = _("Building translations...");
+                title = _("Building translations...");
                 break;
             case "pushpot":
-                msg = _("Sending translations...");
+                title = _("Sending translations...");
                 break;
             default:
-                msg = _("Pulling translations...");
+                title = _("Pulling translations...");
         }
-        OMV.MessageBox.wait(null, msg);
-        OMV.Rpc.request({
-            scope       : me,
-            relayErrors : false,
-            rpcData     : {
-                service  : "Developer",
-                method   : "doCommand",
-                params   : {
-                    "command" : cmd,
-                    "plugin"  : record.get("name")
-                }
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : title,
+            rpcService      : "Developer",
+            rpcMethod       : "doCommand",
+            rpcParams       : {
+                "command" : cmd,
+                "plugin"  : record.get("name")
             },
-            success : function(id, success, response) {
-                me.doReload();
-                OMV.MessageBox.hide();
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
             }
         });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
     }
 });
 
