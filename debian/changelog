@@ -1,3 +1,9 @@
+openmediavault-developer (1.0.8) stable; urgency=low
+
+  * Fix permissions of files
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 29 Oct 2014 14:58:19 -0500
+
 openmediavault-developer (1.0.7) stable; urgency=low
 
   * Fix ownership of files

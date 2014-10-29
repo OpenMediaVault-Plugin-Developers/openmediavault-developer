@@ -34,6 +34,11 @@ temppath="/tmp/"
 localepath="usr/share/openmediavault/locale"
 txpath=".tx"
 
+if [ -z "${sfpath}" ]; then
+    echo "Error - Path not set."
+    exit 1
+fi
+
 initial()
 {
     if [ ! -d "${sfpath}${package}" ]; then
@@ -160,30 +165,47 @@ install()
     apt-get --yes --force-yes --fix-missing -f install
 }
 
-fixowner()
+fixperms()
 {
-    chown -R ${owner}:users ${sfpath}${package}
+    mkconfpath="/usr/share/openmediavault/mkconf"
+    localbinpath="/usr/local/bin"
+
+    echo "Fixing permissions..."
+
+    find "${sfpath}${package}" -type f -exec chmod 644 {} +
+    find "${sfpath}${package}" -type d -exec chmod 755 {} +
+
+    if [ -d "${sfpath}${package}${mkconfpath}" ]; then
+        chmod -R 755 "${sfpath}${package}${mkconfpath}"/*
+    fi
+
+    if [ -d "${sfpath}${package}${localbinpath}" ]; then
+        chmod 755 "${sfpath}${package}${localbinpath}"/*
+    fi
+
+    chmod 755 "${sfpath}${package}/debian/rules"
+    chown -R ${owner}:users "${sfpath}${package}"
 }
 
 case ${command} in
     update)
         initial
         update
-        fixowner
+        fixperms
     ;;
 
     build)
         initial
-        fixowner
+        fixperms
         build
-        fixowner
+        fixperms
     ;;
 
     upload)
         initial
-        fixowner
+        fixperms
         build
-        fixowner
+        fixperms
         upload
     ;;
 
@@ -194,26 +216,26 @@ case ${command} in
     buildpot)
         initial
         buildpot
-        fixowner
+        fixperms
     ;;
 
     pushpot)
         initial
         pushpot
-        fixowner
+        fixperms
     ;;
 
     pullpo)
         initial
         pullpo
-        fixowner
+        fixperms
     ;;
 
     install)
         initial
-        fixowner
+        fixperms
         build
-        fixowner
+        fixperms
         install
     ;;
 
