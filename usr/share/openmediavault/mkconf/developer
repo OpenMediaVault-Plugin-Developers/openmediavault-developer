@@ -109,6 +109,24 @@ EOF
     rm -f ${repos}
 }
 
+buildpot()
+{
+    cd ${sfpath}${package}
+    fakeroot debian/rules omv_build_pot
+}
+
+pushpot()
+{
+    cd ${sfpath}${package}
+    fakeroot debian/rules omv_push_pot
+}
+
+pullpo()
+{
+    cd ${sfpath}${package}
+    fakeroot debian/rules omv_pull_po
+}
+
 case ${command} in
     update)
         initial
@@ -128,6 +146,21 @@ case ${command} in
 
     tx)
         tx
+    ;;
+
+    buildpot)
+        initial
+        buildpot
+    ;;
+
+    pushpot)
+        initial
+        pushpot
+    ;;
+
+    pullpo)
+        initial
+        pullpo
     ;;
 
     *)

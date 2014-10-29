@@ -158,7 +158,7 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
             }]
         }];
     },
-    
+
     onGitConfigButton : function() {
         var me = this;
 
@@ -193,7 +193,7 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 OMV.MessageBox.hide();
             }
         });
-    }    
+    }
 });
 
 OMV.WorkspaceManager.registerPanel({

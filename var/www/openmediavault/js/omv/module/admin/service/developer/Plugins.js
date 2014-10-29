@@ -131,6 +131,33 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             handler  : Ext.Function.bind(me.onUploadButton, me, [ me ]),
             scope    : me,
             disabled : true
+        },{
+            id       : me.getId() + "-buildpot",
+            xtype    : "button",
+            text     : _("Build POT"),
+            icon     : "images/add.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onTxButton, me, [ "buildpot" ]),
+            scope    : me,
+            disabled : true
+        },{
+            id       : me.getId() + "-pushpot",
+            xtype    : "button",
+            text     : _("Push POT"),
+            icon     : "images/upload.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onTxButton, me, [ "pushpot" ]),
+            scope    : me,
+            disabled : true
+        },{
+            id       : me.getId() + "-pullpo",
+            xtype    : "button",
+            text     : _("Pull PO"),
+            icon     : "images/download.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onTxButton, me, [ "pullpo" ]),
+            scope    : me,
+            disabled : true
         }]);
         return items;
     },
@@ -140,14 +167,20 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         me.callParent(arguments);
         // Process additional buttons.
         var tbarBtnDisabled = {
-            "update" : true,
-            "build"  : true,
-            "upload" : true
+            "update"   : true,
+            "build"    : true,
+            "upload"   : true,
+            "buildpot" : true,
+            "pushpot"  : true,
+            "pullpo"   : true
         };
         if(records.length == 1) {
             tbarBtnDisabled["update"] = false;
             tbarBtnDisabled["build"] = false;
             tbarBtnDisabled["upload"] = false;
+            tbarBtnDisabled["buildpot"] = false;
+            tbarBtnDisabled["pushpot"] = false;
+            tbarBtnDisabled["pullpo"] = false;
         }
         // Update the button controls.
         Ext.Object.each(tbarBtnDisabled, function(key, value) {
@@ -258,6 +291,39 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         wnd.setButtonDisabled("close", true);
         wnd.show();
         wnd.start();
+    },
+
+    onTxConfigButton : function(cmd) {
+        var me = this;
+        var msg = "";
+        var record = me.getSelected();
+        switch(cmd) {
+            case "buildpot":
+                msg = _("Building translations...");
+                break;
+            case "pushpot":
+                msg = _("Sending translations...");
+                break;
+            default:
+                msg = _("Pulling translations...");
+        }
+        OMV.MessageBox.wait(null, msg);
+        OMV.Rpc.request({
+            scope       : me,
+            relayErrors : false,
+            rpcData     : {
+                service  : "Developer",
+                method   : "doCommand",
+                params   : {
+                    "command" : cmd,
+                    "plugin"  : record.get("name")
+                }
+            },
+            success : function(id, success, response) {
+                me.doReload();
+                OMV.MessageBox.hide();
+            }
+        });
     }
 });
 
