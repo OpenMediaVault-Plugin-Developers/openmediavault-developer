@@ -27,7 +27,7 @@ require_once("openmediavault/notify.inc");
 
 class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 {
-    private static $commands = array("build","update","upload");
+    private static $commands = array("build","update","upload","buildpot","pushpot","pullpo");
 
     private static $plugins = array("acestream","active-directory","anacron","aufs",
         "autoshutdown","backup","btsync","calibre", "couchpotato","cups","deluge",
@@ -255,6 +255,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             {
                 $cmd = sprintf("omv-mkconf developer %s %s 2>&1", $params['command'], $params['plugin']);
                 $this->exec($cmd, $output, $bgOutputFilename);
+                file_put_contents("/tmp/test123", $cmd, FILE_APPEND);   
             }
             else
             {

@@ -49,7 +49,7 @@ build()
     rm -rf ${temppath}${package}
     cp -r ${sfpath}${package} ${temppath}
     cd ${temppath}${package}
-    fakeroot debian/rules clean binary
+    fakeroot debian/rules clean binary 2>&1
     rm -f ${sfpath}${package}*.deb
     cp -f ${temppath}${package}*.deb ${sfpath}
     rm -f ${temppath}${package}*.deb
@@ -130,7 +130,7 @@ buildpot()
 {
     moveto
     cd ${temppath}${package}
-    fakeroot debian/rules omv_build_pot
+    fakeroot debian/rules omv_build_pot 2>&1
     movefrom
 }
 
@@ -138,7 +138,7 @@ pushpot()
 {
     moveto
     cd ${temppath}${package}
-    fakeroot debian/rules omv_push_pot
+    fakeroot debian/rules omv_push_pot 2>&1
     movefrom
 }
 
@@ -146,7 +146,7 @@ pullpo()
 {
     moveto
     cd ${temppath}${package}
-    fakeroot debian/rules omv_pull_po
+    fakeroot debian/rules omv_pull_po 2>&1
     movefrom
 }
 

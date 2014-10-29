@@ -161,7 +161,7 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
 
     onGitConfigButton : function() {
         var me = this;
-
+        me.doSubmit();
         OMV.MessageBox.wait(null, _("Creating .gitconfig file ..."));
         OMV.Rpc.request({
             scope       : me,
@@ -179,7 +179,7 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
 
     onTxConfigButton : function() {
         var me = this;
-
+        me.doSubmit();
         OMV.MessageBox.wait(null, _("Creating Transifex configs ..."));
         OMV.Rpc.request({
             scope       : me,
