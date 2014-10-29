@@ -135,7 +135,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             id       : me.getId() + "-buildpot",
             xtype    : "button",
             text     : _("Build POT"),
-            icon     : "images/add.png",
+            icon     : "images/software.png",
             iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
             handler  : Ext.Function.bind(me.onTxButton, me, [ "buildpot" ]),
             scope    : me,
@@ -158,6 +158,15 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             handler  : Ext.Function.bind(me.onTxButton, me, [ "pullpo" ]),
             scope    : me,
             disabled : true
+        },{
+            id       : me.getId() + "-install",
+            xtype    : "button",
+            text     : _("Install"),
+            icon     : "images/add.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onInstallButton, me, [ me ]),
+            scope    : me,
+            disabled : true
         }]);
         return items;
     },
@@ -172,7 +181,8 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             "upload"   : true,
             "buildpot" : true,
             "pushpot"  : true,
-            "pullpo"   : true
+            "pullpo"   : true,
+            "install"  : true,
         };
         if(records.length == 1) {
             tbarBtnDisabled["update"] = false;
@@ -181,6 +191,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             tbarBtnDisabled["buildpot"] = false;
             tbarBtnDisabled["pushpot"] = false;
             tbarBtnDisabled["pullpo"] = false;
+            tbarBtnDisabled["install"] = false;
         }
         // Update the button controls.
         Ext.Object.each(tbarBtnDisabled, function(key, value) {
@@ -333,7 +344,39 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         wnd.setButtonDisabled("close", true);
         wnd.show();
         wnd.start();
+    },
+
+    onInstallButton : function() {
+        var me = this;
+        var record = me.getSelected();
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : _("Installing ") + record.get("fullname") + " ...",
+            rpcService      : "Developer",
+            rpcMethod       : "doCommand",
+            rpcParams       : {
+                "command" : "install",
+                "plugin"  : record.get("name")
+            },
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
+            }
+        });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
     }
+
 });
 
 OMV.WorkspaceManager.registerPanel({
