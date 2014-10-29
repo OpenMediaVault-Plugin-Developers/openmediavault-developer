@@ -113,6 +113,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             "type"       : "object",
             "properties" : {
                 "sharedfolderref" : { ' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . ' },
+                "owner"           : { "type" : "string" },
                 "remotehost"      : { "type" : "string" },
                 "remotepath"      : { "type" : "string" },
                 "port"            : { "type" : "integer" },
@@ -130,6 +131,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Prepare configuration data
         $object = array(
             "sharedfolderref" => $params["sharedfolderref"],
+            "owner"           => $params['owner'],
             "remotehost"      => $params['remotehost'],
             "remotepath"      => $params['remotepath'],
             "port"            => intval($params['port']),

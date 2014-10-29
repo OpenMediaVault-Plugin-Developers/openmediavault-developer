@@ -58,6 +58,12 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 xtype      : "sharedfoldercombo",
                 name       : "sharedfolderref",
                 fieldLabel : _("Directory")
+            },{
+                xtype      : "usercombo",
+                name       : "owner",
+                fieldLabel : _("Owner"),
+                value      : "nobody",
+                userType   : "normal"
             }]
         },{
             xtype    : "fieldset",

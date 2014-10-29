@@ -37,6 +37,10 @@ case "$1" in
             omv_config_add_element "${SERVICE_XPATH}" "sharedfolderref" ""
         fi
 
+        if ! omv_config_exists "${SERVICE_XPATH}/owner"; then
+            omv_config_add_element "${SERVICE_XPATH}" "owner" ""
+        fi
+        
         if ! omv_config_exists "${SERVICE_XPATH}/remotehost"; then
             omv_config_add_element "${SERVICE_XPATH}" "remotehost" ""
         fi

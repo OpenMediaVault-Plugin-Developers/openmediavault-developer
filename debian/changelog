@@ -1,3 +1,9 @@
+openmediavault-developer (1.0.6) stable; urgency=low
+
+  * Add owner field
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 29 Oct 2014 14:28:32 -0500
+
 openmediavault-developer (1.0.5) stable; urgency=low
 
   * Fix update all bug
