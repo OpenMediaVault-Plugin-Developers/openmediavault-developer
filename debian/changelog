@@ -1,3 +1,9 @@
+openmediavault-developer (1.0.9) stable; urgency=low
+
+  * Add folding repo
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 31 Oct 2014 09:33:13 -0500
+
 openmediavault-developer (1.0.8) stable; urgency=low
 
   * Fix permissions of files
