@@ -1,3 +1,9 @@
+openmediavault-developer (1.0.13) stable; urgency=low
+
+  * More permission fixes
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 04 Nov 2014 06:46:22 -0600
+
 openmediavault-developer (1.0.12) stable; urgency=low
 
   * Add sabredav

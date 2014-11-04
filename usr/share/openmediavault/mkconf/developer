@@ -172,10 +172,13 @@ fixperms()
     etcinitpath="/etc/init.d/"
     etcsupportpath="/etc/omv-support.d/"
     sysinfopath="/usr/share/openmediavault/sysinfo/modules.d/"
+    varlibcronpath="/var/lib/openmediavault/cron.d/"
     echo "Fixing permissions..."
 
     find "${sfpath}${package}" -type f -exec chmod 644 {} +
     find "${sfpath}${package}" -type d -exec chmod 755 {} +
+
+    find "${sfpath}${package}" -type f -name "*.sh" -exec chmod 755 {} +
 
     if [ -d "${sfpath}${package}${mkconfpath}" ]; then
         chmod -R 755 "${sfpath}${package}${mkconfpath}"/*
@@ -195,6 +198,10 @@ fixperms()
 
     if [ -d "${sfpath}${package}${sysinfopath}" ]; then
         chmod 755 "${sfpath}${package}${sysinfopath}"/*
+    fi
+
+    if [ -d "${sfpath}${package}${varlibcronpath}" ]; then
+        chmod 755 "${sfpath}${package}${varlibcronpath}"/*
     fi
 
     chmod 755 "${sfpath}${package}/debian/rules"
