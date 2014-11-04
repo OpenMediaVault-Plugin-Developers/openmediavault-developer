@@ -38,9 +38,9 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "omvextrasorg","openvpn","openvpnas","openvpn-old","plexmediaserver","pptp",
         "processlist","pxe","pyload","remotenfs-share","remoteshare","roundcube",
         "rsnapshot","sabnzbd","sensors","shellinabox","sickbeard","skeleton",
-        "snapraid","subsonic","subversion","supportinfo","teamspeak3","transmissionbt",
-        "vdr","virtualbox","virtualhosts","wakealarm","webdav","website","wol",
-        "wordpress","zfs");
+        "snapraid","subsonic","subversion","supportinfo","teamspeak3","themes",
+        "transmissionbt","vdr","virtualbox","virtualhosts","wakealarm","webdav",
+        "website","wol","wordpress","zfs");
 
     public function getName()
     {
