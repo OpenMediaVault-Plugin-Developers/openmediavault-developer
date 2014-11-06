@@ -60,6 +60,7 @@ build()
     cp -f ${temppath}${package}*.deb ${sfpath}
     rm -f ${temppath}${package}*.deb
     rm -rf ${temppath}${package}
+    chown ${owner}:users ${sfpath}${package}*.deb
 }
 
 update()
