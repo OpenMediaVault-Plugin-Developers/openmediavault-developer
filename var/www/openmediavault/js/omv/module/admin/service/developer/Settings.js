@@ -84,7 +84,7 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
             },{
                 xtype   : "button",
                 name    : "gitconfig",
-                text    : _("Create .gitconfig"),
+                text    : _("Create git config"),
                 scope   : this,
                 handler : Ext.Function.bind(me.onConfigButton, me, [ "git" ]),
                 margin  : "5 0 8 0"
