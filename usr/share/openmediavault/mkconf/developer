@@ -232,8 +232,6 @@ gitadd()
 gitcommit()
 {
     cd ${sfpath}${package}
-
-    env HOME="/root/"
     git commit -m "${commit}" 2>&1
 }
 
