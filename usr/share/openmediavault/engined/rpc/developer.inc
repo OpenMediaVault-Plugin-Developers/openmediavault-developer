@@ -492,7 +492,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         switch ($params['command'])
         {
             case "git":
-                $configFile = "/root/.gitconfig";
+                $configFile = "/etc/gitconfig";
                 $config = sprintf("[user]\n\tname = %s\n\temail = %s\n", $object['gitname'], $object['gitemail']);
                 file_put_contents($configFile, $config);
 
