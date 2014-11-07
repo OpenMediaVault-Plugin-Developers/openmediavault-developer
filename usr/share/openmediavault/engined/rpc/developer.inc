@@ -28,7 +28,7 @@ require_once("openmediavault/notify.inc");
 class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 {
     private static $commands = array("build","update","upload","buildpot","pushpot",
-        "pullpo","install");
+        "pullpo","install","reset");
 
     private static $plugins = array("acestream","active-directory","anacron","aufs",
         "autoshutdown","backup","btsync","calibre", "couchpotato","cups","deluge",
@@ -41,6 +41,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "snapraid","subsonic","subversion","supportinfo","teamspeak3","themes",
         "transmissionbt","vdr","virtualbox","virtualhosts","wakealarm","webdav",
         "website","wol","wordpress","zfs");
+
+    const LOCATION = 'location';
 
     public function getName()
     {
@@ -57,9 +59,24 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         return sprintf( "//services/%s", $this->getPluginName() );
     }
 
+    private function getXPathLocatons()
+    {
+        return sprintf( "%s/%ss", $this->getXPath(), self::LOCATION );
+    }
+
+    private function getXPathLocaton()
+    {
+        return sprintf( "%s/%s", $this->getXPathLocations(), self::LOCATION );
+    }
+
     private function getEventMessagePath()
     {
         return sprintf( "org.openmediavault.services.%s", $this->getPluginName() );
+    }
+
+    private function getEventMessagePathDrive()
+    {
+        return sprintf( "%s.%ss.%s", $this->getEventMessagePath(), self::LOCATION, self::LOCATION );
     }
 
     public function initialize()
@@ -68,6 +85,11 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $this->registerMethod("setSettings");
         $this->registerMethod("getPluginList");
         $this->registerMethod("doCommand");
+
+        $this->registerMethod("getLocation");
+        $this->registerMethod("setLocation");
+        $this->registerMethod("getLocationList");
+        $this->registerMethod("deleteLocation");
 
         $this->registerMethod("createGitConfig");
         $this->registerMethod("createTxConfig");
@@ -94,6 +116,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         }
 
         $object['port'] = intval($object['port']);
+
+	unset($object['locations']);
 
         return $object;
     }
@@ -202,6 +226,153 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             $params['sortfield'], $params['sortdir']);
     }
 
+    public function getLocation($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Get configuration object
+        $object = $xmlConfig->get($this->getXPathLocation());
+        if (is_null($object))
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXPathLocation()
+            );
+        }
+
+        $object['port'] = intval($object['port']);
+
+        return $object;
+    }
+
+    public function setLocation($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams($params, '{
+            "type"       : "object",
+            "properties" : {
+                "uuid"       : { ' . $GLOBALS["OMV_JSONSCHEMA_UUID_UNDEFINED"] . ' },
+                "name"       : { "type" : "string" },
+                "remotehost" : { "type" : "string" },
+                "remotepath" : { "type" : "string" },
+                "port"       : { "type" : "integer" },
+                "username"   : { "type" : "string" },
+                "password"   : { "type" : "string" }
+            }
+        }');
+
+        // Prepare configuration data
+        $object = array(
+            "uuid"            => ($params["uuid"] == $GLOBALS["OMV_UUID_UNDEFINED"]) ? OMVUtil::uuid() : $params["uuid"],
+            "name"            => $params['name'],
+            "remotehost"      => $params['remotehost'],
+            "remotepath"      => $params['remotepath'],
+            "port"            => intval($params['port']),
+            "username"        => $params['username'],
+            "password"        => $params['password']
+        );
+
+        // Set the configuration object.
+        $success = FALSE;
+        if ($params["uuid"] == $GLOBALS["OMV_UUID_UNDEFINED"])
+        {
+            // Append the configuration object.
+            $success = $xmlConfig->set($this->getXPathLocations(), array("location" => $object));
+        }
+        else
+        {
+            // Update the existing configuration object.
+            $xPath = sprintf("%s[uuid='%s']", $this->getXPathLocation(), $params['uuid']);
+            $success = $xmlConfig->replace($xPath, $object);
+        }
+
+        // Notify configuration changes
+        $dispatcher = &OMVNotifyDispatcher::getInstance();
+        $dispatcher->notify(
+            OMV_NOTIFY_MODIFY,
+            $this->getEventMessagePathLocation(),
+            $object
+        );
+
+        return $object;
+    }
+
+    public function getLocationList($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams($params, '{
+            "type"       : "object",
+            "properties" : {
+                "start"     : { "type" : "integer" },
+                "limit"     : { '.$GLOBALS['OMV_JSONSCHEMA_COUNTFIELD'].' },
+                "sortfield" : { '.$GLOBALS['OMV_JSONSCHEMA_SORTFIELD'].' },
+                "sortdir"   : { '.$GLOBALS['OMV_JSONSCHEMA_SORTDIR'].' }
+            }
+        }');
+
+        // Get configuration data.
+        $objects = $xmlConfig->getList( $this->getXPathLocation() );
+        if (is_null($objects))
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXPathLocation()
+            );
+        }
+
+        // Filter the result.
+        return $this->applyFilter($objects, $params['start'], $params['limit'],
+            $params['sortfield'], $params['sortdir']);
+    }
+
+    public function deleteLocation($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams($params, '{
+            "type"       : "object",
+            "properties" : {
+                "uuid" : { '.$GLOBALS['OMV_JSONSCHEMA_UUID'].' }
+            }
+        }');
+
+        // Delete the configuration object.
+        $xPath = sprintf("%s[uuid='%s']", $this->getXPathLocation(), $params['uuid']);
+        return $this->deleteConfigObjectByPath(
+            $xPath,
+            $this->getEventMessagePathLocation()
+        );
+    }
+
     public function doCommand($params, $context)
     {
         global $xmlConfig;
@@ -216,8 +387,9 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $this->validateMethodParams($params, '{
             "type"       : "object",
             "properties" : {
-                "command" : { "type" : "string" },
-                "plugin"  : { "type" : "string" }
+                "command"  : { "type" : "string" },
+                "plugin"   : { "type" : "string" },
+                "location" : { "type" : "string", "optional" : true }
             }
         }');
 
@@ -256,7 +428,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
             if ($params['plugin'] != "all")
             {
-                $cmd = sprintf("omv-mkconf developer %s %s 2>&1", $params['command'], $params['plugin']);
+                $cmd = sprintf("omv-mkconf developer %s %s %s 2>&1", $params['command'], $params['plugin'], $params['location']);
                 $this->exec($cmd, $output, $bgOutputFilename);
             }
             else

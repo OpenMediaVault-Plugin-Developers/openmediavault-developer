@@ -25,6 +25,7 @@ set -e
 
 command=`echo $2 | cut -d \  -f 1`
 plugin=`echo $2 | cut -d \  -f 2`
+location=`echo $2 | cut -d \  -f 3`
 package="openmediavault-${plugin}"
 
 owner=$(omv_config_get "//services/developer/owner")
@@ -45,6 +46,14 @@ initial()
         echo "Cloning ${package} from github to ${sfpath} ..."
         cd ${sfpath}
         git clone https://github.com/OpenMediaVault-Plugin-Developers/${package}.git
+    fi
+}
+
+remove()
+{
+    if [ -d "${sfpath}${package}" ]; then
+        echo "Removing old files ..."
+        rm -rf ${sfpath}${package}
     fi
 }
 
@@ -211,6 +220,13 @@ fixperms()
 
 case ${command} in
     update)
+        initial
+        update
+        fixperms
+    ;;
+
+    reset)
+        remove
         initial
         update
         fixperms

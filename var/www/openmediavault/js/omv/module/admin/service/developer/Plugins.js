@@ -39,6 +39,8 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         "OMV.util.Format"
     ],
 
+    locationId : "",
+
     hidePagingToolbar : false,
     hideAddButton     : true,
     hideEditButton    : true,
@@ -114,6 +116,15 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             scope    : me,
             disabled : true
         },{
+            id       : me.getId() + "-reset",
+            xtype    : "button",
+            text     : _("Reset"),
+            icon     : "images/reboot.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onResetButton, me, [ me ]),
+            scope    : me,
+            disabled : true
+        },{
             id       : me.getId() + "-build",
             xtype    : "button",
             text     : _("Build"),
@@ -131,6 +142,37 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             handler  : Ext.Function.bind(me.onUploadButton, me, [ me ]),
             scope    : me,
             disabled : true
+        },{
+            id            : me.getId() + "-location",
+            xtype         : "combo",
+            allowBlank    : false,
+            editable      : false,
+            triggerAction : "all",
+            displayField  : "name",
+            valueField    : "uuid",
+            store         : Ext.create("OMV.data.Store", {
+                autoLoad : true,
+                model    : OMV.data.Model.createImplicit({
+                    idProperty : "name",
+                    fields     : [
+                        { name : "uuid", type : "string" },
+                        { name : "name", type : "string" }
+                    ]
+                }),
+                proxy : {
+                    type    : "rpc",
+                    rpcData : {
+                        service : "Developer",
+                        method  : "getLocationList"
+                    }
+                }
+            }),
+            listeners     : {
+                scope  : me,
+                change : function(combo, value) {
+                    me.locationId = value;
+                }
+            }
         },{
             id       : me.getId() + "-buildpot",
             xtype    : "button",
@@ -177,6 +219,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         // Process additional buttons.
         var tbarBtnDisabled = {
             "update"   : true,
+            "reset"    : true,
             "build"    : true,
             "upload"   : true,
             "buildpot" : true,
@@ -186,6 +229,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         };
         if(records.length == 1) {
             tbarBtnDisabled["update"] = false;
+            tbarBtnDisabled["reset"] = false;
             tbarBtnDisabled["build"] = false;
             tbarBtnDisabled["upload"] = false;
             tbarBtnDisabled["buildpot"] = false;
@@ -218,6 +262,40 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             rpcMethod       : "doCommand",
             rpcParams       : {
                 "command" : "update",
+                "plugin"  : cmd
+            },
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
+            }
+        });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
+    },
+
+    onResetButton : function(plugin) {
+        var me = this;
+        var record = me.getSelected();
+        name = record.get("fullname");
+        cmd = record.get("name");
+
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : _("Resetting ") + name + _(" to current github files ..."),
+            rpcService      : "Developer",
+            rpcMethod       : "doCommand",
+            rpcParams       : {
+                "command" : "reset",
                 "plugin"  : cmd
             },
             rpcIgnoreErrors : true,
@@ -281,8 +359,9 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             rpcService      : "Developer",
             rpcMethod       : "doCommand",
             rpcParams       : {
-                "command" : "upload",
-                "plugin"  : record.get("name")
+                "command"  : "upload",
+                "plugin"   : record.get("name"),
+                "location" : me.locationId
             },
             rpcIgnoreErrors : true,
             hideStartButton : true,
