@@ -26,7 +26,7 @@ set -e
 command=`echo $2 | cut -d \  -f 1`
 plugin=`echo $2 | cut -d \  -f 2`
 location=`echo $2 | cut -d \  -f 3`
-commit=${location}
+commit=`echo $2 | cut -d \_ -f 2`
 package="openmediavault-${plugin}"
 
 xpath="//services/developer"
@@ -225,12 +225,14 @@ fixperms()
 gitadd()
 {
     cd ${sfpath}${package}
+    echo "Adding all files ..."
     git add * 2>&1
 }
 
 gitcommit()
 {
     cd ${sfpath}${package}
+    echo "Commit message - ${commit}"
     git commit -m "${commit}" 2>&1
 }
 

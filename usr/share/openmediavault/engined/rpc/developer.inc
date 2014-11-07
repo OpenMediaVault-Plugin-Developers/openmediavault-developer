@@ -495,6 +495,13 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                 $configFile = "/root/.gitconfig";
                 $config = sprintf("[user]\n\tname = %s\n\temail = %s\n", $object['gitname'], $object['gitemail']);
                 file_put_contents($configFile, $config);
+
+                $cmd = sprintf("git config --global user.name \"%s\"", $object['gitname']);
+                OMVUtil::exec($cmd, $output, $result);
+
+                $cmd = sprintf("git config --global user.email \"%s\"", $object['gitemail']);
+                OMVUtil::exec($cmd, $output, $result);
+
                 chmod($configFile, 0600);
                 break;
 
@@ -583,7 +590,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
 
-            $cmd = sprintf("omv-mkconf developer %s %s %s 2>&1", $params['command'], $params['plugin'], $params['commit']);
+            $cmd = sprintf("omv-mkconf developer %s %s _%s 2>&1", $params['command'], $params['plugin'], $params['commit']);
             $this->exec($cmd, $output, $bgOutputFilename);
 
             $this->finalizeBgProcStatus($bgStatusFilename, $output);
