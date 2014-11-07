@@ -134,6 +134,15 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             scope    : me,
             disabled : true
         },{
+            id       : me.getId() + "-install",
+            xtype    : "button",
+            text     : _("Install"),
+            icon     : "images/add.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onInstallButton, me, [ me ]),
+            scope    : me,
+            disabled : true
+        },{
             id       : me.getId() + "-upload",
             xtype    : "button",
             text     : _("Upload"),
@@ -198,15 +207,6 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             icon     : "images/download.png",
             iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
             handler  : Ext.Function.bind(me.onTxButton, me, [ "pullpo" ]),
-            scope    : me,
-            disabled : true
-        },{
-            id       : me.getId() + "-install",
-            xtype    : "button",
-            text     : _("Install"),
-            icon     : "images/add.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onInstallButton, me, [ me ]),
             scope    : me,
             disabled : true
         },{
