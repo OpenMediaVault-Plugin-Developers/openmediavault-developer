@@ -86,7 +86,31 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 name    : "gitconfig",
                 text    : _("Create .gitconfig"),
                 scope   : this,
-                handler : Ext.Function.bind(me.onGitConfigButton, me, [ me ]),
+                handler : Ext.Function.bind(me.onConfigButton, me, [ "git" ]),
+                margin  : "5 0 8 0"
+            }]
+        },{
+            xtype    : "fieldset",
+            title    : _("Github Config"),
+            defaults : {
+                labelSeparator : ""
+            },
+            items : [{
+                xtype      : "textfield",
+                name       : "ghusername",
+                fieldLabel : _("Username"),
+                allowBlank : false
+            },{
+                xtype      : "passwordfield",
+                name       : "ghpassword",
+                fieldLabel : _("Password"),
+                allowBlank : false
+            },{
+                xtype   : "button",
+                name    : "ghconfig",
+                text    : _("Create Github .netrc"),
+                scope   : this,
+                handler : Ext.Function.bind(me.onConfigButton, me, [ "gh" ]),
                 margin  : "5 0 8 0"
             }]
         },{
@@ -120,40 +144,35 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 name    : "txconfig",
                 text    : _("Create Transifex configs"),
                 scope   : this,
-                handler : Ext.Function.bind(me.onTxConfigButton, me, [ me ]),
+                handler : Ext.Function.bind(me.onConfigButton, me, [ "tx" ]),
                 margin  : "5 0 8 0"
             }]
         }];
     },
 
-    onGitConfigButton : function() {
+    onConfigButton : function(cmd) {
         var me = this;
         me.doSubmit();
-        OMV.MessageBox.wait(null, _("Creating .gitconfig file ..."));
+        switch(cmd) {
+            case "gh":
+                title = _("Creating Github .netrc ...");
+                break;
+            case "tx":
+                title = _("Creating Transifex config ...");
+                break;
+            default:
+                title = _("Creating git config ...");
+        }
+        OMV.MessageBox.wait(null, title);
         OMV.Rpc.request({
             scope       : me,
             relayErrors : false,
             rpcData     : {
                 service  : "Developer",
-                method   : "createGitConfig"
-            },
-            success : function(id, success, response) {
-                me.doReload();
-                OMV.MessageBox.hide();
-            }
-        });
-    },
-
-    onTxConfigButton : function() {
-        var me = this;
-        me.doSubmit();
-        OMV.MessageBox.wait(null, _("Creating Transifex configs ..."));
-        OMV.Rpc.request({
-            scope       : me,
-            relayErrors : false,
-            rpcData     : {
-                service  : "Developer",
-                method   : "createTxConfig"
+                method   : "createConfig",
+                params       : {
+                    command : cmd
+                },
             },
             success : function(id, success, response) {
                 me.doReload();
