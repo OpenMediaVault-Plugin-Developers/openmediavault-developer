@@ -145,6 +145,16 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             }
         }');
 
+        // Get the existing configuration object.
+        $oldObject = $xmlConfig->get( $this->getXPath() );
+        if (is_null($oldObject))
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXPath()
+            );
+        }
+
         // Prepare configuration data
         $object = array(
             "sharedfolderref" => $params["sharedfolderref"],
@@ -154,7 +164,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             "txhostname"      => $params['txhostname'],
             "txpassword"      => $params['txpassword'],
             "txtoken"         => $params['txtoken'],
-            "txusername"      => $params['txusername']
+            "txusername"      => $params['txusername'],
+            "locations"       => isset($oldObject['locations']) ? $oldObject['locations'] : array()
         );
 
         // Set configuration object
