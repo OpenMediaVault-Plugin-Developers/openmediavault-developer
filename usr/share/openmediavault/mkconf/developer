@@ -26,10 +26,14 @@ set -e
 command=`echo $2 | cut -d \  -f 1`
 plugin=`echo $2 | cut -d \  -f 2`
 location=`echo $2 | cut -d \  -f 3`
+commit=${location}
 package="openmediavault-${plugin}"
 
-owner=$(omv_config_get "//services/developer/owner")
-sfref=$(omv_config_get "//services/developer/sharedfolderref")
+xpath="//services/developer"
+xpathlocation="${xpath}/locations/location[uuid='${location}']"
+
+owner=$(omv_config_get "${xpath}/owner")
+sfref=$(omv_config_get "${xpath}/sharedfolderref")
 sfpath=$(omv_get_sharedfolder_path "${sfref}")
 temppath="/tmp/"
 localepath="usr/share/openmediavault/locale"
@@ -82,11 +86,11 @@ update()
 
 upload()
 {
-    remotehost=$(omv_config_get "//services/developer/remotehost")
-    remotepath=$(omv_config_get "//services/developer/remotepath")
-    port=$(omv_config_get "//services/developer/port")
-    username=$(omv_config_get "//services/developer/username")
-    password=$(omv_config_get "//services/developer/password")
+    remotehost=$(omv_config_get "${xpathlocation}/remotehost")
+    remotepath=$(omv_config_get "${xpathlocation}/remotepath")
+    port=$(omv_config_get "${xpathlocation}/port")
+    username=$(omv_config_get "${xpathlocation}/username")
+    password=$(omv_config_get "${xpathlocation}/password")
 
     search="${sfpath}${package}_*"
     version=`ls ${search}`
@@ -218,6 +222,29 @@ fixperms()
     chown -R ${owner}:users "${sfpath}${package}"
 }
 
+gitadd()
+{
+    cd ${sfpath}${package}
+    git add * 2>&1
+}
+
+gitcommit()
+{
+    cd ${sfpath}${package}
+    git commit -m "${commit}" 2>&1
+}
+
+gitpush()
+{
+    if [ ! -f "/root/.netrc" ]; then
+        echo ".netrc not found"
+        exit 1
+    fi
+
+    cd ${sfpath}${package}
+    git push 2>&1
+}
+
 case ${command} in
     update)
         initial
@@ -275,6 +302,23 @@ case ${command} in
         build
         fixperms
         install
+    ;;
+
+    add)
+        fixperms
+        gitadd
+    ;;
+
+    commit)
+        initial
+        fixperms
+        gitcommit
+    ;;
+
+    push)
+        initial
+        fixperms
+        gitpush
     ;;
 
     *)

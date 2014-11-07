@@ -209,6 +209,33 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             handler  : Ext.Function.bind(me.onInstallButton, me, [ me ]),
             scope    : me,
             disabled : true
+        },{
+            id       : me.getId() + "-gitadd",
+            xtype    : "button",
+            text     : _("git add"),
+            icon     : "images/add.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onGitButton, me, [ "add" ]),
+            scope    : me,
+            disabled : true
+        },{
+            id       : me.getId() + "-gitcommit",
+            xtype    : "button",
+            text     : _("git commit"),
+            icon     : "images/software.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onGitButton, me, [ "commit" ]),
+            scope    : me,
+            disabled : true
+        },{
+            id       : me.getId() + "-gitpush",
+            xtype    : "button",
+            text     : _("git push"),
+            icon     : "images/upload.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onGitButton, me, [ "push" ]),
+            scope    : me,
+            disabled : true
         }]);
         return items;
     },
@@ -218,14 +245,17 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         me.callParent(arguments);
         // Process additional buttons.
         var tbarBtnDisabled = {
-            "update"   : true,
-            "reset"    : true,
-            "build"    : true,
-            "upload"   : true,
-            "buildpot" : true,
-            "pushpot"  : true,
-            "pullpo"   : true,
-            "install"  : true,
+            "update"    : true,
+            "reset"     : true,
+            "build"     : true,
+            "upload"    : true,
+            "buildpot"  : true,
+            "pushpot"   : true,
+            "pullpo"    : true,
+            "install"   : true,
+            "gitadd"    : true,
+            "gitcommit" : true,
+            "git push"  : true
         };
         if(records.length == 1) {
             tbarBtnDisabled["update"] = false;
@@ -236,6 +266,9 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             tbarBtnDisabled["pushpot"] = false;
             tbarBtnDisabled["pullpo"] = false;
             tbarBtnDisabled["install"] = false;
+            tbarBtnDisabled["gitadd"] = false;
+            tbarBtnDisabled["gitcommit"] = false;
+            tbarBtnDisabled["gitpush"] = false;
         }
         // Update the button controls.
         Ext.Object.each(tbarBtnDisabled, function(key, value) {
@@ -248,12 +281,12 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         var title = "";
         var cmd = "";
         if(plugin == "all") {
-            title = _("Updating all plugins...");
+            title = _("Updating all plugins ...");
             cmd = "all";
         } else {
             var record = me.getSelected();
             name = record.get("fullname");
-            title = _("Updating ") + name + "...";
+            title = _("Updating ") + name + " ...";
             cmd = record.get("name");
         }
         var wnd = Ext.create("OMV.window.Execute", {
@@ -321,7 +354,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
     onBuildButton : function() {
         var me = this;
         var record = me.getSelected();
-        var title = _("Updating ") + record.get("fullname") + "...";
+        var title = _("Updating ") + record.get("fullname") + " ...";
         var wnd = Ext.create("OMV.window.Execute", {
             title           : title,
             rpcService      : "Developer",
@@ -353,7 +386,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
     onUploadButton : function() {
         var me = this;
         var record = me.getSelected();
-        var title = _("Uploading ") + record.get("fullname") + "...";
+        var title = _("Uploading ") + record.get("fullname") + " ...";
         var wnd = Ext.create("OMV.window.Execute", {
             title           : title,
             rpcService      : "Developer",
@@ -389,13 +422,13 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         var record = me.getSelected();
         switch(cmd) {
             case "buildpot":
-                title = _("Building translations...");
+                title = _("Building translations ...");
                 break;
             case "pushpot":
-                title = _("Sending translations...");
+                title = _("Sending translations ...");
                 break;
             default:
-                title = _("Pulling translations...");
+                title = _("Pulling translations ...");
         }
         var wnd = Ext.create("OMV.window.Execute", {
             title           : title,
@@ -454,8 +487,52 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         wnd.setButtonDisabled("close", true);
         wnd.show();
         wnd.start();
-    }
+    },
 
+    onGitButton : function(cmd) {
+        var me = this;
+        var commit = "";
+        var title = "";
+        var record = me.getSelected();
+        switch(cmd) {
+            case "add":
+                title = _("Adding files for commit ...");
+                break;
+            case "commit":
+                title = _("Creating commit ...");
+                commit = prompt("Enter commit message", "");
+                break;
+            default:
+                title = _("Pushing files to Github ...");
+        }
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : title,
+            rpcService      : "Developer",
+            rpcMethod       : "doGit",
+            rpcParams       : {
+                "command" : cmd,
+                "plugin"  : record.get("name"),
+                "commit"  : commit
+            },
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
+            }
+        });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
+    }
 });
 
 OMV.WorkspaceManager.registerPanel({
