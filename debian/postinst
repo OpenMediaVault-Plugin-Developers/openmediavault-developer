@@ -40,26 +40,6 @@ case "$1" in
         if ! omv_config_exists "${SERVICE_XPATH}/owner"; then
             omv_config_add_element "${SERVICE_XPATH}" "owner" ""
         fi
-        
-        if ! omv_config_exists "${SERVICE_XPATH}/remotehost"; then
-            omv_config_add_element "${SERVICE_XPATH}" "remotehost" ""
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/remotepath"; then
-            omv_config_add_element "${SERVICE_XPATH}" "remotepath" ""
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/port"; then
-            omv_config_add_element "${SERVICE_XPATH}" "port" "22"
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/username"; then
-            omv_config_add_element "${SERVICE_XPATH}" "username" "nobody"
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/password"; then
-            omv_config_add_element "${SERVICE_XPATH}" "password" ""
-        fi
 
         if ! omv_config_exists "${SERVICE_XPATH}/gitname"; then
             omv_config_add_element "${SERVICE_XPATH}" "gitname" ""
@@ -83,6 +63,10 @@ case "$1" in
 
         if ! omv_config_exists "${SERVICE_XPATH}/txusername"; then
             omv_config_add_element "${SERVICE_XPATH}" "txusername" ""
+        fi
+
+        if ! omv_config_exists "${SERVICE_XPATH}/locations"; then
+            omv_config_add_element "${SERVICE_XPATH}" "locations"
         fi
 
         pip install transifex-client || :

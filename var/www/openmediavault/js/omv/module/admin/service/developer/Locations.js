@@ -68,12 +68,10 @@ Ext.define("OMV.module.admin.service.developer.Location", {
                 allowBlank    : false,
                 value         : 22
             },{
-                xtype      : "usercombo",
+                xtype      : "textfield",
                 name       : "username",
                 fieldLabel : _("User"),
-                value      : "nobody",
-                userType   : "all",
-                editable   : true
+                allowBlank : false
             },{
                 xtype      : "passwordfield",
                 name       : "password",
@@ -97,7 +95,7 @@ Ext.define("OMV.module.admin.service.developer.Locations", {
 
     hidePagingToolbar : false,
     stateful          : true,
-    stateId           : "9889057b-b2c0-4c48-a4c1-8c9b1fb34d1b",
+    stateId           : "3339057b-b2c0-4c48-a4c1-8c9b1fb34d1b",
     columns           : [{
         text      : _("Name"),
         sortable  : true,

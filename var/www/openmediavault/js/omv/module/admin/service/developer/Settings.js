@@ -67,45 +67,6 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
             }]
         },{
             xtype    : "fieldset",
-            title    : _("Upload Settings"),
-            defaults : {
-                labelSeparator : ""
-            },
-            items : [{
-                xtype      : "textfield",
-                name       : "remotehost",
-                fieldLabel : _("Remote Host"),
-                allowBlank : false
-            },{
-                xtype      : "textfield",
-                name       : "remotepath",
-                fieldLabel : _("Remote Path"),
-                allowBlank : false
-            },{
-                xtype         : "numberfield",
-                name          : "port",
-                fieldLabel    : _("Port"),
-                vtype         : "port",
-                minValue      : 1,
-                maxValue      : 65535,
-                allowDecimals : false,
-                allowBlank    : false,
-                value         : 22
-            },{
-                xtype      : "usercombo",
-                name       : "username",
-                fieldLabel : _("User"),
-                value      : "nobody",
-                userType   : "all",
-                editable   : true
-            },{
-                xtype      : "passwordfield",
-                name       : "password",
-                fieldLabel : _("Password"),
-                allowBlank : false
-            }]
-        },{
-            xtype    : "fieldset",
             title    : _("git Config"),
             defaults : {
                 labelSeparator : ""

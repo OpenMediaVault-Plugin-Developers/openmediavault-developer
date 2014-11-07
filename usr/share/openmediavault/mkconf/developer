@@ -53,7 +53,7 @@ remove()
 {
     if [ -d "${sfpath}${package}" ]; then
         echo "Removing old files ..."
-        rm -rf ${sfpath}${package}
+        rm -rfv ${sfpath}${package}
     fi
 }
 

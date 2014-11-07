@@ -59,12 +59,12 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         return sprintf( "//services/%s", $this->getPluginName() );
     }
 
-    private function getXPathLocatons()
+    private function getXPathLocations()
     {
         return sprintf( "%s/%ss", $this->getXPath(), self::LOCATION );
     }
 
-    private function getXPathLocaton()
+    private function getXPathLocation()
     {
         return sprintf( "%s/%s", $this->getXPathLocations(), self::LOCATION );
     }
@@ -74,7 +74,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         return sprintf( "org.openmediavault.services.%s", $this->getPluginName() );
     }
 
-    private function getEventMessagePathDrive()
+    private function getEventMessagePathLocation()
     {
         return sprintf( "%s.%ss.%s", $this->getEventMessagePath(), self::LOCATION, self::LOCATION );
     }
@@ -115,8 +115,6 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             );
         }
 
-        $object['port'] = intval($object['port']);
-
 	unset($object['locations']);
 
         return $object;
@@ -138,11 +136,6 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             "properties" : {
                 "sharedfolderref" : { ' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . ' },
                 "owner"           : { "type" : "string" },
-                "remotehost"      : { "type" : "string" },
-                "remotepath"      : { "type" : "string" },
-                "port"            : { "type" : "integer" },
-                "username"        : { "type" : "string" },
-                "password"        : { "type" : "string" },
                 "gitname"         : { "type" : "string" },
                 "gitemail"        : { "type" : "string" },
                 "txhostname"      : { "type" : "string" },
@@ -156,11 +149,6 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $object = array(
             "sharedfolderref" => $params["sharedfolderref"],
             "owner"           => $params['owner'],
-            "remotehost"      => $params['remotehost'],
-            "remotepath"      => $params['remotepath'],
-            "port"            => intval($params['port']),
-            "username"        => $params['username'],
-            "password"        => $params['password'],
             "gitname"         => $params['gitname'],
             "gitemail"        => $params['gitemail'],
             "txhostname"      => $params['txhostname'],
@@ -246,7 +234,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             );
         }
 
-        $object['port'] = intval($object['port']);
+        // $object['port'] = intval($object['port']);
 
         return $object;
     }
