@@ -232,7 +232,13 @@ gitadd()
 gitcommit()
 {
     cd ${sfpath}${package}
-    echo "Commit message - ${commit}"
+
+    gitname=$(omv_config_get "${xpath}/gitname")
+    gitemail=$(omv_config_get "${xpath}/gitemail")
+
+    HOME=/root/
+    #git config --global user.name "${gitname}"
+    #git config --global user.email ${gitemail}
     git commit -m "${commit}" 2>&1
 }
 
