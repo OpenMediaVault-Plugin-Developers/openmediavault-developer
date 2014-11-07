@@ -496,13 +496,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                 $config = sprintf("[user]\n\tname = %s\n\temail = %s\n", $object['gitname'], $object['gitemail']);
                 file_put_contents($configFile, $config);
 
-                $cmd = sprintf("git config --global user.name \"%s\"", $object['gitname']);
-                OMVUtil::exec($cmd, $output, $result);
-
-                $cmd = sprintf("git config --global user.email \"%s\"", $object['gitemail']);
-                OMVUtil::exec($cmd, $output, $result);
-
-                chmod($configFile, 0600);
+                chmod($configFile, 0644);
                 break;
 
             case "gh":
