@@ -1,8 +1,9 @@
-openmediavault-developer (1.0.15) UNRELEASED; urgency=low
+openmediavault-developer (1.0.15) stable; urgency=low
 
   * Change order of buttons
+  * Add more language maps
 
- -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 07 Nov 2014 09:21:22 -0600
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 12 Nov 2014 06:18:53 -0600
 
 openmediavault-developer (1.0.14) stable; urgency=low
 

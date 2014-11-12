@@ -110,7 +110,7 @@ tx()
     cat <<EOF > ${tx_file}
 [main]
 host = https://www.transifex.com
-lang_map = de: de_DE, it: it_IT, ru: ru_RU, uk: uk_UK, da: da_DA, no: no_NO, sv: sv_SV, es: es_ES
+lang_map = de: de_DE, it: it_IT, ru: ru_RU, uk: uk_UK, da: da_DA, no: no_NO, sv: sv_SV, es: es_ES, fr: fr_FR, nl: nl_NL
 type = PO
 
 EOF
