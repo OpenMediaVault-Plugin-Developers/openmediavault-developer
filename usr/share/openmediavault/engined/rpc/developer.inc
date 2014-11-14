@@ -31,16 +31,16 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "pullpo","install","reset","tx","gh","git","add","commit","push");
 
     private static $plugins = array("acestream","active-directory","anacron","aufs",
-        "autoshutdown","backup","btsync","calibre", "couchpotato","cups","deluge",
-        "developer","dnsmasq","downloader","extplorer","fail2ban","folding","git",
-        "glusterfs","greyhole","headphones","hpraid","jdownloader","links","mcmyadmin",
-        "mediabrowser","mhddfs","minidlna","mumble","mysql","nginx","offlineimap",
-        "omvextrasorg","openvpn","openvpnas","openvpn-old","plexmediaserver","pptp",
-        "processlist","pxe","pyload","remotenfs-share","remoteshare","roundcube",
-        "rsnapshot","sabnzbd","sensors","shellinabox","sickbeard","skeleton",
-        "snapraid","subsonic","subversion","supportinfo","teamspeak3","themes",
-        "transmissionbt","vdr","virtualbox","virtualhosts","wakealarm","webdav",
-        "website","wol","wordpress","zfs");
+        "autoshutdown","backup","btsync","calibre","couchpotato","cups","deluge",
+        "developer","dnsmasq","downloader","extplorer","fail2ban","folding","gateone",
+        "git","glusterfs","greyhole","headphones","hpraid","jdownloader","links",
+        "mcmyadmin","mediabrowser","mhddfs","minidlna","mumble","mysql","nginx",
+        "offlineimap","omvextrasorg","openvpn","openvpnas","openvpn-old",
+        "plexmediaserver","pptp","processlist","pxe","pyload","remotenfs-share",
+        "remoteshare","roundcube","rsnapshot","sabnzbd","sensors","shellinabox",
+        "sickbeard","skeleton","snapraid","subsonic","subversion","supportinfo",
+        "teamspeak3","themes","transmissionbt","vdr","virtualbox","virtualhosts",
+        "wakealarm","webdav","website","wol","wordpress","zfs");
 
     const LOCATION = 'location';
 
