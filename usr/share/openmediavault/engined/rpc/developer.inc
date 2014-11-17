@@ -28,7 +28,8 @@ require_once("openmediavault/notify.inc");
 class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 {
     private static $commands = array("build","update","upload","buildpot","pushpot",
-        "pullpo","install","reset","tx","gh","git","add","commit","push");
+        "pullpo","install","reset","tx","gh","git","add","commit","push",
+        "dchi","dcha","dchr");
 
     private static $plugins = array("acestream","active-directory","anacron","aufs",
         "autoshutdown","backup","btsync","calibre","couchpotato","cups","deluge",
@@ -93,6 +94,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $this->registerMethod("doCommand");
         $this->registerMethod("createConfig");
         $this->registerMethod("doGit");
+        $this->registerMethod("doDch");
     }
 
     public function getSettings($params, $context)
@@ -595,6 +597,66 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         }
     }
 
+    public function doDch($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams($params, '{
+            "type"       : "object",
+            "properties" : {
+                "command" : { "type" : "string" },
+                "plugin"  : { "type" : "string" },
+                "commit"  : { "type" : "string", "optional" : true }
+            }
+        }');
+
+        if (!in_array($params['command'], self::$commands))
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_MISC_OPERATION_DENIED,
+                sprinf("Unknown command - %s", $params['command'])
+            );
+        }
+
+        if (!in_array($params['plugin'], self::$plugins))
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_MISC_OPERATION_DENIED,
+                sprinf("Unknown plugin - %s", $params['plugin'])
+            );
+        }
+
+        // Create a background process.
+        $bgStatusFilename = $this->createBgProcStatus();
+        $pid = $this->fork();
+
+        if ($pid > 0) { // Parent process.
+            $this->initializeBgProcStatus($bgStatusFilename, $pid);
+            return $bgStatusFilename;
+        }
+
+        // Child process.
+        try {
+            $bgOutputFilename = $this->createBgProcOutput();
+            $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
+
+            $cmd = sprintf("omv-mkconf developer %s %s _%s 2>&1", $params['command'], $params['plugin'], $params['commit']);
+            $this->exec($cmd, $output, $bgOutputFilename);
+
+            $this->finalizeBgProcStatus($bgStatusFilename, $output);
+            exit(0);
+        } catch(Exception $e) {
+            $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
+            exit(1);
+        }
+    }
 }
 
 // Register the RPC service.

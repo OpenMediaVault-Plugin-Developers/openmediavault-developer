@@ -236,6 +236,33 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             handler  : Ext.Function.bind(me.onGitButton, me, [ "push" ]),
             scope    : me,
             disabled : true
+        },{
+            id       : me.getId() + "-dchi",
+            xtype    : "button",
+            text     : _("dch -i"),
+            icon     : "images/arrow-up.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onDchButton, me, [ "dchi" ]),
+            scope    : me,
+            disabled : true
+        },{
+            id       : me.getId() + "-dcha",
+            xtype    : "button",
+            text     : _("dch -a"),
+            icon     : "images/add.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onDchButton, me, [ "dcha" ]),
+            scope    : me,
+            disabled : true
+        },{
+            id       : me.getId() + "-dchr",
+            xtype    : "button",
+            text     : _("dch -r"),
+            icon     : "images/software.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            handler  : Ext.Function.bind(me.onDchButton, me, [ "dchr" ]),
+            scope    : me,
+            disabled : true
         }]);
         return items;
     },
@@ -255,7 +282,10 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             "install"   : true,
             "gitadd"    : true,
             "gitcommit" : true,
-            "git push"  : true
+            "gitpush"   : true,
+            "dchi"      : true,
+            "dcha"      : true,
+            "dchr"      : true
         };
         if(records.length == 1) {
             tbarBtnDisabled["update"] = false;
@@ -269,6 +299,9 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             tbarBtnDisabled["gitadd"] = false;
             tbarBtnDisabled["gitcommit"] = false;
             tbarBtnDisabled["gitpush"] = false;
+            tbarBtnDisabled["dchi"] = false;
+            tbarBtnDisabled["dcha"] = false;
+            tbarBtnDisabled["dchr"] = false;
         }
         // Update the button controls.
         Ext.Object.each(tbarBtnDisabled, function(key, value) {
@@ -509,6 +542,52 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             title           : title,
             rpcService      : "Developer",
             rpcMethod       : "doGit",
+            rpcParams       : {
+                "command" : cmd,
+                "plugin"  : record.get("name"),
+                "commit"  : commit
+            },
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
+            }
+        });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
+    },
+
+    onDchButton : function(cmd) {
+        var me = this;
+        var commit = "";
+        var title = "";
+        var record = me.getSelected();
+        switch(cmd) {
+            case "dchi":
+                title = _("Increment version ...");
+                commit = prompt("Enter changelog line", "");
+                break;
+            case "dcha":
+                title = _("Add changelog line ...");
+                commit = prompt("Enter changelog line", "");
+                break;
+            default:
+                title = _("Release version ...");
+        }
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : title,
+            rpcService      : "Developer",
+            rpcMethod       : "doDch",
             rpcParams       : {
                 "command" : cmd,
                 "plugin"  : record.get("name"),

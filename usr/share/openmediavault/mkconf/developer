@@ -252,6 +252,35 @@ gitpush()
     git push 2>&1
 }
 
+dchi()
+{
+    export DEBEMAIL="plugins@omv-extras.org"
+    export DEBFULLNAME="OpenMediaVault Plugin Developers"
+    cd ${sfpath}${package}
+    echo "Increment version ..."
+    dch -U --no-auto-nmu -i "${commit}" 2>&1
+    head -n 1 debian/changelog
+}
+
+dcha()
+{
+    export DEBEMAIL="plugins@omv-extras.org"
+    export DEBFULLNAME="OpenMediaVault Plugin Developers"
+    cd ${sfpath}${package}
+    echo "Add changelog line ..."
+    dch -U --no-auto-nmu -a "${commit}" 2>&1
+}
+
+dchr()
+{
+    export DEBEMAIL="plugins@omv-extras.org"
+    export DEBFULLNAME="OpenMediaVault Plugin Developers"
+    cd ${sfpath}${package}
+    echo "Release version ..."
+    dch -U --no-auto-nmu -r "release" 2>&1
+    head -n 1 debian/changelog
+}
+
 case ${command} in
     update)
         initial
@@ -326,6 +355,23 @@ case ${command} in
         initial
         fixperms
         gitpush
+    ;;
+
+    dchi)
+        fixperms
+        dchi
+    ;;
+
+    dcha)
+        initial
+        fixperms
+        dcha
+    ;;
+
+    dchr)
+        initial
+        fixperms
+        dchr
     ;;
 
     *)
