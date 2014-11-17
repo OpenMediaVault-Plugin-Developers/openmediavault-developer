@@ -64,6 +64,7 @@ remove()
 build()
 {
     echo "Building ${package}..."
+    export LANG=C
     rm -f ${temppath}${package}*.deb
     rm -rf ${temppath}${package}
     cp -r ${sfpath}${package} ${temppath}
@@ -175,6 +176,8 @@ install()
     version=`ls ${search}`
 
     echo "Installing ${package} ..."
+    export LANG=C
+    export DEBIAN_FRONTEND=noninteractive
     dpkg -i "${version}"
     apt-get --yes --force-yes --fix-missing -f install
 }
@@ -219,6 +222,9 @@ fixperms()
     fi
 
     chmod 755 "${sfpath}${package}/debian/rules"
+    if [ -f "${sfpath}${package}/debian/${plugin}.init" ]; then
+        chmod 755 "${sfpath}${package}/debian/${plugin}.init"
+    fi
     chown -R ${owner}:users "${sfpath}${package}"
 }
 
