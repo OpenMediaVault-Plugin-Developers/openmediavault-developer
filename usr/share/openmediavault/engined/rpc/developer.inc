@@ -40,8 +40,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "plexmediaserver","pptp","processlist","pxe","pyload","remotenfs-share",
         "remoteshare","roundcube","rsnapshot","sabnzbd","sensors","shellinabox",
         "sickbeard","skeleton","snapraid","subsonic","subversion","supportinfo",
-        "teamspeak3","themes","transmissionbt","vdr","virtualbox","virtualhosts",
-        "wakealarm","webdav","website","wol","wordpress","zfs");
+        "teamspeak3","themes","transmissionbt","unionfilesystems","vdr","virtualbox",
+        "virtualhosts","wakealarm","webdav","website","wol","wordpress","zfs");
 
     const LOCATION = 'location';
 
