@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.1) stable; urgency=low
+
+  * add nzbdrone
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 23 Nov 2014 07:13:47 -0600
+
 openmediavault-developer (1.1) stable; urgency=low
 
   * Add unionfilesystems

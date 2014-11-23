@@ -36,12 +36,13 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "developer","dnsmasq","downloader","extplorer","fail2ban","folding","gateone",
         "git","glusterfs","greyhole","headphones","hpraid","jdownloader","links",
         "mcmyadmin","mediabrowser","mhddfs","minidlna","mumble","mysql","nginx",
-        "nzbget","offlineimap","omvextrasorg","openvpn","openvpnas","openvpn-old",
-        "plexmediaserver","pptp","processlist","pxe","pyload","remotenfs-share",
-        "remoteshare","roundcube","rsnapshot","sabnzbd","sensors","shellinabox",
-        "sickbeard","skeleton","snapraid","subsonic","subversion","supportinfo",
-        "teamspeak3","themes","transmissionbt","unionfilesystems","vdr","virtualbox",
-        "virtualhosts","wakealarm","webdav","website","wol","wordpress","zfs");
+        "nzbget","nzbdrone","offlineimap","omvextrasorg","openvpn","openvpnas",
+        "openvpn-old","plexmediaserver","pptp","processlist","pxe","pyload",
+        "remotenfs-share","remoteshare","roundcube","rsnapshot","sabnzbd","sensors",
+        "shellinabox","sickbeard","skeleton","snapraid","subsonic","subversion",
+        "supportinfo","teamspeak3","themes","transmissionbt","unionfilesystems","vdr",
+        "virtualbox","virtualhosts","wakealarm","webdav","website","wol","wordpress",
+        "zfs");
 
     const LOCATION = 'location';
 
