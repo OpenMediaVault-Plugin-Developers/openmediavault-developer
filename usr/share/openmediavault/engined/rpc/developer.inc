@@ -39,10 +39,10 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "nzbget","nzbdrone","offlineimap","omvextrasorg","openvpn","openvpnas",
         "openvpn-old","plexmediaserver","pptp","processlist","pxe","pyload",
         "remotenfs-share","remoteshare","roundcube","rsnapshot","sabnzbd","sensors",
-        "shellinabox","sickbeard","skeleton","snapraid","subsonic","subversion",
-        "supportinfo","teamspeak3","themes","transmissionbt","unionfilesystems","vdr",
-        "virtualbox","virtualhosts","wakealarm","webdav","website","wol","wordpress",
-        "zfs");
+        "shellinabox","sickbeard","skeleton","snapraid","sonarr","subsonic",
+        "subversion","supportinfo","teamspeak3","themes","transmissionbt",
+        "unionfilesystems","vdr","virtualbox","virtualhosts","wakealarm","webdav",
+        "website","wol","wordpress","zfs");
 
     const LOCATION = 'location';
 
