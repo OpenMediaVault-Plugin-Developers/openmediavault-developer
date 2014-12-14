@@ -310,7 +310,7 @@ omvsvn()
     # copy files to temp path to build package
     rm -rf ${temppath}openmediavault
     cp -rf ${sfpath}${omv_code}/deb/openmediavault ${temppath}
-    cp -f  ${sfpath}openmediavault.mk ${temppath}
+    cp -f  ${sfpath}${omv_code}/openmediavault.mk ${temppath}
 
     # make svn package
     cd ${temppath}openmediavault
