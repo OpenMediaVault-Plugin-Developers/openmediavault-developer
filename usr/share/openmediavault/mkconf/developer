@@ -307,11 +307,18 @@ omvsvn()
     version=$(head -n 1 debian/changelog | cut -f2 -d"(" | cut -f1 -d")")
     echo "Version ${version}"
 
-    # make svn package
-    fakeroot debian/rules clean binary
-    mv -v ../openmediavault_${version}_all.deb ../openmediavault_${version}-svn${revision}_all.deb
+    # copy files to temp path to build package
+    rm -rf ${temppath}openmediavault
+    cp -rf ${sfpath}${omv_code}/deb/openmediavault ${temppath}
+    cp -f  ${sfpath}openmediavault.mk ${temppath}
 
-    dpkg -i ../openmediavault_${version}-svn${revision}_all.deb
+    # make svn package
+    cd ${temppath}openmediavault
+    svn update
+    fakeroot debian/rules clean binary
+    mv -v ../openmediavault_${version}_all.deb ${sfpath}openmediavault_${version}-svn${revision}_all.deb
+
+    dpkg -i ${sfpath}openmediavault_${version}-svn${revision}_all.deb
     apt-get --yes --force-yes --fix-missing -f install
 }
 
