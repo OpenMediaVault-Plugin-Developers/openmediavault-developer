@@ -96,6 +96,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $this->registerMethod("createConfig");
         $this->registerMethod("doGit");
         $this->registerMethod("doDch");
+        $this->registerMethod("doOmvSvn");
     }
 
     public function getSettings($params, $context)
@@ -139,14 +140,14 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             "properties" : {
                 "sharedfolderref" : { ' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . ' },
                 "owner"           : { "type" : "string" },
-                "gitname"         : { "type" : "string" },
-                "gitemail"        : { "type" : "string" },
-                "ghusername"      : { "type" : "string" },
-                "ghpassword"      : { "type" : "string" },
-                "txhostname"      : { "type" : "string" },
-                "txpassword"      : { "type" : "string" },
+                "gitname"         : { "type" : "string", "optional" : true },
+                "gitemail"        : { "type" : "string", "optional" : true },
+                "ghusername"      : { "type" : "string", "optional" : true },
+                "ghpassword"      : { "type" : "string", "optional" : true },
+                "txhostname"      : { "type" : "string", "optional" : true },
+                "txpassword"      : { "type" : "string", "optional" : true },
                 "txtoken"         : { "type" : "string", "optional" : true },
-                "txusername"      : { "type" : "string" }
+                "txusername"      : { "type" : "string", "optional" : true }
             }
         }');
 
@@ -658,6 +659,38 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             exit(1);
         }
     }
+    
+    public function doOmvSvn($params, $context)
+    {
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            array( "role" => OMV_ROLE_ADMINISTRATOR )
+        );
+
+        // Create a background process.
+        $bgStatusFilename = $this->createBgProcStatus();
+        $pid = $this->fork();
+        if ($pid > 0)   // Parent process.
+        {
+            $this->initializeBgProcStatus($bgStatusFilename, $pid);
+            return $bgStatusFilename;
+        }
+
+        // Child process.
+        try {
+            $bgOutputFilename = $this->createBgProcOutput();
+            $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
+
+            $cmd = "omv-mkconf developer omvsvn 2>&1";
+            $this->exec($cmd, $output, $bgOutputFilename);
+            $this->finalizeBgProcStatus($bgStatusFilename, $output);
+
+        } catch(Exception $e) {
+            $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
+            exit(1);
+        }
+    }    
 }
 
 // Register the RPC service.

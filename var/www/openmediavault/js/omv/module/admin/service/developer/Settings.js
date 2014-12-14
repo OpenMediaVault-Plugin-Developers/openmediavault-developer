@@ -46,6 +46,22 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
     rpcGetMethod : "getSettings",
     rpcSetMethod : "setSettings",
 
+    getButtonItems : function() {
+        var me = this;
+        var items = me.callParent(arguments);
+        items.push({
+            id       : me.getId() + "-omvsvn",
+            xtype    : "button",
+            text     : _("Install OMV from svn"),
+            icon     : "images/add.png",
+            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
+            disabled : true,
+            scope    : me,
+            handler  : Ext.Function.bind(me.onOmvSvnButton, me, [ me ])
+        });
+        return items;
+    },
+
     getFormItems    : function() {
         var me = this;
         return [{
@@ -75,12 +91,12 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 xtype      : "textfield",
                 name       : "gitname",
                 fieldLabel : _("Name"),
-                allowBlank : false
+                allowBlank : true
             },{
                 xtype      : "textfield",
                 name       : "gitemail",
                 fieldLabel : _("Email"),
-                allowBlank : false
+                allowBlank : true
             },{
                 xtype   : "button",
                 name    : "gitconfig",
@@ -99,12 +115,12 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 xtype      : "textfield",
                 name       : "ghusername",
                 fieldLabel : _("Username"),
-                allowBlank : false
+                allowBlank : true
             },{
                 xtype      : "passwordfield",
                 name       : "ghpassword",
                 fieldLabel : _("Password"),
-                allowBlank : false
+                allowBlank : true
             },{
                 xtype   : "button",
                 name    : "ghconfig",
@@ -123,12 +139,12 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 xtype      : "textfield",
                 name       : "txhostname",
                 fieldLabel : _("Hostname"),
-                allowBlank : false
+                allowBlank : true
             },{
                 xtype      : "passwordfield",
                 name       : "txpassword",
                 fieldLabel : _("Password"),
-                allowBlank : false
+                allowBlank : true
             },{
                 xtype      : "textfield",
                 name       : "txtoken",
@@ -138,7 +154,7 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 xtype      : "textfield",
                 name       : "txusername",
                 fieldLabel : _("Username"),
-                allowBlank : false
+                allowBlank : true
             },{
                 xtype   : "button",
                 name    : "txconfig",
@@ -179,6 +195,32 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 OMV.MessageBox.hide();
             }
         });
+    },
+
+    onOmvSvnButton: function() {
+        var me = this;
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : _("Installing OMV from svn ..."),
+            rpcService      : "Developer",
+            rpcMethod       : "doOmvSvn",
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
+            }
+        });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
     }
 });
 

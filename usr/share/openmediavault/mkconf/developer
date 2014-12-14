@@ -281,6 +281,40 @@ dchr()
     head -n 1 debian/changelog
 }
 
+omvsvn()
+{
+    echo "Installing OMV svn ..."
+    export LANG=C
+    export DEBIAN_FRONTEND=noninteractive
+
+    omv_code="openmediavault-code"
+
+    if [ ! -d "${sfpath}${omv_code}" ]; then
+        cd ${sfpath}
+        svn checkout svn://svn.code.sf.net/p/openmediavault/code/trunk ${omv_code}
+    else
+        cd ${sfpath}${omv_code}
+        svn update
+    fi
+
+    # get revision
+    cd ${sfpath}${omv_code}
+    revision=$(svn info | grep "Revision:" | cut -f2 -d":" | tr -d " ")
+    echo "Revision ${revision}..."
+
+    # get version
+    cd ${sfpath}${omv_code}/deb/openmediavault
+    version=$(head -n 1 debian/changelog | cut -f2 -d"(" | cut -f1 -d")")
+    echo "Version ${version}"
+
+    # make svn package
+    fakeroot debian/rules clean binary
+    mv -v ../openmediavault_${version}_all.deb ../openmediavault_${version}-svn${revision}_all.deb
+
+    dpkg -i ../openmediavault_${version}-svn${revision}_all.deb
+    apt-get --yes --force-yes --fix-missing -f install
+}
+
 case ${command} in
     update)
         initial
@@ -372,6 +406,10 @@ case ${command} in
         initial
         fixperms
         dchr
+    ;;
+
+    omvsvn)
+        omvsvn
     ;;
 
     *)
