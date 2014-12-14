@@ -55,7 +55,6 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
             text     : _("Install OMV from svn"),
             icon     : "images/add.png",
             iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            disabled : true,
             scope    : me,
             handler  : Ext.Function.bind(me.onOmvSvnButton, me, [ me ])
         });
