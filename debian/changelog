@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.5) stable; urgency=low
+
+  * Add slash to stored code path
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 16 Dec 2014 06:09:37 -0600
+
 openmediavault-developer (1.1.4) stable; urgency=low
 
   * Add install omv from svn
