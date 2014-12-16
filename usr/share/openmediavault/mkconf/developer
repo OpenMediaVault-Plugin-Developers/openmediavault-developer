@@ -44,9 +44,11 @@ if [ -z "${sfpath}" ]; then
     exit 1
 fi
 
+packagepath="${sfpath}/${package}"
+
 initial()
 {
-    if [ ! -d "${sfpath}${package}" ]; then
+    if [ ! -d "${packagepath}" ]; then
         echo "Cloning ${package} from github to ${sfpath} ..."
         cd ${sfpath}
         git clone https://github.com/OpenMediaVault-Plugin-Developers/${package}.git
@@ -55,9 +57,9 @@ initial()
 
 remove()
 {
-    if [ -d "${sfpath}${package}" ]; then
+    if [ -d "${packagepath}" ]; then
         echo "Removing old files ..."
-        rm -rfv ${sfpath}${package}
+        rm -rfv ${packagepath}
     fi
 }
 
@@ -67,19 +69,19 @@ build()
     export LANG=C
     rm -f ${temppath}${package}*.deb
     rm -rf ${temppath}${package}
-    cp -r ${sfpath}${package} ${temppath}
+    cp -r ${packagepath} ${temppath}
     cd ${temppath}${package}
     fakeroot debian/rules clean binary 2>&1
-    rm -f ${sfpath}${package}*.deb
-    cp -f ${temppath}${package}*.deb ${sfpath}
+    rm -f ${packagepath}*.deb
+    cp -f ${temppath}${package}*.deb ${sfpath}/
     rm -f ${temppath}${package}*.deb
     rm -rf ${temppath}${package}
-    chown ${owner}:users ${sfpath}${package}*.deb
+    chown ${owner}:users ${packagepath}*.deb
 }
 
 update()
 {
-    cd ${sfpath}${package}
+    cd ${packagepath}
     echo "Updating ${package} from github..."
     git pull
     git status
@@ -93,7 +95,7 @@ upload()
     username=$(omv_config_get "${xpathlocation}/username")
     password=$(omv_config_get "${xpathlocation}/password")
 
-    search="${sfpath}${package}_*"
+    search="${packagepath}_*"
     version=`ls ${search}`
 
     echo "Uploading ${version} to ${remotehost} ..."
@@ -103,7 +105,7 @@ upload()
 tx()
 {
     repos="/tmp/repos"
-    tx_dir="${sfpath}.tx"
+    tx_dir="${sfpath}/.tx"
     tx_file="${tx_dir}/config"
 
     mkdir -p "${tx_dir}"
@@ -136,13 +138,13 @@ moveto()
 {
     rm -rf ${temppath}${package}
     rm -rf ${temppath}${txpath}
-    cp -r ${sfpath}${package} ${temppath}
-    cp -r ${sfpath}${txpath} ${temppath}
+    cp -r ${packagepath} ${temppath}
+    cp -r ${sfpath}/${txpath} ${temppath}
 }
 
 movefrom()
 {
-    cp -rf ${temppath}${package} ${sfpath}
+    cp -rf ${temppath}${package} ${sfpath}/
     rm -rf ${temppath}${package}
 }
 
@@ -172,7 +174,7 @@ pullpo()
 
 install()
 {
-    search="${sfpath}${package}_*"
+    search="${packagepath}_*"
     version=`ls ${search}`
 
     echo "Installing ${package} ..."
@@ -192,52 +194,52 @@ fixperms()
     varlibcronpath="/var/lib/openmediavault/cron.d/"
     echo "Fixing permissions..."
 
-    find "${sfpath}${package}" -type f -exec chmod 644 {} +
-    find "${sfpath}${package}" -type d -exec chmod 755 {} +
+    find "${packagepath}" -type f -exec chmod 644 {} +
+    find "${packagepath}" -type d -exec chmod 755 {} +
 
-    find "${sfpath}${package}" -type f -name "*.sh" -exec chmod 755 {} +
+    find "${packagepath}" -type f -name "*.sh" -exec chmod 755 {} +
 
-    if [ -d "${sfpath}${package}${mkconfpath}" ]; then
-        chmod -R 755 "${sfpath}${package}${mkconfpath}"/*
+    if [ -d "${packagepath}${mkconfpath}" ]; then
+        chmod -R 755 "${packagepath}${mkconfpath}"/*
     fi
 
-    if [ -d "${sfpath}${package}${localbinpath}" ]; then
-        chmod 755 "${sfpath}${package}${localbinpath}"/*
+    if [ -d "${packagepath}${localbinpath}" ]; then
+        chmod 755 "${packagepath}${localbinpath}"/*
     fi
 
-    if [ -d "${sfpath}${package}${etcinitpath}" ]; then
-        chmod 755 "${sfpath}${package}${etcinitpath}"/*
+    if [ -d "${packagepath}${etcinitpath}" ]; then
+        chmod 755 "${packagepath}${etcinitpath}"/*
     fi
 
-    if [ -d "${sfpath}${package}${etcsupportpath}" ]; then
-        chmod 755 "${sfpath}${package}${etcsupportpath}"/*
+    if [ -d "${packagepath}${etcsupportpath}" ]; then
+        chmod 755 "${packagepath}${etcsupportpath}"/*
     fi
 
-    if [ -d "${sfpath}${package}${sysinfopath}" ]; then
-        chmod 755 "${sfpath}${package}${sysinfopath}"/*
+    if [ -d "${packagepath}${sysinfopath}" ]; then
+        chmod 755 "${packagepath}${sysinfopath}"/*
     fi
 
-    if [ -d "${sfpath}${package}${varlibcronpath}" ]; then
-        chmod 755 "${sfpath}${package}${varlibcronpath}"/*
+    if [ -d "${packagepath}${varlibcronpath}" ]; then
+        chmod 755 "${packagepath}${varlibcronpath}"/*
     fi
 
-    chmod 755 "${sfpath}${package}/debian/rules"
-    if [ -f "${sfpath}${package}/debian/${plugin}.init" ]; then
-        chmod 755 "${sfpath}${package}/debian/${plugin}.init"
+    chmod 755 "${packagepath}/debian/rules"
+    if [ -f "${packagepath}/debian/${plugin}.init" ]; then
+        chmod 755 "${packagepath}/debian/${plugin}.init"
     fi
-    chown -R ${owner}:users "${sfpath}${package}"
+    chown -R ${owner}:users "${packagepath}"
 }
 
 gitadd()
 {
-    cd ${sfpath}${package}
+    cd ${packagepath}
     echo "Adding all files ..."
     git add * 2>&1
 }
 
 gitcommit()
 {
-    cd ${sfpath}${package}
+    cd ${packagepath}
     git commit -m "${commit}" 2>&1
 }
 
@@ -248,7 +250,7 @@ gitpush()
         exit 1
     fi
 
-    cd ${sfpath}${package}
+    cd ${packagepath}
     git push 2>&1
 }
 
@@ -256,7 +258,7 @@ dchi()
 {
     export DEBEMAIL="plugins@omv-extras.org"
     export DEBFULLNAME="OpenMediaVault Plugin Developers"
-    cd ${sfpath}${package}
+    cd ${packagepath}
     echo "Increment version ..."
     dch -U --no-auto-nmu -i "${commit}" 2>&1
     head -n 1 debian/changelog
@@ -266,7 +268,7 @@ dcha()
 {
     export DEBEMAIL="plugins@omv-extras.org"
     export DEBFULLNAME="OpenMediaVault Plugin Developers"
-    cd ${sfpath}${package}
+    cd ${packagepath}
     echo "Add changelog line ..."
     dch -U --no-auto-nmu -a "${commit}" 2>&1
 }
@@ -275,7 +277,7 @@ dchr()
 {
     export DEBEMAIL="plugins@omv-extras.org"
     export DEBFULLNAME="OpenMediaVault Plugin Developers"
-    cd ${sfpath}${package}
+    cd ${packagepath}
     echo "Release version ..."
     dch -U --no-auto-nmu -r "release" 2>&1
     head -n 1 debian/changelog
@@ -287,30 +289,31 @@ omvsvn()
     export LANG=C
     export DEBIAN_FRONTEND=noninteractive
 
-    omv_code="openmediavault-code"
+    omvcode="openmediavault-code"
+    omvcodepath="${sfpath}/${omvcode}"
 
-    if [ ! -d "${sfpath}${omv_code}" ]; then
+    if [ ! -d "${omvcodepath}" ]; then
         cd ${sfpath}
-        svn checkout svn://svn.code.sf.net/p/openmediavault/code/trunk ${omv_code}
+        svn checkout svn://svn.code.sf.net/p/openmediavault/code/trunk ${omvcode}
     else
-        cd ${sfpath}${omv_code}
+        cd ${omvcodepath}
         svn update
     fi
 
     # get revision
-    cd ${sfpath}${omv_code}
+    cd ${omvcodepath}
     revision=$(svn info | grep "Revision:" | cut -f2 -d":" | tr -d " ")
     echo "Revision ${revision}..."
 
     # get version
-    cd ${sfpath}${omv_code}/deb/openmediavault
+    cd ${omvcodepath}/deb/openmediavault
     version=$(head -n 1 debian/changelog | cut -f2 -d"(" | cut -f1 -d")")
     echo "Version ${version}"
 
     # copy files to temp path to build package
     rm -rf ${temppath}openmediavault
-    cp -rf ${sfpath}${omv_code}/deb/openmediavault ${temppath}
-    cp -f  ${sfpath}${omv_code}/deb/openmediavault.mk ${temppath}
+    cp -rf ${omvcodepath}/deb/openmediavault ${temppath}
+    cp -f  ${omvcodepath}/deb/openmediavault.mk ${temppath}
 
     # make svn package
     cd ${temppath}openmediavault
@@ -318,7 +321,7 @@ omvsvn()
     fakeroot debian/rules clean binary
     mv -v ../openmediavault_${version}_all.deb ${sfpath}openmediavault_${version}-svn${revision}_all.deb
 
-    dpkg -i ${sfpath}openmediavault_${version}-svn${revision}_all.deb
+    dpkg -i ${sfpath}/openmediavault_${version}-svn${revision}_all.deb
     apt-get --yes --force-yes --fix-missing -f install
 }
 
