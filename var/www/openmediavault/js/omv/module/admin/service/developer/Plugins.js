@@ -514,6 +514,9 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 exception : function(wnd, error) {
                     OMV.MessageBox.error(null, error);
                     wnd.setButtonDisabled("close", false);
+                },
+                close     : function() {
+                    document.location.reload();
                 }
             }
         });
