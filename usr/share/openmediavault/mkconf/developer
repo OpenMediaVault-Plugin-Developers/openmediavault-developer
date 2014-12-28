@@ -190,6 +190,7 @@ fixperms()
     localbinpath="/usr/local/bin"
     etcinitpath="/etc/init.d/"
     etcsupportpath="/etc/omv-support.d/"
+    etcnetworkpath="/etc/network/if-up.d/"
     sysinfopath="/usr/share/openmediavault/sysinfo/modules.d/"
     varlibcronpath="/var/lib/openmediavault/cron.d/"
     echo "Fixing permissions..."
@@ -213,6 +214,10 @@ fixperms()
 
     if [ -d "${packagepath}${etcsupportpath}" ]; then
         chmod 755 "${packagepath}${etcsupportpath}"/*
+    fi
+
+    if [ -d "${packagepath}${etcnetworkpath}" ]; then
+        chmod 755 "${packagepath}${etcnetworkpath}"/*
     fi
 
     if [ -d "${packagepath}${sysinfopath}" ]; then
