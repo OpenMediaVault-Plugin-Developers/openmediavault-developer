@@ -1,3 +1,11 @@
+openmediavault-developer (1.1.9) stable; urgency=low
+
+  * Convert buttons to menu buttons
+  * Add menu item for showing changelog
+  * Add menu item for showing git status
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 29 Dec 2014 10:09:56 -0600
+
 openmediavault-developer (1.1.8) stable; urgency=low
 
   * Add folder exists column

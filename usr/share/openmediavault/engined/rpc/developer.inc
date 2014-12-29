@@ -29,7 +29,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 {
     private static $commands = array("build","update","upload","buildpot","pushpot",
         "pullpo","install","reset","tx","gh","git","add","commit","push",
-        "dchi","dcha","dchr");
+        "dchi","dcha","dchr","changelog","status");
 
     private static $plugins = array("acestream","active-directory","anacron","aufs",
         "autoshutdown","backup","btsync","calibre","couchpotato","cups","deluge",
@@ -245,14 +245,14 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             $pluginPath = sprintf("%s/openmediavault-%s", $sfPath, $plugin);
             $exists = file_exists($pluginPath);
             $version = "n/a";
-            
+
             if ($exists)
             {
                 $f = fopen(sprintf("%s/debian/changelog", $pluginPath), 'r');
                 $version = fgets($f);
                 fclose($f);
             }
-            
+
             $objects[] = array(
                 "name"     => $plugin,
                 "fullname" => sprintf("openmediavault-%s", $plugin),

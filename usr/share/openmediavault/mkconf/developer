@@ -259,6 +259,12 @@ gitpush()
     git push 2>&1
 }
 
+gitstatus()
+{
+    cd ${packagepath}
+    git status 2>&1
+}
+
 dchi()
 {
     export DEBEMAIL="plugins@omv-extras.org"
@@ -328,6 +334,13 @@ omvsvn()
 
     dpkg -i ${sfpath}/openmediavault_${version}-svn${revision}_all.deb
     apt-get --yes --force-yes --fix-missing -f install
+}
+
+changelog()
+{
+    export LANG=C
+    cd ${packagepath}
+    cat debian/changelog
 }
 
 case ${command} in
@@ -406,6 +419,12 @@ case ${command} in
         gitpush
     ;;
 
+    status)
+        initial
+        fixperms
+        gitstatus
+    ;;
+
     dchi)
         fixperms
         dchi
@@ -425,6 +444,11 @@ case ${command} in
 
     omvsvn)
         omvsvn
+    ;;
+
+    changelog)
+        initial
+        changelog
     ;;
 
     *)

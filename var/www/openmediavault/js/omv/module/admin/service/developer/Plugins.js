@@ -99,7 +99,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                         { name : "fullname", type : "string" },
                         { name : "url", type : "string" },
                         { name : "exists", type : "boolean" },
-                        { name : "version", type : "string" },
+                        { name : "version", type : "string" }
                     ]
                 }),
                 proxy    : {
@@ -119,49 +119,53 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         var items = me.callParent(arguments);
 
         Ext.Array.insert(items, 0, [{
-            id       : me.getId() + "-updateall",
-            xtype    : "button",
-            text     : _("Update All"),
-            icon     : "images/refresh.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onUpdateButton, me, [ "all" ]),
-            scope    : me
+            xtype : "button",
+            text  : _("GitHub"),
+            icon  : "images/refresh.png",
+            scope : this,
+            menu  : [{
+                text     : _("Update All"),
+                icon     : "images/refresh.png",
+                handler  : Ext.Function.bind(me.onUpdateButton, me, [ "all" ]),
+                disabled : false
+            },{
+                text     : _("Update"),
+                icon     : "images/refresh.png",
+                handler  : Ext.Function.bind(me.onUpdateButton, me, [ "" ]),
+                disabled : true,
+                selectionConfig : {
+                    minSelections : 1,
+                    maxSelections : 1
+                }
+            },{
+                text     : _("Reset"),
+                icon     : "images/reboot.png",
+                handler  : Ext.Function.bind(me.onResetButton, me, [ me ]),
+                disabled : true,
+                selectionConfig : {
+                    minSelections : 1,
+                    maxSelections : 1
+                }
+            }]
         },{
-            id       : me.getId() + "-update",
             xtype    : "button",
-            text     : _("Update"),
-            icon     : "images/refresh.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onUpdateButton, me, [ "" ]),
-            scope    : me,
-            disabled : true
-        },{
-            id       : me.getId() + "-reset",
-            xtype    : "button",
-            text     : _("Reset"),
-            icon     : "images/reboot.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onResetButton, me, [ me ]),
-            scope    : me,
-            disabled : true
-        },{
-            id       : me.getId() + "-build",
-            xtype    : "button",
-            text     : _("Build"),
+            text     : _("Package"),
+            scope    : this,
             icon     : "images/software.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onBuildButton, me, [ me ]),
-            scope    : me,
-            disabled : true
-        },{
-            id       : me.getId() + "-install",
-            xtype    : "button",
-            text     : _("Install"),
-            icon     : "images/add.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onInstallButton, me, [ me ]),
-            scope    : me,
-            disabled : true
+            disabled : true,
+            selectionConfig : {
+                minSelections : 1,
+                maxSelections : 1
+            },
+            menu     : [{
+                text     : _("Build"),
+                icon     : "images/software.png",
+                handler  : Ext.Function.bind(me.onBuildButton, me, [ me ])
+            },{
+                text     : _("Install"),
+                icon     : "images/add.png",
+                handler  : Ext.Function.bind(me.onInstallButton, me, [ me ])
+            }]
         },{
             id       : me.getId() + "-upload",
             xtype    : "button",
@@ -170,7 +174,11 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
             handler  : Ext.Function.bind(me.onUploadButton, me, [ me ]),
             scope    : me,
-            disabled : true
+            disabled : true,
+            selectionConfig : {
+                minSelections : 1,
+                maxSelections : 1
+            }
         },{
             id            : me.getId() + "-location",
             xtype         : "combo",
@@ -203,130 +211,85 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 }
             }
         },{
-            id       : me.getId() + "-buildpot",
             xtype    : "button",
-            text     : _("Build POT"),
-            icon     : "images/software.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onTxButton, me, [ "buildpot" ]),
-            scope    : me,
-            disabled : true
-        },{
-            id       : me.getId() + "-pushpot",
-            xtype    : "button",
-            text     : _("Push POT"),
-            icon     : "images/upload.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onTxButton, me, [ "pushpot" ]),
-            scope    : me,
-            disabled : true
-        },{
-            id       : me.getId() + "-pullpo",
-            xtype    : "button",
-            text     : _("Pull PO"),
-            icon     : "images/download.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onTxButton, me, [ "pullpo" ]),
-            scope    : me,
-            disabled : true
-        },{
-            id       : me.getId() + "-gitadd",
-            xtype    : "button",
-            text     : _("git add"),
+            text     : _("Transifex"),
+            scope    : this,
             icon     : "images/add.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onGitButton, me, [ "add" ]),
-            scope    : me,
-            disabled : true
+            disabled : true,
+            selectionConfig : {
+                minSelections : 1,
+                maxSelections : 1
+            },
+            menu     : [{
+                text     : _("Build POT"),
+                icon     : "images/software.png",
+                handler  : Ext.Function.bind(me.onTxButton, me, [ "buildpot" ])
+            },{
+                text     : _("Push POT"),
+                icon     : "images/upload.png",
+                handler  : Ext.Function.bind(me.onTxButton, me, [ "pushpot" ])
+            },{
+                text     : _("Pull PO"),
+                icon     : "images/download.png",
+                handler  : Ext.Function.bind(me.onTxButton, me, [ "pullpo" ])
+            }]
         },{
-            id       : me.getId() + "-gitcommit",
             xtype    : "button",
-            text     : _("git commit"),
-            icon     : "images/software.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onGitButton, me, [ "commit" ]),
-            scope    : me,
-            disabled : true
-        },{
-            id       : me.getId() + "-gitpush",
-            xtype    : "button",
-            text     : _("git push"),
-            icon     : "images/upload.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onGitButton, me, [ "push" ]),
-            scope    : me,
-            disabled : true
-        },{
-            id       : me.getId() + "-dchi",
-            xtype    : "button",
-            text     : _("dch -i"),
-            icon     : "images/arrow-up.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onDchButton, me, [ "dchi" ]),
-            scope    : me,
-            disabled : true
-        },{
-            id       : me.getId() + "-dcha",
-            xtype    : "button",
-            text     : _("dch -a"),
+            text     : _("Git"),
+            scope    : this,
             icon     : "images/add.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onDchButton, me, [ "dcha" ]),
-            scope    : me,
-            disabled : true
+            disabled : true,
+            selectionConfig : {
+                minSelections : 1,
+                maxSelections : 1
+            },
+            menu     : [{
+                text     : _("git add"),
+                icon     : "images/add.png",
+                handler  : Ext.Function.bind(me.onGitButton, me, [ "add" ])
+            },{
+                text     : _("git commit"),
+                icon     : "images/software.png",
+                handler  : Ext.Function.bind(me.onGitButton, me, [ "commit" ])
+            },{
+                text     : _("git push"),
+                icon     : "images/upload.png",
+                handler  : Ext.Function.bind(me.onGitButton, me, [ "push" ])
+            },{
+                text     : _("git status"),
+                icon     : "images/pulse.png",
+                handler  : Ext.Function.bind(me.onGitButton, me, [ "status" ])
+            }]
         },{
-            id       : me.getId() + "-dchr",
+            id       : me.getId() + "-dch",
             xtype    : "button",
-            text     : _("dch -r"),
-            icon     : "images/software.png",
-            iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
-            handler  : Ext.Function.bind(me.onDchButton, me, [ "dchr" ]),
-            scope    : me,
-            disabled : true
+            text     : _("Changelog"),
+            scope    : this,
+            icon     : "images/changelog.png",
+            disabled : true,
+            selectionConfig : {
+                minSelections : 1,
+                maxSelections : 1
+            },
+            menu     : [{
+                text     : _("dch -i"),
+                icon     : "images/arrow-up.png",
+                handler  : Ext.Function.bind(me.onDchButton, me, [ "dchi" ])
+            },{
+                text     : _("dch -a"),
+                icon     : "images/add.png",
+                handler  : Ext.Function.bind(me.onDchButton, me, [ "dcha" ])
+            },{
+                text     : _("dch -r"),
+                icon     : "images/software.png",
+                handler  : Ext.Function.bind(me.onDchButton, me, [ "dchr" ])
+            },{
+                text     : _("Show changelog"),
+                icon     : "images/changelog.png",
+                handler  : Ext.Function.bind(me.onChangelogButton, me, [ me ])
+            }]
         }]);
         return items;
-    },
-
-    onSelectionChange: function(model, records) {
-        var me = this;
-        me.callParent(arguments);
-        // Process additional buttons.
-        var tbarBtnDisabled = {
-            "update"    : true,
-            "reset"     : true,
-            "build"     : true,
-            "upload"    : true,
-            "buildpot"  : true,
-            "pushpot"   : true,
-            "pullpo"    : true,
-            "install"   : true,
-            "gitadd"    : true,
-            "gitcommit" : true,
-            "gitpush"   : true,
-            "dchi"      : true,
-            "dcha"      : true,
-            "dchr"      : true
-        };
-        if(records.length == 1) {
-            tbarBtnDisabled["update"] = false;
-            tbarBtnDisabled["reset"] = false;
-            tbarBtnDisabled["build"] = false;
-            tbarBtnDisabled["upload"] = false;
-            tbarBtnDisabled["buildpot"] = false;
-            tbarBtnDisabled["pushpot"] = false;
-            tbarBtnDisabled["pullpo"] = false;
-            tbarBtnDisabled["install"] = false;
-            tbarBtnDisabled["gitadd"] = false;
-            tbarBtnDisabled["gitcommit"] = false;
-            tbarBtnDisabled["gitpush"] = false;
-            tbarBtnDisabled["dchi"] = false;
-            tbarBtnDisabled["dcha"] = false;
-            tbarBtnDisabled["dchr"] = false;
-        }
-        // Update the button controls.
-        Ext.Object.each(tbarBtnDisabled, function(key, value) {
-            this.setToolbarButtonDisabled(key, value);
-        }, me);
     },
 
     onUpdateButton : function(plugin) {
@@ -420,6 +383,38 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             rpcMethod       : "doCommand",
             rpcParams       : {
                 "command" : "build",
+                "plugin"  : record.get("name")
+            },
+            rpcIgnoreErrors : true,
+            hideStartButton : true,
+            hideStopButton  : true,
+            listeners       : {
+                scope     : me,
+                finish    : function(wnd, response) {
+                    wnd.appendValue(_("Done..."));
+                    wnd.setButtonDisabled("close", false);
+                },
+                exception : function(wnd, error) {
+                    OMV.MessageBox.error(null, error);
+                    wnd.setButtonDisabled("close", false);
+                }
+            }
+        });
+        wnd.setButtonDisabled("close", true);
+        wnd.show();
+        wnd.start();
+    },
+
+    onChangelogButton : function() {
+        var me = this;
+        var record = me.getSelected();
+        var title = _("Changelog for ") + record.get("fullname") + " ...";
+        var wnd = Ext.create("OMV.window.Execute", {
+            title           : title,
+            rpcService      : "Developer",
+            rpcMethod       : "doCommand",
+            rpcParams       : {
+                "command" : "changelog",
                 "plugin"  : record.get("name")
             },
             rpcIgnoreErrors : true,
@@ -563,6 +558,9 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             case "commit":
                 title = _("Creating commit ...");
                 commit = prompt("Enter commit message", "");
+                break;
+            case "status":
+                title = _("Status ...");
                 break;
             default:
                 title = _("Pushing files to Github ...");
