@@ -121,7 +121,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         Ext.Array.insert(items, 0, [{
             xtype : "button",
             text  : _("GitHub"),
-            icon  : "images/refresh.png",
+            icon  : "images/folder.png",
             scope : this,
             menu  : [{
                 text     : _("Update All"),
@@ -214,7 +214,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             xtype    : "button",
             text     : _("Transifex"),
             scope    : this,
-            icon     : "images/add.png",
+            icon     : "images/access.png",
             disabled : true,
             selectionConfig : {
                 minSelections : 1,
@@ -237,7 +237,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             xtype    : "button",
             text     : _("Git"),
             scope    : this,
-            icon     : "images/add.png",
+            icon     : "images/logs.png",
             disabled : true,
             selectionConfig : {
                 minSelections : 1,
