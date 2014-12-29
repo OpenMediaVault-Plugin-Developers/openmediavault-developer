@@ -1,3 +1,10 @@
+openmediavault-developer (1.1.8) stable; urgency=low
+
+  * Add folder exists column
+  * Add version column
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 29 Dec 2014 08:47:39 -0600
+
 openmediavault-developer (1.1.7) stable; urgency=low
 
   * Fix permissions

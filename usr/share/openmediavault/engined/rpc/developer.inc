@@ -217,14 +217,48 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             }
         }');
 
+        // Get configuration object
+        $object = $xmlConfig->get($this->getXPath());
+        if (is_null($object))
+        {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXPath()
+            );
+        }
+
+        unset($object['locations']);
+
+        $sfPath = OMVRpc::exec(
+            "ShareMgmt",
+            "getPath",
+            array(
+                "uuid" => $object['sharedfolderref']
+            ),
+            $context
+        );
+
         $objects = array();
 
         foreach (self::$plugins as $plugin)
         {
+            $pluginPath = sprintf("%s/openmediavault-%s", $sfPath, $plugin);
+            $exists = file_exists($pluginPath);
+            $version = "n/a";
+            
+            if ($exists)
+            {
+                $f = fopen(sprintf("%s/debian/changelog", $pluginPath), 'r');
+                $version = fgets($f);
+                fclose($f);
+            }
+            
             $objects[] = array(
                 "name"     => $plugin,
                 "fullname" => sprintf("openmediavault-%s", $plugin),
-                "url"      => sprintf("https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-%s", $plugin)
+                "url"      => sprintf("https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-%s", $plugin),
+                "exists"   => $exists,
+                "version"  => $version
             );
         }
 
@@ -659,7 +693,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             exit(1);
         }
     }
-    
+
     public function doOmvSvn($params, $context)
     {
         // Validate the RPC caller context.
@@ -690,7 +724,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
             exit(1);
         }
-    }    
+    }
 }
 
 // Register the RPC service.
