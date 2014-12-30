@@ -229,15 +229,17 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
         unset($object['locations']);
 
-        $sfPath = OMVRpc::exec(
-            "ShareMgmt",
-            "getPath",
-            array(
-                "uuid" => $object['sharedfolderref']
-            ),
-            $context
-        );
-
+        if (!empty($object['sharedfolderref']))
+        {
+            $sfPath = OMVRpc::exec(
+                "ShareMgmt",
+                "getPath",
+                array(
+                    "uuid" => $object['sharedfolderref']
+                ),
+                $context
+            );
+        }
         $objects = array();
 
         foreach (self::$plugins as $plugin)
