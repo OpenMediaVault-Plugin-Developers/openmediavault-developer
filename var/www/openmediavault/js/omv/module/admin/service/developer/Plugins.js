@@ -46,6 +46,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
     hideEditButton    : true,
     hideDeleteButton  : true,
     autoReload        : false,
+    rememberSelected  : true,
     stateful          : true,
     stateId           : "b317a72d-1804-1632-a31b-1f48f0ea6aae",
     columns           : [{
