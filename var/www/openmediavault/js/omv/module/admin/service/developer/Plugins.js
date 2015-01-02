@@ -109,7 +109,12 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                         service : "Developer",
                         method  : "getPluginList"
                     }
-                }
+                },
+                remoteSort : true,
+                sorters    : [{
+                    direction : "ASC",
+                    property  : "name"
+                }]
             })
         });
         me.callParent(arguments);

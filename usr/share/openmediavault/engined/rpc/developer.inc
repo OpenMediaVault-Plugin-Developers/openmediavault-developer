@@ -41,8 +41,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "remotenfs-share","remoteshare","roundcube","rsnapshot","sabnzbd","sensors",
         "shellinabox","sickbeard","skeleton","snapraid","sonarr","subsonic",
         "subversion","supportinfo","teamspeak3","themes","transmissionbt",
-        "unionfilesystems","vdr","virtualbox","virtualhosts","wakealarm","webdav",
-        "website","wol","wordpress","zfs");
+        "unionfilesystems","vdr","vdr-extras","virtualbox","virtualhosts","wakealarm",
+        "webdav","website","wol","wordpress","zfs");
 
     const LOCATION = 'location';
 
