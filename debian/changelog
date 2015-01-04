@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.12) stable; urgency=low
+
+  * Fix control character typo
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 04 Jan 2015 17:28:15 -0600
+
 openmediavault-developer (1.1.11) stable; urgency=low
 
   * Fix typo
