@@ -332,7 +332,7 @@ omvsvn()
     fakeroot debian/rules clean binary
     mv -v ../openmediavault_${version}_all.deb ${sfpath}openmediavault_${version}-svn${revision}_all.deb
 
-    dpkg -i ${sfpath}/openmediavault_${version}-svn${revision}_all.deb
+    dpkg -i -–force-confold ${sfpath}/openmediavault_${version}-svn${revision}_all.deb
     apt-get --yes --force-yes --fix-missing -f install
 }
 

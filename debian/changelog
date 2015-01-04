@@ -2,6 +2,7 @@ openmediavault-developer (1.1.10) stable; urgency=low
 
   * Set rememberSelected flag
   * add vdr-extras
+  * Add force-confold flag to omv svn install
 
  -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 01 Jan 2015 07:48:13 -0600
 
