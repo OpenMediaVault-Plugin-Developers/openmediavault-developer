@@ -334,6 +334,9 @@ omvsvn()
 
     dpkg --force-confold -i ${sfpath}/openmediavault_${version}-svn${revision}_all.deb
     apt-get --yes --force-yes --fix-missing -f install
+
+    echo "Purging internal cache ..."
+    omv_purge_internal_cache
 }
 
 changelog()

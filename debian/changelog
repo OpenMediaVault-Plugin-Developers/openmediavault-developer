@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.13) stable; urgency=low
+
+  * Purge js cache when installing omv svn
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 05 Jan 2015 15:42:09 -0600
+
 openmediavault-developer (1.1.12) stable; urgency=low
 
   * Fix control character typo

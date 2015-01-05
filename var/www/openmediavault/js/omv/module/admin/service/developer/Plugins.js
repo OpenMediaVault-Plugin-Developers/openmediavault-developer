@@ -333,7 +333,8 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                     wnd.setButtonDisabled("close", false);
                 },
                 close     : function() {
-                    this.doReload();
+                    // TODO - add back when grid save selection working
+                    // this.doReload();
                 }
             }
         });
@@ -370,7 +371,8 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                     wnd.setButtonDisabled("close", false);
                 },
                 close     : function() {
-                    this.doReload();
+                    // TODO - add back when grid save selection working
+                    // this.doReload();
                 }
             }
         });
@@ -543,7 +545,8 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                     wnd.setButtonDisabled("close", false);
                 },
                 close     : function() {
-                    document.location.reload();
+                    // TODO - add back when grid save selection working
+                    // document.location.reload();
                 }
             }
         });
@@ -640,7 +643,8 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                     wnd.setButtonDisabled("close", false);
                 },
                 close     : function() {
-                    this.doReload();
+                    // TODO - add back when grid save selection working
+                    // this.doReload();
                 }
             }
         });
