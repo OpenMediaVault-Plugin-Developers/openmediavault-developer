@@ -93,9 +93,8 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             store : Ext.create("OMV.data.Store", {
                 autoLoad : true,
                 model    : OMV.data.Model.createImplicit({
-                    idProperty : "uuid",
+                    idProperty : "name",
                     fields     : [
-                        { name : "uuid", type : "string" },
                         { name : "name", type : "string" },
                         { name : "fullname", type : "string" },
                         { name : "url", type : "string" },
@@ -333,8 +332,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                     wnd.setButtonDisabled("close", false);
                 },
                 close     : function() {
-                    // TODO - add back when grid save selection working
-                    // this.doReload();
+                    this.doReload();
                 }
             }
         });
@@ -371,8 +369,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                     wnd.setButtonDisabled("close", false);
                 },
                 close     : function() {
-                    // TODO - add back when grid save selection working
-                    // this.doReload();
+                    this.doReload();
                 }
             }
         });
@@ -545,8 +542,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                     wnd.setButtonDisabled("close", false);
                 },
                 close     : function() {
-                    // TODO - add back when grid save selection working
-                    // document.location.reload();
+                    document.location.reload();
                 }
             }
         });
@@ -643,8 +639,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                     wnd.setButtonDisabled("close", false);
                 },
                 close     : function() {
-                    // TODO - add back when grid save selection working
-                    // this.doReload();
+                    this.doReload();
                 }
             }
         });
