@@ -42,7 +42,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "shellinabox","sickbeard","skeleton","snapraid","sonarr","subsonic",
         "subversion","supportinfo","teamspeak3","themes","transmissionbt",
         "unionfilesystems","vdr","vdr-extras","virtualbox","virtualhosts","wakealarm",
-        "webdav","website","wol","wordpress","zfs");
+        "webdav","website","websites","wol","wordpress","zfs");
 
     const LOCATION = 'location';
 
