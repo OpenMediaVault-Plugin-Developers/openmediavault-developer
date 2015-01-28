@@ -71,7 +71,12 @@ build()
     rm -rf ${temppath}${package}
     cp -r ${packagepath} ${temppath}
     cd ${temppath}${package}
-    fakeroot debian/rules clean binary 2>&1
+    if [ -f "${temppath}${package}/control" ]; then
+        equivs-build control 2>&1
+        mv ${temppath}${package}/*.deb ${temppath}
+    else
+        fakeroot debian/rules clean binary 2>&1
+    fi
     rm -f ${packagepath}*.deb
     cp -f ${temppath}${package}*.deb ${sfpath}/
     rm -f ${temppath}${package}*.deb
@@ -229,7 +234,10 @@ fixperms()
         chmod 755 "${packagepath}${varlibcronpath}"/*
     fi
 
-    chmod 755 "${packagepath}/debian/rules"
+    if [ -f "${packagepath}/debian/rules" ]; then
+        chmod 755 "${packagepath}/debian/rules"
+    fi
+
     if [ -f "${packagepath}/debian/${plugin}.init" ]; then
         chmod 755 "${packagepath}/debian/${plugin}.init"
     fi
@@ -271,9 +279,13 @@ dchi()
     export DEBEMAIL="plugins@omv-extras.org"
     export DEBFULLNAME="OpenMediaVault Plugin Developers"
     cd ${packagepath}
-    echo "Increment version ..."
-    dch -U --no-auto-nmu -i "${commit}" 2>&1
-    head -n 1 debian/changelog
+    if [ -f "debian/changelog" ]; then
+        echo "Increment version ..."
+        dch -U --no-auto-nmu -i "${commit}" 2>&1
+        head -n 1 debian/changelog
+    else
+        echo "No changelog found."
+    fi
 }
 
 dcha()
@@ -281,8 +293,12 @@ dcha()
     export DEBEMAIL="plugins@omv-extras.org"
     export DEBFULLNAME="OpenMediaVault Plugin Developers"
     cd ${packagepath}
-    echo "Add changelog line ..."
-    dch -U --no-auto-nmu -a "${commit}" 2>&1
+    if [ -f "debian/changelog" ]; then
+        echo "Add changelog line ..."
+        dch -U --no-auto-nmu -a "${commit}" 2>&1
+    else
+        echo "No changelog found."
+    fi        
 }
 
 dchr()
@@ -290,9 +306,14 @@ dchr()
     export DEBEMAIL="plugins@omv-extras.org"
     export DEBFULLNAME="OpenMediaVault Plugin Developers"
     cd ${packagepath}
-    echo "Release version ..."
-    dch -U --no-auto-nmu -r "release" 2>&1
-    head -n 1 debian/changelog
+    if [ -f "debian/changelog" ]; then
+        echo "Release version ..."
+        dch -U --no-auto-nmu -r "release" 2>&1
+        head -n 1 debian/changelog
+    else
+        echo "No changelog found."
+    fi
+
 }
 
 omvsvn()

@@ -250,9 +250,23 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
             if ($exists)
             {
-                $f = fopen(sprintf("%s/debian/changelog", $pluginPath), 'r');
-                $version = fgets($f);
-                fclose($f);
+                if (file_exists(sprintf("%s/control", $pluginPath)))
+                {
+                    foreach (new SplFileObject(sprintf("%s/control", $pluginPath)) as $line)
+                    {
+                        if (preg_match("/^Version:/", $line))
+                        {
+                            $version = trim($line);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    $f = fopen(sprintf("%s/debian/changelog", $pluginPath), 'r');
+                    $version = fgets($f);
+                    fclose($f);
+                }
             }
 
             $objects[] = array(
