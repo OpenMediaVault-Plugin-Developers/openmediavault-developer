@@ -37,7 +37,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "gateone","git","glusterfs","greyhole","headphones","hpraid","jdownloader",
         "links","mcmyadmin","mediabrowser","mhddfs","minidlna","mumble","mysql","nginx",
         "nzbget","nzbdrone","offlineimap","omvextrasorg","openvpn","openvpnas",
-        "openvpn-old","plexmediaserver","pptp","processlist","pxe","pyload",
+        "openvpn-old","plexmediaserver","postgresql","pptp","processlist","pxe","pyload",
         "remotenfs-share","remoteshare","roundcube","rsnapshot","sabnzbd","sensors",
         "shellinabox","sickbeard","skeleton","snapraid","sonarr","subsonic",
         "subversion","supportinfo","teamspeak3","themes","transmissionbt",
