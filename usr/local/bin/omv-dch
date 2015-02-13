@@ -3,4 +3,4 @@
 export DEBEMAIL="plugins@omv-extras.org" 
 export DEBFULLNAME="OpenMediaVault Plugin Developers"
 
-dch -U --no-auto-nmu $@
+dch --upstream --no-auto-nmu $@
