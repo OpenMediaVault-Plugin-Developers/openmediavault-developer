@@ -155,25 +155,35 @@ movefrom()
 
 buildpot()
 {
+    OMV_POT_DIR="${temppath}${package}/usr/share/openmediavault/locale"
+
     moveto
-    cd ${temppath}${package}
-    fakeroot debian/rules omv_build_pot 2>&1
+    cd "${temppath}${package}"
+    echo "Building PO template file ..." >&2
+    mkdir -p "${OMV_POT_DIR}"
+
+    find ./ \( -iname *.js -o -iname *.php -o -iname *.inc \) \
+	  -type f -print0 | xargs -0r xgettext --keyword=_ \
+	  --output-dir="${OMV_POT_DIR}" --output="${package}.pot" \
+	  --force-po --no-location --no-wrap --sort-output \
+	  --package-name="${package}" -
+	# Remove '#, c-format' comments, otherwise manuall upload of translation
+	# files confuses Transifex.
+	sed --in-place '/^#, c-format/d' "${OMV_POT_DIR}/${package}.pot"
     movefrom
 }
 
 pushpot()
 {
     moveto
-    cd ${temppath}${package}
-    fakeroot debian/rules omv_push_pot 2>&1
+    tx --root="${temppath}{package}" push --source --resource="${package}.${package}pot"
     movefrom
 }
 
 pullpo()
 {
     moveto
-    cd ${temppath}${package}
-    fakeroot debian/rules omv_pull_po 2>&1
+    tx --root="${temppath}{package}" pull --all --resource="${package}.${package}pot"
     movefrom
 }
 
@@ -298,7 +308,7 @@ dcha()
         dch -U --no-auto-nmu -a "${commit}" 2>&1
     else
         echo "No changelog found."
-    fi        
+    fi
 }
 
 dchr()
