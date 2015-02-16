@@ -206,6 +206,7 @@ fixperms()
 {
     mkconfpath="/usr/share/openmediavault/mkconf"
     localbinpath="/usr/local/bin"
+    sbinpath="/usr/sbin"
     etcinitpath="/etc/init.d/"
     etcsupportpath="/etc/omv-support.d/"
     etcnetworkpath="/etc/network/if-up.d/"
@@ -224,6 +225,10 @@ fixperms()
 
     if [ -d "${packagepath}${localbinpath}" ]; then
         chmod 755 "${packagepath}${localbinpath}"/*
+    fi
+
+    if [ -d "${packagepath}${sbinpath}" ]; then
+        chmod 755 "${packagepath}${sbinpath}"/*
     fi
 
     if [ -d "${packagepath}${etcinitpath}" ]; then
