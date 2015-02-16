@@ -38,6 +38,7 @@ sfpath=$(omv_get_sharedfolder_path "${sfref}")
 temppath="/tmp/"
 localepath="usr/share/openmediavault/locale"
 txpath=".tx"
+txbin="/usr/local/bin/tx"
 
 if [ -z "${sfpath}" ]; then
     echo "Error - Path not set."
@@ -176,14 +177,14 @@ buildpot()
 pushpot()
 {
     moveto
-    tx --root="${temppath}{package}" push --source --resource="${package}.${package}pot"
+    ${txbin} --root="${temppath}{package}" push --source --resource="${package}.${package}pot"
     movefrom
 }
 
 pullpo()
 {
     moveto
-    tx --root="${temppath}{package}" pull --all --resource="${package}.${package}pot"
+    ${txbin} --root="${temppath}{package}" pull --all --resource="${package}.${package}pot"
     movefrom
 }
 
