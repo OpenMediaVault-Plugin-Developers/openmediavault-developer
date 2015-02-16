@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.21) stable; urgency=low
+
+  * Move open url to menu button
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 16 Feb 2015 00:11:37 -0600
+
 openmediavault-developer (1.1.20) stable; urgency=low
 
   * Call tx package directly

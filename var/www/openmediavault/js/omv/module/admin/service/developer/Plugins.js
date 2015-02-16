@@ -60,14 +60,6 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         dataIndex : "fullname",
         stateId   : "fullname"
     },{
-        text      : _("Github URL"),
-        sortable  : true,
-        dataIndex : "url",
-        stateId   : "url",
-        renderer  : function(value) {
-            return "<a href=\"" + value + "\" target=\"_blank\">" + value + "</a>";
-        }
-    },{
         text      : _("Folder Exists"),
         sortable  : true,
         dataIndex : "exists",
@@ -146,6 +138,15 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 text     : _("Reset"),
                 icon     : "images/reboot.png",
                 handler  : Ext.Function.bind(me.onResetButton, me, [ me ]),
+                disabled : true,
+                selectionConfig : {
+                    minSelections : 1,
+                    maxSelections : 1
+                }
+            },{
+                text     : _("Open repo page"),
+                icon     : "images/home.png",
+                handler  : Ext.Function.bind(me.onOpenRepoButton, me, [ me ]),
                 disabled : true,
                 selectionConfig : {
                     minSelections : 1,
@@ -646,6 +647,11 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         wnd.setButtonDisabled("close", true);
         wnd.show();
         wnd.start();
+    },
+
+    onOpenRepoButton : function() {
+        var record = this.getSelected();
+        window.open(record.get("url"), "_blank");
     }
 });
 
