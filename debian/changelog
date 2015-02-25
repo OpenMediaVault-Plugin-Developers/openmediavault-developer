@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.23) stable; urgency=low
+
+  * Fix transifex pull
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 25 Feb 2015 07:04:21 -0600
+
 openmediavault-developer (1.1.22) stable; urgency=low
 
   * Add sbin to permissions fix function

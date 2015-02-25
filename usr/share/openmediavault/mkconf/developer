@@ -185,7 +185,7 @@ pushpot()
 pullpo()
 {
     moveto
-    ${txbin} --root="${temppath}" pull --all --resource="${package}.${package}pot"
+    ${txbin} --root="${temppath}" pull --all --force --resource="${package}.${package}pot"
     movefrom
 }
 
