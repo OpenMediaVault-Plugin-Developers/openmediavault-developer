@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.24) stable; urgency=low
+
+  * Add fs2ram
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 07 Mar 2015 20:10:44 -0600
+
 openmediavault-developer (1.1.23) stable; urgency=low
 
   * Fix transifex pull
