@@ -77,6 +77,9 @@ build()
         equivs-build control 2>&1
         mv ${temppath}${package}/*.deb ${temppath}
     else
+        # debuild -b -us -uc -I
+        # debuild clean
+        # dpkg-buildpackage -b
         fakeroot debian/rules clean binary 2>&1
     fi
     rm -f ${packagepath}*.deb
