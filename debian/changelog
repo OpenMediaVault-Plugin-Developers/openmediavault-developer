@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.26) stable; urgency=low
+
+  * Add openmediavault-kerberos plugin
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 23 Apr 2015 06:28:57 -0500
+
 openmediavault-developer (1.1.25) stable; urgency=low
 
   * Change fs2ram to flashmemory
