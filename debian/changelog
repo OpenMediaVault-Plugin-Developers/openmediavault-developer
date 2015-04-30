@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.27) stable; urgency=low
+
+  * add docker
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 29 Apr 2015 21:48:18 -0500
+
 openmediavault-developer (1.1.26) stable; urgency=low
 
   * Add openmediavault-kerberos plugin
