@@ -32,7 +32,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "dchi","dcha","dchr","changelog","status");
 
     private static $plugins = array("acestream","active-directory","anacron","aufs",
-        "autoshutdown","backup","btsync","calibre","couchpotato","cups","deluge",
+        "autoshutdown","backup","btsync","calibre","couchpotato","cups","ddclient","deluge",
         "developer","dnsmasq","docker","downloader","extplorer","fail2ban","flexget","flashmemory",
         "folding","gateone","git","glusterfs","greyhole","headphones","hpraid","jdownloader",
         "kerberos","links","mcmyadmin","mediabrowser","mhddfs","minidlna","mumble","mysql","nginx",
