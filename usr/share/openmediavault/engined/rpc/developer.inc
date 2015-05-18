@@ -40,7 +40,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "openvpn-old","plexmediaserver","postgresql","pptp","processlist","pxe","pyload",
         "remotenfs-share","remoteshare","roundcube","rsnapshot","sabnzbd","sensors",
         "shellinabox","sickbeard","skeleton","snapraid","sonarr","subsonic",
-        "subversion","supportinfo","teamspeak3","themes","transmissionbt",
+        "subversion","supportinfo","syncthing","teamspeak3","themes","transmissionbt",
         "unionfilesystems","vdr","vdr-extras","virtualbox","virtualhosts","wakealarm",
         "webdav","website","websites","wol","wordpress","zfs");
 

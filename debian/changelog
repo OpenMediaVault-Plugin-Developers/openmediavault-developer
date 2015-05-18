@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.29) stable; urgency=low
+
+  * add syncthing
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Mon, 18 May 2015 14:30:19 -0500
+
 openmediavault-developer (1.1.28) stable; urgency=low
 
   * Add ddclient
