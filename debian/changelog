@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.30) stable; urgency=low
+
+  * Add openmediavault-locate
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 27 May 2015 06:29:03 -0500
+
 openmediavault-developer (1.1.29) stable; urgency=low
 
   * add syncthing
