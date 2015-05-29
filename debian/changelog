@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.31) stable; urgency=low
+
+  * add openmediavault-spideroak
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 29 May 2015 08:17:43 -0500
+
 openmediavault-developer (1.1.30) stable; urgency=low
 
   * Add openmediavault-locate

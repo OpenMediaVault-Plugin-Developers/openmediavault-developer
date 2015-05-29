@@ -39,7 +39,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "mysql","nginx","nzbget","nzbdrone","offlineimap","omvextrasorg","openvpn","openvpnas",
         "openvpn-old","plexmediaserver","postgresql","pptp","processlist","pxe","pyload",
         "remotenfs-share","remoteshare","roundcube","rsnapshot","sabnzbd","sensors",
-        "shellinabox","sickbeard","skeleton","snapraid","sonarr","subsonic",
+        "shellinabox","sickbeard","skeleton","snapraid","sonarr","spideroak","subsonic",
         "subversion","supportinfo","syncthing","teamspeak3","themes","transmissionbt",
         "unionfilesystems","vdr","vdr-extras","virtualbox","virtualhosts","wakealarm",
         "webdav","website","websites","wol","wordpress","zfs");
