@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.32) stable; urgency=low
+
+  * add mylar plugin
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 07 Jun 2015 10:39:57 -0500
+
 openmediavault-developer (1.1.31) stable; urgency=low
 
   * add openmediavault-spideroak
