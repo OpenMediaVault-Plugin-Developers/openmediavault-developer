@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.33) stable; urgency=low
+
+  * add remotedesktop
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 19 Jun 2015 10:06:03 -0500
+
 openmediavault-developer (1.1.32) stable; urgency=low
 
   * add mylar plugin
