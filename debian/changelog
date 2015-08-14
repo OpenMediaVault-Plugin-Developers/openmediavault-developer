@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.36) stable; urgency=low
+
+  * Add docker-gui plugin
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 14 Aug 2015 10:38:18 -0500
+
 openmediavault-developer (1.1.35) stable; urgency=low
 
   * Add sudoers.d dir to fixperms
