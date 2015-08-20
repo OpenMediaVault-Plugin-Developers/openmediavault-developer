@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.37) stable; urgency=low
+
+  * Change version column to flex
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 20 Aug 2015 11:40:09 -0500
+
 openmediavault-developer (1.1.36) stable; urgency=low
 
   * Add docker-gui plugin

@@ -76,7 +76,8 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         text      : _("Version"),
         sortable  : true,
         dataIndex : "version",
-        stateId   : "version"
+        stateId   : "version",
+        flex      : 1
     }],
 
     initComponent: function() {
