@@ -171,17 +171,18 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
             items: [{
                 xtype: "textfield",
                 name: "btusername",
-                fieldLabel : _("Username")
+                fieldLabel : _("Username"),
+                allowBlank : true
             },{
-                xtype: "textfield",
-                inputType: "password",
+                xtype: "passwordfield",
                 fieldLabel : _("API key"),
-                name: "btapikey"
+                name: "btapikey",
+                allowBlank : true
             },{
-                xtype: "textfield",
-                inputType: "password",
+                xtype: "passwordfield",
                 fieldLabel : _("GPG-key passphrase"),
-                name: "btgpgpass"
+                name: "btgpgpass",
+                allowBlank : true
             }]
         }];
     },
