@@ -1,3 +1,9 @@
+openmediavault-developer (1.1.38) stable; urgency=low
+
+  * Added support for publishing files to Bintray
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 04 Sep 2015 15:21:52 +0200
+
 openmediavault-developer (1.1.37) stable; urgency=low
 
   * Change version column to flex
