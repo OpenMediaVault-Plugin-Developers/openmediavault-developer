@@ -162,6 +162,27 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 handler : Ext.Function.bind(me.onConfigButton, me, [ "tx" ]),
                 margin  : "5 0 8 0"
             }]
+        },{
+            xtype: "fieldset",
+            title: _("Bintray settings"),
+            fieldDefaults: {
+                labelSeparator: ""
+            },
+            items: [{
+                xtype: "textfield",
+                name: "btusername",
+                fieldLabel : _("Username")
+            },{
+                xtype: "textfield",
+                inputType: "password",
+                fieldLabel : _("API key"),
+                name: "btapikey"
+            },{
+                xtype: "textfield",
+                inputType: "password",
+                fieldLabel : _("GPG-key passphrase"),
+                name: "btgpgpass"
+            }]
         }];
     },
 
@@ -171,10 +192,10 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
         switch(cmd) {
             case "gh":
                 title = _("Creating Github .netrc ...");
-                break;
+            break;
             case "tx":
                 title = _("Creating Transifex config ...");
-                break;
+            break;
             default:
                 title = _("Creating git config ...");
         }
