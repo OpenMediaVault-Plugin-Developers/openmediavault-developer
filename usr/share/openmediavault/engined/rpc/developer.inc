@@ -28,7 +28,7 @@ require_once("openmediavault/notify.inc");
 class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 {
     private static $commands = array("build","update","upload","buildpot","pushpot",
-        "pullpo","install","reset","tx","gh","git","add","commit","push",
+        "pullpo","install","reset","tx","gh","git","add","commit","push","tag",
         "dchi","dcha","dchr","changelog","status");
 
     private static $plugins = array("acestream","active-directory","anacron","aufs",
@@ -647,6 +647,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                 "properties" : {
                     "command" : { "type" : "string" },
                         "plugin"  : { "type" : "string" },
+                        "tag"  : { "type" : "string", "optional" : "true" },
+                        "message"  : { "type" : "string", "optional" : "true" },
                         "commit"  : { "type" : "string", "optional" : true }
     }
     }');
@@ -681,7 +683,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $bgOutputFilename = $this->createBgProcOutput();
         $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
 
-        $cmd = sprintf("omv-mkconf developer %s %s _%s 2>&1", $params['command'], $params['plugin'], $params['commit']);
+        $cmd = sprintf("omv-mkconf developer %s %s _%s _%s _%s2>&1",
+            $params['command'], $params['plugin'], $params['commit'], $params['tag'], $params['message']);
         $this->exec($cmd, $output, $bgOutputFilename);
 
         $this->finalizeBgProcStatus($bgStatusFilename, $output);

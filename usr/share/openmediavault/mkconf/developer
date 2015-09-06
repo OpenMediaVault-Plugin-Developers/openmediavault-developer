@@ -26,7 +26,9 @@ set -e
 command=`echo $2 | cut -d \  -f 1`
 plugin=`echo $2 | cut -d \  -f 2`
 location=`echo $2 | cut -d \  -f 3`
-commit=`echo $2 | cut -d \_ -f 2`
+commit=`echo $2 | cut -d \_ -f 2 | tr -d '[[:space:]]'`
+tag=`echo $2 | cut -d \_ -f 3 | tr -d '[[:space:]]'`
+message=`echo $2 | cut -d \_ -f 4 | tr -d '[[:space:]]'`
 package="openmediavault-${plugin}"
 
 xpath="//services/developer"
@@ -283,6 +285,18 @@ gitcommit()
     git commit -m "${commit}" 2>&1
 }
 
+gittag()
+{
+    if [ ! -f "/root/.netrc" ]; then
+        echo ".netrc not found"
+        exit 1
+    fi
+    
+    cd ${packagepath}
+    git tag -a "${tag}" -m "${message}" 2>&1
+    git push origin "${tag}" 2>&1
+}
+
 gitpush()
 {
     if [ ! -f "/root/.netrc" ]; then
@@ -468,6 +482,12 @@ case ${command} in
         initial
         fixperms
         gitpush
+    ;;
+
+    tag)
+        initial
+        fixperms
+        gittag
     ;;
 
     status)
