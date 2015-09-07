@@ -263,6 +263,10 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 icon     : "images/upload.png",
                 handler  : Ext.Function.bind(me.onGitButton, me, [ "push" ])
             },{
+                text     : _("git tag"),
+                icon     : "images/puzzle.png",
+                handler  : Ext.Function.bind(me.onGitButton, me, [ "tag" ])
+            },{
                 text     : _("git status"),
                 icon     : "images/pulse.png",
                 handler  : Ext.Function.bind(me.onGitButton, me, [ "status" ])
@@ -557,6 +561,8 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         var me = this;
         var commit = "";
         var title = "";
+        var tag = "";
+        var message = "";
         var record = me.getSelected();
         switch(cmd) {
             case "add":
@@ -565,6 +571,11 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             case "commit":
                 title = _("Creating commit ...");
                 commit = prompt("Enter commit message", "");
+                break;
+            case "tag":
+                title = _("Creating tag ...");
+                tag = prompt("Enter tag name", "");
+                message = prompt("Enter message", "");
                 break;
             case "status":
                 title = _("Status ...");
@@ -579,7 +590,9 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             rpcParams       : {
                 "command" : cmd,
                 "plugin"  : record.get("name"),
-                "commit"  : commit
+                "commit"  : commit,
+                "tag"     : tag,
+                "message" : message
             },
             rpcIgnoreErrors : true,
             hideStartButton : true,
