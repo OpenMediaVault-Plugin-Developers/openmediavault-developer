@@ -77,7 +77,11 @@ Ext.define("OMV.module.admin.service.developer.Packages", {
                 listeners: {
                     change: function(combo, newValue, oldValue, eOpts) {
                         me.getForm().findField("repository").setDisabled(false);
-                        me.getForm().findField("repository").getStore().getProxy().rpcData.params.omvversion = newValue;
+                        if (me.getForm().findField("repository").getStore().getProxy().rpcData.params === undefined) {
+                            me.getForm().findField("repository").getStore().getProxy().rpcData.params = {omvversion: newValue};
+                        } else {
+                            me.getForm().findField("repository").getStore().getProxy().rpcData.params.omvversion = newValue;
+                        }
                         me.getForm().findField("repository").getStore().load();
                     }
                 }
@@ -107,7 +111,11 @@ Ext.define("OMV.module.admin.service.developer.Packages", {
                 listeners: {
                     change: function(combo, newValue, oldValue, eOpts) {
                         me.getForm().findField("bpackage").setDisabled(false);
-                        me.getForm().findField("bpackage").getStore().getProxy().rpcData.params.repository = newValue;
+                        if (me.getForm().findField("bpackage").getStore().getProxy().rpcData.params === undefined) {
+                            me.getForm().findField("bpackage").getStore().getProxy().rpcData.params = {repository: newValue};
+                        } else {
+                            me.getForm().findField("bpackage").getStore().getProxy().rpcData.params.repository = newValue;
+                        }
                         me.getForm().findField("bpackage").getStore().load();
                     }
                 },

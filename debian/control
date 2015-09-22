@@ -11,7 +11,7 @@ Package: openmediavault-developer
 Architecture: all
 Depends: ${misc:Depends}, fakeroot, build-essential, devscripts, git,
  debhelper, openmediavault (>= 1.12), sshpass, python-pip,
- subversion, equivs
+ subversion, equivs, curl, php5-curl
 Description: OpenMediaVault Developer plugin
  Plugin to help developer download/ plugin code and setup system for
  plugin development.
