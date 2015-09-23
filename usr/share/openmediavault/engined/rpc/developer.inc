@@ -216,7 +216,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "btusername"      => $params['btusername'],
         "btapikey"        => $params['btapikey'],
         "btgpgpass"       => $params['btgpgpass'],
-        "locations"       => isset($oldObject['locations']) ? $oldObject['locations'] : array()
+        "locations"       => isset($oldObject['locations']) ? $oldObject['locations'] : array(),
+        "btpackages"      => isset($oldObject['btpackages']) ? $oldObject['btpackages'] : array()
     );
 
     // Set configuration object
@@ -971,7 +972,6 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             array("role" => OMV_ROLE_ADMINISTRATOR)
         );
 
-        $objects = array();
         $package = $xmlConfig->get($this->getXpath() . "/btpackages/btpackage[uuid='" . $params['uuid'] . "']");
         if (is_null($package)) {
             throw new OMVException(
