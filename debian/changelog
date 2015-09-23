@@ -1,3 +1,9 @@
+openmediavault-developer (2.1) stable; urgency=low
+
+  * Update dependencies
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 22 Sep 2015 20:29:34 -0500
+
 openmediavault-developer (2.0) stable; urgency=low
 
   * Change textfields to passwordfields
