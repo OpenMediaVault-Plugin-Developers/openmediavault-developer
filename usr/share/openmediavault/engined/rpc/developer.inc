@@ -109,6 +109,20 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         return $response;
     }
 
+    private function _createTree(&$list, $parent){
+        $tree = array();
+        foreach ($parent as $k=>$l){
+            if(isset($list[$l['id']])){
+                $l['leaf'] = false;
+                $l['data'] = $this->_createTree($list, $list[$l['id']]);
+            } else {
+                $l['leaf'] = true;
+            }
+            $tree[] = $l;
+        }
+        return $tree;
+    }
+
     public function initialize()
     {
         $this->registerMethod("getSettings");
@@ -127,6 +141,12 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $this->registerMethod("doOmvSvn");
 
         $this->registerMethod("getBintrayRepoList");
+        $this->registerMethod("getBintrayRepos");
+        $this->registerMethod("addBintrayRepo");
+        $this->registerMethod("addBintrayPackage");
+        $this->registerMethod("publishFileBintray");
+        $this->registerMethod("syncBintrayData");
+        $this->registerMethod("getBintrayFiles");
         $this->registerMethod("getBintrayPackageList");
         $this->registerMethod("getBintrayFileList");
         $this->registerMethod("getBintrayPackages");
@@ -217,7 +237,10 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "btapikey"        => $params['btapikey'],
         "btgpgpass"       => $params['btgpgpass'],
         "locations"       => isset($oldObject['locations']) ? $oldObject['locations'] : array(),
-        "btpackages"      => isset($oldObject['btpackages']) ? $oldObject['btpackages'] : array()
+        "btpackages"      => isset($oldObject['btpackages']) ? $oldObject['btpackages'] : array(),
+        "btrepos"         => isset($oldObject['btrepos']) ? $oldObject['btrepos'] : array(),
+        "repos"           => isset($oldObject['repos']) ? $oldObject['repos'] : array(),
+        "packages"        => isset($oldObject['packages']) ? $oldObject['packages'] : array()
     );
 
     // Set configuration object
@@ -824,6 +847,396 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                 );
             }
         }
+        return $objects;
+    }
+
+    /**
+     * Retrieve all Bintray repos and packages that the user has access to
+     * 
+     * @param array  $params  An associative array with all RPC call parameters
+     * @param string $context The context of the user maing the RPC call
+     *
+     * @return array $object An ssociative array with all settings
+     */
+    public function getBintrayRepos($params, $context)
+    {
+        global $xmlConfig;
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
+
+        $settings = $xmlConfig->get($this->getXpath());
+        if (is_null($settings)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXpath()
+            );
+        }
+
+        $objects = array();
+        $reposXpath = $this->getXpath() . "/repos";
+        $packagesXpath = $this->getXpath() . "/packages";
+        $repos = $xmlConfig->getList($reposXpath . "/*");
+        if (count($repos) === 0) {
+            $this->syncBintrayData($params, $context);
+            $repos = $xmlConfig->getList($reposXpath . "/*");
+        }
+        foreach ($repos as $repo) {
+            array_push(
+                $objects,
+                array(
+                    "parentid" => "root",
+                    "id" => $repo['name'],
+                    "type" => "Repo",
+                    "name" => $repo['name'],
+                    "icon" => "images/folder.png"
+                )
+            );
+            $packages = $xmlConfig->getList($packagesXpath . "/package[repo='" . $repo['name'] . "']");
+            foreach ($packages as $package) {
+                array_push(
+                    $objects,
+                    array(
+                        "parentid" => $repo['name'],
+                        "id" => $repo['name'] . "-" . $package['name'],
+                        "type" => "Package",
+                        "name" => $package['name'],
+                        "icon" => "images/puzzle.png"
+                    )
+                );
+            }
+        }
+        $new = array();
+        foreach ($objects as $a){
+            $new[$a['parentid']][] = $a;
+        }
+        $tree['data'] = $this->_createTree($new, $new['root']);
+        return $tree;
+    }
+
+    /**
+     * Create a new Bintray repo
+     * 
+     * @param array  $params  An associative array with all RPC call parameters
+     * @param string $context The context of the user maing the RPC call
+     *
+     * @return array $object An ssociative array with all settings
+     */
+    public function addBintrayRepo($params, $context)
+    {
+        global $xmlConfig;
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
+
+        $settings = $xmlConfig->get($this->getXpath());
+        if (is_null($settings)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXpath()
+            );
+        }
+
+        $url = "https://api.bintray.com/repos/openmediavault-plugin-developers/" . $params['repo'];
+        $cmd = "curl -H \"Content-Type: application/json\" -u" . $settings['btusername'] . ":" . $settings['btapikey'] . " " .
+            "-X POST -d '{ \"type\": \"debian\", \"private\": false, \"premium\": false, \"desc\": \"" . $params['desc'] . "\" }' " .
+            $url;
+
+        OMVutil::exec($cmd, $out, $res);
+
+        if (!(preg_match('/^\{.*\"created\".*\}$/', $out[0]))) {
+            throw new OMVException(
+                OMVErrorMsg::E_EXEC_MISC,
+                $out[0]
+            );
+        }
+        $reposXpath = $this->getXpath() . "/repos";
+        $object = array("name" => $params['repo']);
+        if (false === $xmlConfig->set($reposXpath, array("repo" => $object))) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
+                $this->getXpath()
+            );
+        }
+    }
+
+    /**
+     * Create a new Bintray package
+     * 
+     * @param array  $params  An associative array with all RPC call parameters
+     * @param string $context The context of the user maing the RPC call
+     *
+     * @return array $object An ssociative array with all settings
+     */
+    public function addBintrayPackage($params, $context)
+    {
+        global $xmlConfig;
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
+
+        $settings = $xmlConfig->get($this->getXpath());
+        if (is_null($settings)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXpath()
+            );
+        }
+
+        if (!empty($settings['sharedfolderref'])) {
+            $sfPath = OMVRpc::exec(
+                "ShareMgmt",
+                "getPath",
+                array(
+                    "uuid" => $settings['sharedfolderref']
+                ),
+                $context
+            );
+        }
+
+        $pluginPath = sprintf("%s/%s", $sfPath, $params['name']);
+        $desc = "";
+        if (file_exists(sprintf("%s/debian/control", $pluginPath))) {
+            $data = rtrim(file_get_contents(sprintf("%s/debian/control", $pluginPath)));
+            $lines = explode("\n", $data);
+            for ($i = 0; $i < count($lines); $i++) {
+                if (preg_match('/^Description:(.*)$/', $lines[$i], $matches)) {
+                    $desc .= trim($matches[1]) . "\n";
+                    for ($j = $i+1; $j < count($lines); $j++) {
+                        if (preg_match('/^[a-zA-Z]+:/', $lines[$j])) {
+                            break;
+                        } else {
+                            $desc .= trim($lines[$j]) . "\n";
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+        $desc = trim($desc);
+
+        $url = "https://api.bintray.com/packages/openmediavault-plugin-developers/" . $params['repo'];
+        $cmd = "curl -H \"Content-Type: application/json\" -u" . $settings['btusername'] . ":" . $settings['btapikey'] . " " .
+            "-X POST -d '{ \"name\": \"" . $params['name'] . "\", \"desc\": \"" . $desc . "\", \"licenses\": [\"GPL-3.0\"], " .
+            "\"vcs_url\": \"https://github.com/OpenMediaVault-Plugin-Developers/" . $params['name'] . ".git\", " .
+            "\"github_repo\": \"OpenMediaVault-Plugin-Developers/" . $params['name'] . "\", " .
+            "\"public_download_numbers\": true }' " .
+            $url;
+
+        OMVutil::exec($cmd, $out, $res);
+
+        if (!(preg_match('/^\{.*\"created\".*\}$/', $out[0]))) {
+            throw new OMVException(
+                OMVErrorMsg::E_EXEC_MISC,
+                $out[0]
+            );
+        }
+        $packagesXpath = $this->getXpath() . "/packages";
+        $object = array(
+            "name" => $params['name'],
+            "repo" => $params['repo']
+        );
+        if (false === $xmlConfig->set($packagesXpath, array("package" => $object))) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
+                $this->getXpath()
+            );
+        }
+    }
+
+    /**
+     * Publish a file to Bintray
+     * 
+     * @param array  $params  An associative array with all RPC call parameters
+     * @param string $context The context of the user maing the RPC call
+     *
+     * @return array $object An associative array with all the new settings
+     */
+    public function publishFileBintray($params, $context)
+    {
+        global $xmlConfig;
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
+
+        $settings = $xmlConfig->get($this->getXpath());
+        if (is_null($settings)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXpath()
+            );
+        }
+
+        if (!empty($settings['sharedfolderref'])) {
+            $sfPath = OMVRpc::exec(
+                "ShareMgmt",
+                "getPath",
+                array(
+                    "uuid" => $settings['sharedfolderref']
+                ),
+                $context
+            );
+        }
+
+        if (!(preg_match('/^.*_([\d]+\.[\d\.]+)_(.*)\.deb$/', $params['file'], $matches))) {
+            throw new OMVException(
+                OMVErrorMsg::E_EXEC_MISC,
+                "Failed to get data from filename:" .
+                $params['file']
+            );
+
+        }
+        $version = $matches[1];
+        $arch = $matches[2];
+
+        $url = "https://api.bintray.com/content/openmediavault-plugin-developers/" .
+            $params['repo'] . "/" . $params['bpackage'] .
+            "/" . $version . "/" . "pool/main/" . substr($params['bpackage'], 0, 1) .
+            "/" . $params['bpackage'] . "/" . $params['file'];
+
+        $cmd = "curl -X PUT -T " . $sfPath . "/" . $params['file'] . " " .
+            "-H 'X-GPG-PASSPHRASE: " . $settings['btgpgpass'] . "' " .
+            "-H 'X-Bintray-Debian-Distribution: " . $params['dist'] . "' " .
+            "-H 'X-Bintray-Debian-Component: main' " .
+            "-H 'X-Bintray-Debian-Architecture: " . $arch . "' " .
+            "-H 'X-Bintray-Publish: 1' " .
+            "-u" . $settings['btusername'] . ":" . $settings['btapikey'] . " " . $url;
+
+        OMVutil::exec($cmd, $out, $res);
+
+        if (!(strcmp($out[0], "{}") === 0)) {
+            throw new OMVException(
+                OMVErrorMsg::E_EXEC_MISC,
+                $out[0]
+            );
+        }
+    }
+
+    /**
+     * Sync local data with Bintray
+     * 
+     * @param array  $params  An associative array with all RPC call parameters
+     * @param string $context The context of the user maing the RPC call
+     *
+     * @return array $object An associative array with all the new settings
+     */
+    public function syncBintrayData($params, $context)
+    {
+        global $xmlConfig;
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
+
+        $settings = $xmlConfig->get($this->getXpath());
+        if (is_null($settings)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXpath()
+            );
+        }
+
+        $reposXpath = $this->getXpath() . "/repos";
+        $packagesXpath = $this->getXpath() . "/packages";
+        $xmlConfig->delete($reposXpath);
+        $xmlConfig->delete($packagesXpath);
+        if (false === $xmlConfig->set($this->getXpath(), array("repos" => array()))) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
+                $this->getXpath()
+            );
+        }
+        if (false === $xmlConfig->set($this->getXpath(), array("packages" => array()))) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
+                $this->getXpath()
+            );
+        }
+
+        $url = "https://api.bintray.com/repos/openmediavault-plugin-developers";
+        $repodata = json_decode($this->_doApiCall($url));
+        foreach ($repodata as $repo) {
+            $object = array("name" => $repo->name);
+            if (false === $xmlConfig->set($reposXpath, array("repo" => $object))) {
+                throw new OMVException(
+                    OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
+                    $this->getXpath()
+                );
+            }
+            $url = "https://api.bintray.com/repos/openmediavault-plugin-developers/" . $repo->name . "/packages";
+            $packagedata = json_decode($this->_doApiCall($url));
+            foreach ($packagedata as $package) {
+                $object = array(
+                    "name" => $package->name,
+                    "repo" => $repo->name
+                );
+                if (false === $xmlConfig->set($packagesXpath, array("package" => $object))) {
+                    throw new OMVException(
+                        OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
+                        $this->getXpath()
+                    );
+                }
+            }
+        }
+    }
+
+    /**
+     * Retrieve all files in location specified by package
+     * 
+     * @param array  $params  An associative array with all RPC call parameters
+     * @param string $context The context of the user maing the RPC call
+     *
+     * @return array $object An ssociative array with all settings
+     */
+    public function getBintrayFiles($params, $context)
+    {
+        global $xmlConfig;
+        $this->validateMethodContext(
+            $context,
+            array("role" => OMV_ROLE_ADMINISTRATOR)
+        );
+
+        // Get configuration object
+        $settings = $xmlConfig->get($this->getXPath());
+        if (is_null($settings)) {
+            throw new OMVException(
+                OMVErrorMsg::E_CONFIG_GET_OBJECT_FAILED,
+                $this->getXPath()
+            );
+        }
+
+        if (!empty($settings['sharedfolderref'])) {
+            $sfPath = OMVRpc::exec(
+                "ShareMgmt",
+                "getPath",
+                array(
+                    "uuid" => $settings['sharedfolderref']
+                ),
+                $context
+            );
+        }
+
+        $objects = array();
+
+        $files = scandir($sfPath);
+        foreach ($files as $file) {
+            if (preg_match('/^' . $params['bpackage'] . '.*.deb$/', $file)) {
+                if (!(is_dir($sfPath . "/" . $file))) {
+                    array_push(
+                        $objects,
+                        array(
+                            "filename" => $file,
+                            "fullpath" => $sfPath . "/" . $file
+                        )
+                    );
+                }
+            }
+        }
+
         return $objects;
     }
 
