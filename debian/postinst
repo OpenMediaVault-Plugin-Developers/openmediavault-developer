@@ -81,10 +81,6 @@ case "$1" in
             omv_config_add_element "${SERVICE_XPATH}" "btgpgpass"
         fi
 
-        if ! omv_config_exists "${SERVICE_XPATH}/btpackages"; then
-            omv_config_add_element "${SERVICE_XPATH}" "btpackages"
-        fi
-
         pip install transifex-client || :
 
         dpkg-trigger update-fixperms

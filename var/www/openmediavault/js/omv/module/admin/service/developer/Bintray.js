@@ -1,181 +1,194 @@
-/**
- * Copyright (c) 2015 OpenMediaVault Plugin Developers
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 // require("js/omv/WorkspaceManager.js")
-// require("js/omv/workspace/panel/Panel.js")
-// require("js/omv/module/admin/service/developer/Packages.js")
-// require("js/omv/module/admin/service/developer/Publish.js")
+// require("js/omv/data/Store.js")
+// require("js/omv/data/Model.js")
+// require("js/omv/data/proxy/Rpc.js")
+// require("js/omv/tree/Panel.js")
+// require("js/omv/form/field/CheckboxGrid.js")
+// require("js/omv/workspace/window/Form.js")
 
 Ext.define("OMV.module.admin.service.developer.Bintray", {
-    extend: "OMV.workspace.grid.Panel",
+	extend: "OMV.tree.Panel",
 
-    rpcService: "Developer",
-    rpcGetMethod: "getBintrayPackages",
-    requires: [
-        "OMV.data.Store",
-        "OMV.data.Model",
-        "OMV.data.proxy.Rpc",
-    ],
+	rpcService: "Developer",
+	rpcGetMethod: "getBintrayRepos",
+	requires: [
+		"OMV.data.Store",
+		"OMV.data.Model",
+		"OMV.data.proxy.Rpc"
+	],
 
-    stateful: true,
-    stateId: "9e468ecc-904d-427a-bda0-02e916bb796c",
+	rootVisible: false,
+	stateful: true,
+	stateId: "b32945c9-3f96-4859-a231-784fe946e957",
+	
+    border: false,
+	rowLines: false,
+	columnLines: true,
+	selModel: {
+		allowDeselect: true,
+		mode: "SINGLE"
+	},
 
-    defaults: {
-        flex: 1
-    },
-    anchor: "100%",
+	hideTopToolbar: false,
+	hidePagingToolbar: false,
+	deletionConfirmRequired: true,
+	deletionWaitMsg: _("Deleting selected item(s)"),
+	mode: "remote",
+	rememberSelected: false,
+	autoReload: false,
 
-    columns: [{
-        text: _("Version"),
-        dataIndex: 'omvversion',
-        sortable: true,
-        stateId: 'omvversion'
-    },{
-        text: _("Repository"),
-        dataIndex: 'repository',
-        sortable: true,
-        stateId: 'repository'
-    },{
-        text: _("Package"),
-        dataIndex: 'bpackage',
-        sortable: true,
-        stateId: 'bpackage'
-    },{
-        text: _("Distribution"),
-        dataIndex: 'dist',
-        sortable: true,
-        stateId: 'dist'
-    },{
-        text: _("Architecture"),
-        dataIndex: 'arch',
-        sortable: true,
-        stateId: 'arch'
-    }],
+	columns: [{
+		text: _("Name"),
+		xtype: 'treecolumn',
+		dataIndex: 'name',
+		sortable: true,
+		stateId: 'name'
+	}],
+
+	getTopToolbarItems: function(c) {
+		var me = this;
+		return [{
+			id: me.getId() + "-addRepo",
+			xtype: "button",
+			text: _("Add repo"),
+			icon: "images/add.png",
+			iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+            disabled: false,
+            hidden: false,
+			handler: Ext.Function.bind(me.onAddRepoButton, me, [ me ]),
+			scope: me
+		},{
+			id: me.getId() + "-addPackage",
+			xtype: "button",
+			text: _("Add package"),
+			icon: "images/add.png",
+			iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+			disabled: true,
+            hidden: false,
+			handler: Ext.Function.bind(me.onAddPackageButton, me, [ me ]),
+			scope: me
+		},{
+			id: me.getId() + "-publish",
+			xtype: "button",
+			text: _("Publish file"),
+			icon: "images/upload.png",
+			iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+			disabled: true,
+            hidden: false,
+			handler: Ext.Function.bind(me.onPublishFileButton, me, [ me ]),
+			scope: me
+		},{
+			id: me.getId() + "-sync",
+			xtype: "button",
+			text: _("Synchronize"),
+			icon: "images/refresh.png",
+			iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+			disabled: false,
+            hidden: false,
+			handler: Ext.Function.bind(me.onSyncButton, me, [ me ]),
+			scope: me
+		}]
+	},
+	
+    onSelectionChange: function(model, records) {
+		var me = this;
+		if(me.hideTopToolbar)
+			return;
+		var tbarBtnName = [ "addRepo", "addPackage", "publish", "sync" ];
+		var tbarBtnDisabled = {
+			"addRepo": false,
+			"addPackage": true,
+			"publish": true,
+            "sync": false
+		};
+		// Enable/disable buttons depending on the number of selected rows.
+		if(records.length <= 0) {
+		} else if(records.length == 1) {
+			// Enable 'addPackage' button if selected node a Repo
+			Ext.Array.each(records, function(record) {
+				if(record.get("type") === "Repo") {
+					tbarBtnDisabled["addPackage"] = false;
+					return false;
+				}
+			});
+			// Enable 'Publish' button if selected node is a Package
+			Ext.Array.each(records, function(record) {
+				if(record.get("type") === "Package") {
+					tbarBtnDisabled["publish"] = false;
+					return false;
+				}
+			});
+		} else {
+		}
+		
+		// Update the button controls.
+		Ext.Array.each(tbarBtnName, function(name) {
+			var tbarBtnCtrl = me.queryById(me.getId() + "-" + name);
+			if(!Ext.isEmpty(tbarBtnCtrl)) {
+				if(true == tbarBtnDisabled[name]) {
+					tbarBtnCtrl.disable();
+				} else {
+					tbarBtnCtrl.enable();
+				}
+			}
+		});
+	},
 
     initComponent: function() {
         var me = this;
-        
+		me.dockedItems = [];
+        me.dockedItems.push(me.topToolbar = Ext.widget({
+            xtype: "toolbar",
+            dock: "top",
+            items: me.getTopToolbarItems(me)
+        }));
         Ext.apply(me, {
-            store: Ext.create("OMV.data.Store", {
+            store: Ext.create("Ext.data.TreeStore", {
                 autoLoad: true,
                 model: OMV.data.Model.createImplicit({
                     fields: [
-                        { name: "uuid", type: "string" },
-                        { name: "omvversion", type: "string" },
-                        { name: "repository", type: "string" },
-                        { name: "bpackage", type: "string" },
-                        { name: "dist", type: "string" },
-                        { name: "arch", type: "string" }
+                        { name: "name", type: "string" },
+                        { name: "id", type: "string" },
+                        { name: "type", type: "string" },
+                        { name: "parentid", type: "string" }
                     ]
                 }),
                 proxy: {
                     type: "rpc",
                     rpcData: {
                         service: "Developer",
-                        method: "getBintrayPackages",
+                        method: "getBintrayRepos",
                     }
-                }
+                },
+                folderSort: true
             })
         });
         me.callParent(arguments);
+		var selModel = me.getSelectionModel();
+        selModel.on("selectionchange", me.onSelectionChange, me);
     },
 
-    getTopToolbarItems: function(c) {
+    onAddRepoButton : function() {
         var me = this;
+        Ext.create("OMV.workspace.window.Form", {
+            title: _("Create Bintray repo"),
+            rpcService   : "Developer",
+            rpcSetMethod : "addBintrayRepo",
 
-        return [{
-            id: me.getId() + "-add",
-            xtype: "button",
-            text: _("Add package"),
-            icon: "images/add.png",
-            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
-            disabled: false,
-            handler: Ext.Function.bind(me.onAddButton, me, [ me ]),
-            scope: me
-        },{
-            id: me.getId() + "-edit",
-            xtype: "button",
-            text: _("Edit package"),
-            icon: "images/edit.png",
-            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
-            disabled: true,
-            handler: Ext.Function.bind(me.onEditButton, me, [ me ]),
-            scope: me
-        },{
-            id: me.getId() + "-publish",
-            xtype: "button",
-            text: _("Publish file"),
-            icon: "images/upload.png",
-            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
-            disabled: true,
-            handler: Ext.Function.bind(me.onPublishButton, me, [ me ]),
-            scope: me
-        },{
-            id: me.getId() + "-delete",
-            xtype: "button",
-            text: _("Delete package"),
-            icon: "images/delete.png",
-            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
-            disabled: true,
-            handler: Ext.Function.bind(me.onDeleteButton, me, [ me ]),
-            scope: me
-        }];
-    },
+            getFormItems : function() {
+                var me = this;
+                return [{
+                    xtype: "textfield",
+                    name: "repo",
+                    fieldLabel: _("Name"),
+                    allowBlank: false
+                },{
+                    xtype: "textareafield",
+                    name: "desc",
+                    fieldLabel: _("Description")
+                }];
+            },
 
-    onSelectionChange: function(model, records) {
-        var me = this;
-        if(me.hideTopToolbar)
-            return;
-        var tbarBtnName = [ "add", "edit", "publish", "delete" ];
-        var tbarBtnDisabled = {
-            "add": false,
-            "edit": false,
-            "publish": false,
-            "delete": false
-        };
-        // Enable/disable buttons depending on the number of selected rows.
-        if(records.length <= 0) {
-            tbarBtnDisabled["edit"] = true;
-            tbarBtnDisabled["publish"] = true;
-            tbarBtnDisabled["delete"] = true;
-        } else if(records.length == 1) {
-        } else {
-            tbarBtnDisabled["edit"] = true;
-            tbarBtnDisabled["publish"] = true;
-        }
-
-        // Update the button controls.
-        Ext.Array.each(tbarBtnName, function(name) {
-            var tbarBtnCtrl = me.queryById(me.getId() + "-" + name);
-            if(!Ext.isEmpty(tbarBtnCtrl)) {
-                if(true == tbarBtnDisabled[name]) {
-                    tbarBtnCtrl.disable();
-                } else {
-                    tbarBtnCtrl.enable();
-                }
-            }
-        });
-    },
-
-    onAddButton : function() {
-        var me = this;
-        Ext.create("OMV.module.admin.service.developer.Packages", {
-            title: _("Add package"),
-            uuid: "",
             listeners: {
                 scope: me,
                 submit: function() {
@@ -185,14 +198,49 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
         }).show();
     },
 
-    onEditButton : function() {
+    onAddPackageButton: function() {
         var me = this;
         var sm = me.getSelectionModel();
         var records = sm.getSelection();
         var record = records[0];
-        Ext.create("OMV.module.admin.service.developer.Packages", {
-            title: _("Edit package"),
-            uuid: record.get("uuid"),
+        Ext.create("OMV.workspace.window.Form", {
+            title: _("Create Bintray package"),
+            rpcService   : "Developer",
+            rpcSetMethod : "addBintrayPackage",
+
+            getFormItems : function() {
+                var me = this;
+                return [{
+                    xtype: "combo",
+                    name: "name",
+                    store: Ext.create("OMV.data.Store", {
+                        autoLoad: true,
+                        pageSize: 100,
+                        model: OMV.data.Model.createImplicit({
+                            fields: [
+                                { name: "fullname", type: "string" }
+                            ]
+                        }),
+                        proxy: {
+                            type: "rpc",
+                            rpcData: {
+                                service: "Developer",
+                                method: "getPluginList",
+                            }
+                        }
+                    }),
+                    editable: false,
+                    valueField: "fullname",
+                    displayField: "fullname",
+                    fieldLabel: _("Plugin"),
+                    allowBlank: false
+                },{
+                    xtype: "hiddenfield",
+                    name: "repo",
+                    value: record.get("name")
+                }];
+            },
+
             listeners: {
                 scope: me,
                 submit: function() {
@@ -202,13 +250,73 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
         }).show();
     },
 
-    onPublishButton: function() {
+    onPublishFileButton: function() {
         var me = this;
         var sm = me.getSelectionModel();
         var records = sm.getSelection();
         var record = records[0];
-        Ext.create("OMV.module.admin.service.developer.Publish", {
-            uuid: record.get("uuid"),
+        Ext.create("OMV.workspace.window.Form", {
+            title: _("Publish file on Bintray"),
+            width: 500,
+            rpcService   : "Developer",
+            rpcSetMethod : "publishFileBintray",
+
+            getFormItems : function() {
+                var me = this;
+                return [{
+                    xtype: "combo",
+                    name: "file",
+                    store: Ext.create("OMV.data.Store", {
+                        autoLoad: true,
+                        fields: [
+                            { name: "filename", type: "string" },
+                            { name: "fullpath", type: "string" }
+                        ],
+                        proxy: {
+                            type: "rpc",
+                            rpcData: {
+                                service: "Developer",
+                                method: "getBintrayFiles",
+                                params: {
+                                    bpackage: record.get("name")
+                                }
+                            }
+                        }
+                    }),
+                    editable: false,
+                    valueField: "filename",
+                    displayField: "filename",
+                    fieldLabel: _("File"),
+                    allowBlank: false,
+                },{
+                    xtype: "combo",
+                    name: "dist",
+                    store: Ext.create("OMV.data.Store", {
+                        autoLoad: true,
+                        fields: [
+                            { name: "distribution", type: "string" }
+                        ],
+                        data: [
+                            { distribution: "wheezy" }
+                        ]
+                    }),
+                    editable: false,
+                    valueField: "distribution",
+                    displayField: "distribution",
+                    value: "wheezy",
+                    fieldLabel: _("Dist"),
+                    allowBlank: false
+                },{
+                    xtype: "hiddenfield",
+                    name: "bpackage",
+                    value: record.get("name")
+                },{
+                    xtype: "hiddenfield",
+                    name: "repo",
+                    value: record.get("parentid")
+                }];
+            },
+
             listeners: {
                 scope: me,
                 submit: function() {
@@ -223,20 +331,49 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
         }).show();
     },
 
-    doDeletion: function(record) {
+    onSyncButton : function() {
         var me = this;
         OMV.Rpc.request({
             scope: me,
-            callback: me.onDeletion,
+            relayErrors: false,
+            callback: function(id, success, response) {
+                this.doReload();
+            },
             rpcData: {
                 service: "Developer",
-                method: "deleteBintrayPackage",
+                method: "syncBintrayData",
                 params: {
-                    uuid: record.get('uuid')
+                    name: "Test"
                 }
             }
         });
-    }
+    },
+
+    /**
+     * Helper function to get the top toolbar object.
+     * @return The paging toolbar object or NULL.
+     */
+    getTopToolbar: function() {
+        return this.topToolbar;
+    },
+
+    /**
+     * Helper function to get the paging toolbar object.
+     * @return The paging toolbar object or NULL.
+     */
+    getPagingToolbar: function() {
+        return this.pagingToolbar;
+    },
+
+    /**
+     * Reload the grid content.
+     */
+    doReload: function() {
+        var me = this;
+        if(me.mode === "remote") {
+            me.store.reload();
+        }
+    },
 
 });
 
@@ -244,7 +381,6 @@ OMV.WorkspaceManager.registerPanel({
     id: "bintray",
     path: "/service/developer",
     text: _("Bintray"),
-    position: 70,
+    position: 50,
     className: "OMV.module.admin.service.developer.Bintray"
 });
-
