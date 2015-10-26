@@ -26,7 +26,7 @@ set -e
 command=`echo $2 | cut -d \  -f 1`
 plugin=`echo $2 | cut -d \  -f 2`
 location=`echo $2 | cut -d \  -f 3`
-commit=`echo $2 | cut -d \_ -f 2 | tr -d '[[:space:]]'`
+commit=`echo $2 | cut -d \_ -f 2`
 tag=`echo $2 | cut -d \_ -f 3 | tr -d '[[:space:]]'`
 message=`echo $2 | cut -d \_ -f 4 | tr -d '[[:space:]]'`
 package="openmediavault-${plugin}"
