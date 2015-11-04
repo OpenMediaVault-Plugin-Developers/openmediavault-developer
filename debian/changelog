@@ -1,3 +1,9 @@
+openmediavault-developer (2.3) stable; urgency=low
+
+  * Add mpd
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 04 Nov 2015 06:27:07 -0600
+
 openmediavault-developer (2.2) stable; urgency=low
 
   * ReplaceBintrayimplementation

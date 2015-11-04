@@ -36,11 +36,11 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "developer","dnsmasq","docker","docker-gui","downloader","emby","extplorer","fail2ban",
         "flexget","flashmemory","folding","gateone","git","glusterfs","greyhole","headphones",
         "hpraid","jdownloader","kerberos","links","locate","mcmyadmin","mediabrowser","mhddfs",
-        "minidlna","mumble","mylar","mysql","nginx","nzbget","nzbdrone","offlineimap","omvextrasorg",
-        "openvpn","openvpnas","openvpn-old","plexmediaserver","postgresql","pptp","processlist",
-        "pxe","pyload","remotedesktop","remotenfs-share","remoteshare","roundcube","rsnapshot",
-        "sabnzbd","sensors","shellinabox","sickbeard","skeleton","snapraid","sonarr","spideroak",
-        "subsonic","subversion","supportinfo","syncthing","teamspeak3","themes","transmissionbt",
+        "minidlna","mpd","mumble","mylar","mysql","nginx","nzbget","nzbdrone","offlineimap",
+        "omvextrasorg","openvpn","openvpnas","openvpn-old","plexmediaserver","postgresql","pptp",
+        "processlist","pxe","pyload","remotedesktop","remotenfs-share","remoteshare","roundcube",
+        "rsnapshot","sabnzbd","sensors","shellinabox","sickbeard","skeleton","snapraid","sonarr",
+        "spideroak","subsonic","subversion","supportinfo","syncthing","teamspeak3","transmissionbt",
         "unionfilesystems","vdr","vdr-extras","virtualbox","virtualhosts","wakealarm",
         "webdav","website","websites","wol","wordpress","zfs");
 
