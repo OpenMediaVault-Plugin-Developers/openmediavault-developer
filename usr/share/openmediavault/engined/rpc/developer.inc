@@ -35,14 +35,14 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "autoshutdown","backup","btsync","calibre","couchpotato","cups","ddclient","deluge",
         "developer","dnsmasq","docker","docker-gui","downloader","emby","extplorer","fail2ban",
         "flexget","flashmemory","folding","gateone","git","glusterfs","greyhole","headphones",
-        "hpraid","jdownloader","kerberos","links","locate","mcmyadmin","mediabrowser","mhddfs",
-        "minidlna","mpd","mumble","mylar","mysql","nginx","nzbget","nzbdrone","offlineimap",
-        "omvextrasorg","openvpn","openvpnas","openvpn-old","plexmediaserver","postgresql","pptp",
-        "processlist","pxe","pyload","remotedesktop","remotenfs-share","remoteshare","roundcube",
-        "rsnapshot","sabnzbd","sensors","shellinabox","sickbeard","skeleton","snapraid","sonarr",
-        "spideroak","subsonic","subversion","supportinfo","syncthing","teamspeak3","transmissionbt",
-        "unionfilesystems","vdr","vdr-extras","virtualbox","virtualhosts","wakealarm",
-        "webdav","website","websites","wol","wordpress","zfs");
+        "hpraid","jdownloader","kerberos","links","locate","luksencryption","mcmyadmin","mediabrowser",
+        "mhddfs","minidlna","mpd","mumble","mylar","mysql","nginx","nzbget","nzbdrone","offlineimap",
+        "omvextrasorg","openvpn","openvpnas","plexmediaserver","postgresql","processlist","pxe",
+        "pyload","remotedesktop","remotenfs-share","remoteshare","roundcube","rsnapshot","sabnzbd",
+        "sensors","shellinabox","sickbeard","skeleton","snapraid","sonarr","spideroak","subsonic",
+        "subversion","supportinfo","syncthing","teamspeak3","transmissionbt","unionfilesystems",
+        "vdr","vdr-extras","virtualbox","virtualhosts","wakealarm","webdav","website","websites",
+        "wol","wordpress","zfs");
 
     const LOCATION = 'location';
 

@@ -405,7 +405,7 @@ changelog()
 {
     export LANG=C
     cd ${packagepath}
-    cat debian/changelog
+    head debian/changelog
 }
 
 case ${command} in
