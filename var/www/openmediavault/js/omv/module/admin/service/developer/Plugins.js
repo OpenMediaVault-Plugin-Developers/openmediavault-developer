@@ -270,6 +270,10 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 text     : _("git status"),
                 icon     : "images/pulse.png",
                 handler  : Ext.Function.bind(me.onGitButton, me, [ "status" ])
+            },{
+                text     : _("git diff"),
+                icon     : "images/edit.png",
+                handler  : Ext.Function.bind(me.onGitButton, me, [ "diff" ])
             }]
         },{
             id       : me.getId() + "-dch",
@@ -579,6 +583,9 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 break;
             case "status":
                 title = _("Status ...");
+                break;
+            case "diff":
+                title = _("Showing diff ...");
                 break;
             default:
                 title = _("Pushing files to Github ...");

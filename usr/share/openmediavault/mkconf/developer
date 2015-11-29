@@ -291,7 +291,7 @@ gittag()
         echo ".netrc not found"
         exit 1
     fi
-    
+
     cd ${packagepath}
     git tag -a "${tag}" -m "${message}" 2>&1
     git push origin "${tag}" 2>&1
@@ -312,6 +312,12 @@ gitstatus()
 {
     cd ${packagepath}
     git status 2>&1
+}
+
+gitdiff()
+{
+    cd ${packagepath}
+    git diff 2>&1
 }
 
 dchi()
@@ -494,6 +500,12 @@ case ${command} in
         initial
         fixperms
         gitstatus
+    ;;
+
+    diff)
+        initial
+        fixperms
+        gitdiff
     ;;
 
     dchi)

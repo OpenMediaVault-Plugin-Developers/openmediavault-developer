@@ -29,7 +29,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 {
     private static $commands = array("build","update","upload","buildpot","pushpot",
         "pullpo","install","reset","tx","gh","git","add","commit","push","tag",
-        "dchi","dcha","dchr","changelog","status");
+        "dchi","dcha","dchr","changelog","status","diff");
 
     private static $plugins = array("acestream","active-directory","anacron","aufs",
         "autoshutdown","backup","btsync","calibre","couchpotato","cups","ddclient","deluge",
