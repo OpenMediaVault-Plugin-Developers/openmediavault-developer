@@ -1,3 +1,9 @@
+openmediavault-developer (2.6.1) stable; urgency=low
+
+  * Remove testing line
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 24 Dec 2015 07:19:33 -0600
+
 openmediavault-developer (2.6) stable; urgency=low
 
   * Add letsencrypt

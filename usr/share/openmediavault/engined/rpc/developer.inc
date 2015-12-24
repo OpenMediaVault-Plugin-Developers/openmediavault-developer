@@ -1045,7 +1045,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $version = $matches[1];
         $arch = $matches[2];
 
-        if ($arch == "all") $arch="amd64,armhf,i386";
+        //if ($arch == "all") $arch="amd64,armhf,i386";
         
         $url = "https://api.bintray.com/content/openmediavault-plugin-developers/" .
             $params['repo'] . "/" . $params['bpackage'] .
