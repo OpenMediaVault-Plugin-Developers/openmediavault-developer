@@ -35,10 +35,10 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "autoshutdown","backup","btsync","calibre","couchpotato","cups","ddclient","deluge",
         "developer","dnsmasq","docker","docker-gui","downloader","emby","extplorer","fail2ban",
         "flexget","flashmemory","folding","gateone","git","glusterfs","greyhole","headphones",
-        "hpraid","jdownloader","kerberos","links","locate","luksencryption","mcmyadmin","mediabrowser",
-        "mhddfs","minidlna","mpd","mumble","mylar","mysql","nginx","nzbget","nzbdrone","offlineimap",
-        "omvextrasorg","openvpn","openvpnas","plexmediaserver","postgresql","processlist","pxe",
-        "pyload","remotedesktop","remotenfs-share","remoteshare","roundcube","rsnapshot","sabnzbd",
+        "hpraid","jdownloader","kerberos","letsencrypt","links","locate","luksencryption","mcmyadmin",
+        "mediabrowser","mhddfs","minidlna","mpd","mumble","mylar","mysql","nginx","nzbget","nzbdrone",
+        "offlineimap","omvextrasorg","openvpn","openvpnas","plexmediaserver","postgresql","processlist",
+        "pxe","pyload","remotedesktop","remotenfs-share","remoteshare","roundcube","rsnapshot","sabnzbd",
         "sensors","shellinabox","sickbeard","skeleton","snapraid","sonarr","spideroak","subsonic",
         "subversion","supportinfo","syncthing","teamspeak3","transmissionbt","unionfilesystems",
         "vdr","vdr-extras","virtualbox","virtualhosts","wakealarm","webdav","website","websites",
@@ -1045,6 +1045,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $version = $matches[1];
         $arch = $matches[2];
 
+        if ($arch == "all") $arch="amd64,armhf,i386";
+        
         $url = "https://api.bintray.com/content/openmediavault-plugin-developers/" .
             $params['repo'] . "/" . $params['bpackage'] .
             "/" . $version . "/" . "pool/main/" . substr($params['bpackage'], 0, 1) .

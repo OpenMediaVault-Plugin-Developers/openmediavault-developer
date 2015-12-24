@@ -1,3 +1,9 @@
+openmediavault-developer (2.6) stable; urgency=low
+
+  * Add letsencrypt
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 24 Dec 2015 07:12:44 -0600
+
 openmediavault-developer (2.5) stable; urgency=low
 
   * Add git diff menu
