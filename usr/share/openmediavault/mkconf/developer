@@ -218,6 +218,8 @@ fixperms()
     etcsudoerspath="/etc/sudoers.d/"
     sysinfopath="/usr/share/openmediavault/sysinfo/modules.d/"
     varlibcronpath="/var/lib/openmediavault/cron.d/"
+    prepath="/usr/share/openmediavault/releaseupgrade/pre.d/"
+    postpath="/usr/share/openmediavault/releaseupgrade/post.d/"
     echo "Fixing permissions..."
 
     find "${packagepath}" -type f -exec chmod 644 {} +
@@ -269,6 +271,15 @@ fixperms()
     if [ -f "${packagepath}/debian/${plugin}.init" ]; then
         chmod 755 "${packagepath}/debian/${plugin}.init"
     fi
+
+    if [ -d "${packagepath}${prepath}" ]; then
+        chmod 755 "${packagepath}${prepath}"/*
+    fi
+
+    if [ -d "${packagepath}${postpath}" ]; then
+        chmod 755 "${packagepath}${postpath}"/*
+    fi
+
     chown -R ${owner}:users "${packagepath}"
 }
 
