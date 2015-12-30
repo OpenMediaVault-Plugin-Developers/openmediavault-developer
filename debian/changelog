@@ -1,3 +1,9 @@
+openmediavault-developer (2.6.3) stable; urgency=low
+
+  * add jessie to distribution dropdown
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 29 Dec 2015 21:11:32 -0600
+
 openmediavault-developer (2.6.2) stable; urgency=low
 
   * Fix permissions
