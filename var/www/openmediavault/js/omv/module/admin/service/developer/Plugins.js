@@ -280,7 +280,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             xtype    : "button",
             text     : _("Changelog"),
             scope    : this,
-            icon     : "images/changelog.png",
+            icon     : "images/document.png",
             disabled : true,
             selectionConfig : {
                 minSelections : 1,
@@ -300,7 +300,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 handler  : Ext.Function.bind(me.onDchButton, me, [ "dchr" ])
             },{
                 text     : _("Show changelog"),
-                icon     : "images/changelog.png",
+                icon     : "images/document.png",
                 handler  : Ext.Function.bind(me.onChangelogButton, me, [ me ])
             }]
         }]);

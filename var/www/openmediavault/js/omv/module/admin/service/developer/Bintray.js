@@ -7,136 +7,136 @@
 // require("js/omv/workspace/window/Form.js")
 
 Ext.define("OMV.module.admin.service.developer.Bintray", {
-	extend: "OMV.tree.Panel",
+    extend: "OMV.tree.Panel",
 
-	rpcService: "Developer",
-	rpcGetMethod: "getBintrayRepos",
-	requires: [
-		"OMV.data.Store",
-		"OMV.data.Model",
-		"OMV.data.proxy.Rpc"
-	],
+    rpcService: "Developer",
+    rpcGetMethod: "getBintrayRepos",
+    requires: [
+        "OMV.data.Store",
+        "OMV.data.Model",
+        "OMV.data.proxy.Rpc"
+    ],
 
-	rootVisible: false,
-	stateful: true,
-	stateId: "b32945c9-3f96-4859-a231-784fe946e957",
-	
+    rootVisible: false,
+    stateful: true,
+    stateId: "b32945c9-3f96-4859-a231-784fe946e957",
+
     border: false,
-	rowLines: false,
-	columnLines: true,
-	selModel: {
-		allowDeselect: true,
-		mode: "SINGLE"
-	},
+    rowLines: false,
+    columnLines: true,
+    selModel: {
+        allowDeselect: true,
+        mode: "SINGLE"
+    },
 
-	hideTopToolbar: false,
-	hidePagingToolbar: false,
-	deletionConfirmRequired: true,
-	deletionWaitMsg: _("Deleting selected item(s)"),
-	mode: "remote",
-	rememberSelected: false,
-	autoReload: false,
+    hideTopToolbar: false,
+    hidePagingToolbar: false,
+    deletionConfirmRequired: true,
+    deletionWaitMsg: _("Deleting selected item(s)"),
+    mode: "remote",
+    rememberSelected: false,
+    autoReload: false,
 
-	columns: [{
-		text: _("Name"),
-		xtype: 'treecolumn',
-		dataIndex: 'name',
-		sortable: true,
-		stateId: 'name'
-	}],
+    columns: [{
+        text: _("Name"),
+        xtype: 'treecolumn',
+        dataIndex: 'name',
+        sortable: true,
+        stateId: 'name'
+    }],
 
-	getTopToolbarItems: function(c) {
-		var me = this;
-		return [{
-			id: me.getId() + "-addRepo",
-			xtype: "button",
-			text: _("Add repo"),
-			icon: "images/add.png",
-			iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+    getTopToolbarItems: function(c) {
+        var me = this;
+        return [{
+            id: me.getId() + "-addRepo",
+            xtype: "button",
+            text: _("Add repo"),
+            icon: "images/add.png",
+            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
             disabled: false,
             hidden: false,
-			handler: Ext.Function.bind(me.onAddRepoButton, me, [ me ]),
-			scope: me
-		},{
-			id: me.getId() + "-addPackage",
-			xtype: "button",
-			text: _("Add package"),
-			icon: "images/add.png",
-			iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
-			disabled: true,
+            handler: Ext.Function.bind(me.onAddRepoButton, me, [ me ]),
+            scope: me
+        },{
+            id: me.getId() + "-addPackage",
+            xtype: "button",
+            text: _("Add package"),
+            icon: "images/add.png",
+            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+            disabled: true,
             hidden: false,
-			handler: Ext.Function.bind(me.onAddPackageButton, me, [ me ]),
-			scope: me
-		},{
-			id: me.getId() + "-publish",
-			xtype: "button",
-			text: _("Publish file"),
-			icon: "images/upload.png",
-			iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
-			disabled: true,
+            handler: Ext.Function.bind(me.onAddPackageButton, me, [ me ]),
+            scope: me
+        },{
+            id: me.getId() + "-publish",
+            xtype: "button",
+            text: _("Publish file"),
+            icon: "images/upload.png",
+            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+            disabled: true,
             hidden: false,
-			handler: Ext.Function.bind(me.onPublishFileButton, me, [ me ]),
-			scope: me
-		},{
-			id: me.getId() + "-sync",
-			xtype: "button",
-			text: _("Synchronize"),
-			icon: "images/refresh.png",
-			iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
-			disabled: false,
+            handler: Ext.Function.bind(me.onPublishFileButton, me, [ me ]),
+            scope: me
+        },{
+            id: me.getId() + "-sync",
+            xtype: "button",
+            text: _("Synchronize"),
+            icon: "images/refresh.png",
+            iconCls: Ext.baseCSSPrefix + "btn-icon-16x16",
+            disabled: false,
             hidden: false,
-			handler: Ext.Function.bind(me.onSyncButton, me, [ me ]),
-			scope: me
-		}]
-	},
-	
+            handler: Ext.Function.bind(me.onSyncButton, me, [ me ]),
+            scope: me
+        }]
+    },
+
     onSelectionChange: function(model, records) {
-		var me = this;
-		if(me.hideTopToolbar)
-			return;
-		var tbarBtnName = [ "addRepo", "addPackage", "publish", "sync" ];
-		var tbarBtnDisabled = {
-			"addRepo": false,
-			"addPackage": true,
-			"publish": true,
+        var me = this;
+        if(me.hideTopToolbar)
+            return;
+        var tbarBtnName = [ "addRepo", "addPackage", "publish", "sync" ];
+        var tbarBtnDisabled = {
+            "addRepo": false,
+            "addPackage": true,
+            "publish": true,
             "sync": false
-		};
-		// Enable/disable buttons depending on the number of selected rows.
-		if(records.length <= 0) {
-		} else if(records.length == 1) {
-			// Enable 'addPackage' button if selected node a Repo
-			Ext.Array.each(records, function(record) {
-				if(record.get("type") === "Repo") {
-					tbarBtnDisabled["addPackage"] = false;
-					return false;
-				}
-			});
-			// Enable 'Publish' button if selected node is a Package
-			Ext.Array.each(records, function(record) {
-				if(record.get("type") === "Package") {
-					tbarBtnDisabled["publish"] = false;
-					return false;
-				}
-			});
-		} else {
-		}
-		
-		// Update the button controls.
-		Ext.Array.each(tbarBtnName, function(name) {
-			var tbarBtnCtrl = me.queryById(me.getId() + "-" + name);
-			if(!Ext.isEmpty(tbarBtnCtrl)) {
-				if(true == tbarBtnDisabled[name]) {
-					tbarBtnCtrl.disable();
-				} else {
-					tbarBtnCtrl.enable();
-				}
-			}
-		});
-	},
+        };
+        // Enable/disable buttons depending on the number of selected rows.
+        if(records.length <= 0) {
+        } else if(records.length == 1) {
+            // Enable 'addPackage' button if selected node a Repo
+            Ext.Array.each(records, function(record) {
+                if(record.get("type") === "Repo") {
+                    tbarBtnDisabled["addPackage"] = false;
+                    return false;
+                }
+            });
+            // Enable 'Publish' button if selected node is a Package
+            Ext.Array.each(records, function(record) {
+                if(record.get("type") === "Package") {
+                    tbarBtnDisabled["publish"] = false;
+                    return false;
+                }
+            });
+        } else {
+        }
+
+        // Update the button controls.
+        Ext.Array.each(tbarBtnName, function(name) {
+            var tbarBtnCtrl = me.queryById(me.getId() + "-" + name);
+            if(!Ext.isEmpty(tbarBtnCtrl)) {
+                if(true == tbarBtnDisabled[name]) {
+                    tbarBtnCtrl.disable();
+                } else {
+                    tbarBtnCtrl.enable();
+                }
+            }
+        });
+    },
 
     initComponent: function() {
         var me = this;
-		me.dockedItems = [];
+        me.dockedItems = [];
         me.dockedItems.push(me.topToolbar = Ext.widget({
             xtype: "toolbar",
             dock: "top",
@@ -157,14 +157,14 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
                     type: "rpc",
                     rpcData: {
                         service: "Developer",
-                        method: "getBintrayRepos",
+                        method: "getBintrayRepos"
                     }
                 },
                 folderSort: true
             })
         });
         me.callParent(arguments);
-		var selModel = me.getSelectionModel();
+        var selModel = me.getSelectionModel();
         selModel.on("selectionchange", me.onSelectionChange, me);
     },
 
@@ -225,7 +225,7 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
                             type: "rpc",
                             rpcData: {
                                 service: "Developer",
-                                method: "getPluginList",
+                                method: "getPluginList"
                             }
                         }
                     }),
@@ -287,7 +287,7 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
                     valueField: "filename",
                     displayField: "filename",
                     fieldLabel: _("File"),
-                    allowBlank: false,
+                    allowBlank: false
                 },{
                     xtype: "combo",
                     name: "dist",
@@ -304,9 +304,34 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
                     editable: false,
                     valueField: "distribution",
                     displayField: "distribution",
-                    value: "wheezy",
+                    value: "jessie",
                     fieldLabel: _("Dist"),
                     allowBlank: false
+                },{
+                    xtype: "combo",
+                    name: "arch",
+                    fieldLabel: _("Architecture"),
+                    mode: "local",
+                    store: new Ext.data.SimpleStore({
+                        fields: [ "value", "text" ],
+                        data: [
+                            [ "all", _("All") ],
+                            [ "amd64", _("amd64 only") ],
+                            [ "arm64", _("arm64 only") ],
+                            [ "armel", _("armel only") ],
+                            [ "armhf", _("armhf only") ],
+                            [ "powerpc", _("powerpc only") ],
+                            [ "amd64,i386", _("amd64,i386") ],
+                            [ "amd64,armhf,i386", _("amd64,armhf,i386") ],
+                            [ "amd64,armel,armhf,i386", _("amd64,armel,armhf,i386") ]
+                        ]
+                    }),
+                    displayField: "text",
+                    valueField: "value",
+                    allowBlank: false,
+                    editable: false,
+                    triggerAction: "all",
+                    value: "all"
                 },{
                     xtype: "hiddenfield",
                     name: "bpackage",
@@ -374,8 +399,7 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
         if(me.mode === "remote") {
             me.store.reload();
         }
-    },
-
+    }
 });
 
 OMV.WorkspaceManager.registerPanel({

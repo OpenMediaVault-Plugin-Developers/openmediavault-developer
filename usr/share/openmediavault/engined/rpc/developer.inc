@@ -27,22 +27,40 @@ require_once("openmediavault/notify.inc");
 
 class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 {
-    private static $commands = array("build","update","upload","buildpot","pushpot",
-        "pullpo","install","reset","tx","gh","git","add","commit","push","tag",
-        "dchi","dcha","dchr","changelog","status","diff");
+    private static $commands = [
+        "build","update","upload","install","reset",
+        "tx","buildpot","pushpot","pullpo",
+        "git","gh","add","commit","push","tag","status","diff",
+        "dchi","dcha","dchr","changelog"
+    ];
 
-    private static $plugins = array("acestream","active-directory","anacron","aufs",
-        "autoshutdown","backup","btsync","calibre","couchpotato","cups","ddclient","deluge",
-        "developer","dnsmasq","docker","docker-gui","downloader","emby","extplorer","fail2ban",
-        "flexget","flashmemory","folding","gateone","git","glusterfs","greyhole","headphones",
-        "hpraid","jdownloader","kerberos","letsencrypt","links","locate","luksencryption","mcmyadmin",
-        "mediabrowser","mhddfs","minidlna","mpd","mumble","mylar","mysql","nginx","nzbget","nzbdrone",
-        "offlineimap","omvextrasorg","openvpn","openvpnas","plexmediaserver","postgresql","processlist",
-        "pxe","pyload","remotedesktop","remotenfs-share","remoteshare","roundcube","rsnapshot","sabnzbd",
-        "sensors","shellinabox","sickbeard","skeleton","snapraid","sonarr","spideroak","subsonic",
-        "subversion","supportinfo","syncthing","teamspeak3","transmissionbt","unionfilesystems",
-        "vdr","vdr-extras","virtualbox","virtualhosts","wakealarm","webdav","website","websites",
-        "wol","wordpress","zfs");
+    private static $plugins = [
+        "acestream","active-directory","anacron","autoshutdown",
+        "backup","btsync",
+        "calibre","couchpotato","cups",
+        "ddclient","deluge","developer","dnsmasq","docker",
+            "docker-gui","downloader",
+        "emby","extplorer",
+        "fail2ban","flashmemory",
+        "gateone","greyhole",
+        "headphones","hpraid",
+        "jdownloader",
+        "kerberos",
+        "letsencrypt","links","locate","luksencryption",
+        "mcmyadmin","mediabrowser","minidlna","mpd","mumble",
+            "mylar","mysql",
+        "nginx","nzbget","nzbdrone",
+        "offlineimap","omvextrasorg","openvpn","openvpnas",
+        "plexmediaserver","postgresql","pxe","pyload",
+        "remotedesktop","remoteshare","roundcube","rsnapshot",
+        "sabnzbd","sensors","shellinabox","sickbeard","skeleton",
+            "snapraid","sonarr","subsonic","syncthing",
+        "teamspeak3","transmissionbt",
+        "unionfilesystems",
+        "vdr","vdr-extras","virtualbox",
+        "wakealarm","webdav","websites","wol","wordpress",
+        "zfs"
+    ];
 
     const LOCATION = 'location';
 
@@ -83,20 +101,20 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
     /**
      * Do a curl API call with given url
-     * 
+     *
      * @param string $url The URL to use in the call
-     * 
+     *
      * @return string
      */
     private function _doApiCall($url)
     {
         $curl = curl_init();
         curl_setopt_array(
-            $curl, array(
+            $curl, [
                 CURLOPT_RETURNTRANSFER => 1,
                 CURLOPT_TIMEOUT => 30,
                 CURLOPT_CONNECTTIMEOUT => 5
-            )
+            ]
         );
         curl_setopt($curl, CURLOPT_URL, $url);
         if (!($response = curl_exec($curl))) {
@@ -110,7 +128,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
     }
 
     private function _createTree(&$list, $parent){
-        $tree = array();
+        $tree = [];
         foreach ($parent as $k=>$l){
             if(isset($list[$l['id']])){
                 $l['leaf'] = false;
@@ -155,7 +173,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Get configuration object
@@ -180,7 +198,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Validate the parameters of the RPC service method.
@@ -214,7 +232,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
     }
 
     // Prepare configuration data
-    $object = array(
+    $object = [
         "sharedfolderref" => $params["sharedfolderref"],
         "owner"           => $params['owner'],
         "gitname"         => $params['gitname'],
@@ -228,10 +246,10 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "btusername"      => $params['btusername'],
         "btapikey"        => $params['btapikey'],
         "btgpgpass"       => $params['btgpgpass'],
-        "locations"       => isset($oldObject['locations']) ? $oldObject['locations'] : array(),
-        "repos"           => isset($oldObject['repos']) ? $oldObject['repos'] : array(),
-        "packages"        => isset($oldObject['packages']) ? $oldObject['packages'] : array()
-    );
+        "locations"       => isset($oldObject['locations']) ? $oldObject['locations'] : [],
+        "repos"           => isset($oldObject['repos']) ? $oldObject['repos'] : [],
+        "packages"        => isset($oldObject['packages']) ? $oldObject['packages'] : []
+    ];
 
     // Set configuration object
     if (false === $xmlConfig->replace($this->getXPath(), $object))
@@ -260,7 +278,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Validate the parameters of the RPC service method.
@@ -291,13 +309,11 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $sfPath = OMVRpc::exec(
             "ShareMgmt",
             "getPath",
-            array(
-                "uuid" => $object['sharedfolderref']
-            ),
+            [ "uuid" => $object['sharedfolderref'] ],
             $context
         );
     }
-    $objects = array();
+    $objects = [];
 
     foreach (self::$plugins as $plugin)
     {
@@ -326,13 +342,13 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             }
         }
 
-        $objects[] = array(
+        $objects[] = [
             "name"     => $plugin,
             "fullname" => sprintf("openmediavault-%s", $plugin),
             "url"      => sprintf("https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-%s", $plugin),
             "exists"   => $exists,
             "version"  => $version
-        );
+        ];
     }
 
     // Filter the result.
@@ -347,7 +363,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Get configuration object
@@ -373,7 +389,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Validate the parameters of the RPC service method.
@@ -391,7 +407,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
     }');
 
     // Prepare configuration data
-    $object = array(
+    $object = [
         "uuid"            => ($params["uuid"] == $GLOBALS["OMV_UUID_UNDEFINED"]) ? OMVUtil::uuid() : $params["uuid"],
         "name"            => $params['name'],
         "remotehost"      => $params['remotehost'],
@@ -399,14 +415,14 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "port"            => intval($params['port']),
         "username"        => $params['username'],
         "password"        => $params['password']
-    );
+    ];
 
     // Set the configuration object.
     $success = FALSE;
     if ($params["uuid"] == $GLOBALS["OMV_UUID_UNDEFINED"])
     {
         // Append the configuration object.
-        $success = $xmlConfig->set($this->getXPathLocations(), array("location" => $object));
+        $success = $xmlConfig->set($this->getXPathLocations(), [ "location" => $object ]);
     }
     else
     {
@@ -433,7 +449,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Validate the parameters of the RPC service method.
@@ -469,7 +485,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Validate the parameters of the RPC service method.
@@ -495,7 +511,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Validate the parameters of the RPC service method.
@@ -569,7 +585,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Validate the parameters of the RPC service method.
@@ -652,7 +668,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Validate the parameters of the RPC service method.
@@ -716,7 +732,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Validate the parameters of the RPC service method.
@@ -775,7 +791,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext(
             $context,
-            array( "role" => OMV_ROLE_ADMINISTRATOR )
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Create a background process.
@@ -804,7 +820,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
     /**
      * Retrieve all Bintray repos and packages that the user has access to
-     * 
+     *
      * @param array  $params  An associative array with all RPC call parameters
      * @param string $context The context of the user maing the RPC call
      *
@@ -815,7 +831,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         global $xmlConfig;
         $this->validateMethodContext(
             $context,
-            array("role" => OMV_ROLE_ADMINISTRATOR)
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         $settings = $xmlConfig->get($this->getXpath());
@@ -826,7 +842,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             );
         }
 
-        $objects = array();
+        $objects = [];
         $reposXpath = $this->getXpath() . "/repos";
         $packagesXpath = $this->getXpath() . "/packages";
         $repos = $xmlConfig->getList($reposXpath . "/*");
@@ -837,29 +853,29 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         foreach ($repos as $repo) {
             array_push(
                 $objects,
-                array(
+                [
                     "parentid" => "root",
                     "id" => $repo['name'],
                     "type" => "Repo",
                     "name" => $repo['name'],
                     "icon" => "images/folder.png"
-                )
+                ]
             );
             $packages = $xmlConfig->getList($packagesXpath . "/package[repo='" . $repo['name'] . "']");
             foreach ($packages as $package) {
                 array_push(
                     $objects,
-                    array(
+                    [
                         "parentid" => $repo['name'],
                         "id" => $repo['name'] . "-" . $package['name'],
                         "type" => "Package",
                         "name" => $package['name'],
                         "icon" => "images/puzzle.png"
-                    )
+                    ]
                 );
             }
         }
-        $new = array();
+        $new = [];
         foreach ($objects as $a){
             $new[$a['parentid']][] = $a;
         }
@@ -869,7 +885,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
     /**
      * Create a new Bintray repo
-     * 
+     *
      * @param array  $params  An associative array with all RPC call parameters
      * @param string $context The context of the user maing the RPC call
      *
@@ -880,7 +896,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         global $xmlConfig;
         $this->validateMethodContext(
             $context,
-            array("role" => OMV_ROLE_ADMINISTRATOR)
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         $settings = $xmlConfig->get($this->getXpath());
@@ -905,8 +921,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             );
         }
         $reposXpath = $this->getXpath() . "/repos";
-        $object = array("name" => $params['repo']);
-        if (false === $xmlConfig->set($reposXpath, array("repo" => $object))) {
+        $object = [ "name" => $params['repo'] ];
+        if (false === $xmlConfig->set($reposXpath, [ "repo" => $object ])) {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
                 $this->getXpath()
@@ -916,7 +932,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
     /**
      * Create a new Bintray package
-     * 
+     *
      * @param array  $params  An associative array with all RPC call parameters
      * @param string $context The context of the user maing the RPC call
      *
@@ -927,7 +943,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         global $xmlConfig;
         $this->validateMethodContext(
             $context,
-            array("role" => OMV_ROLE_ADMINISTRATOR)
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         $settings = $xmlConfig->get($this->getXpath());
@@ -942,9 +958,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             $sfPath = OMVRpc::exec(
                 "ShareMgmt",
                 "getPath",
-                array(
-                    "uuid" => $settings['sharedfolderref']
-                ),
+                [ "uuid" => $settings['sharedfolderref'] ],
                 $context
             );
         }
@@ -987,11 +1001,11 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             );
         }
         $packagesXpath = $this->getXpath() . "/packages";
-        $object = array(
+        $object = [
             "name" => $params['name'],
             "repo" => $params['repo']
-        );
-        if (false === $xmlConfig->set($packagesXpath, array("package" => $object))) {
+        ];
+        if (false === $xmlConfig->set($packagesXpath, [ "package" => $object ])) {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
                 $this->getXpath()
@@ -1001,7 +1015,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
     /**
      * Publish a file to Bintray
-     * 
+     *
      * @param array  $params  An associative array with all RPC call parameters
      * @param string $context The context of the user maing the RPC call
      *
@@ -1012,7 +1026,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         global $xmlConfig;
         $this->validateMethodContext(
             $context,
-            array("role" => OMV_ROLE_ADMINISTRATOR)
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         $settings = $xmlConfig->get($this->getXpath());
@@ -1027,9 +1041,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             $sfPath = OMVRpc::exec(
                 "ShareMgmt",
                 "getPath",
-                array(
-                    "uuid" => $settings['sharedfolderref']
-                ),
+                [ "uuid" => $settings['sharedfolderref'] ],
                 $context
             );
         }
@@ -1045,8 +1057,12 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $version = $matches[1];
         $arch = $matches[2];
 
-        //if ($arch == "all") $arch="amd64,armhf,i386";
-        
+        if ($arch == "all") {
+            if (!empty($params['arch'])) {
+                $arch = trim($params['arch']);
+            }
+        }
+
         $url = "https://api.bintray.com/content/openmediavault-plugin-developers/" .
             $params['repo'] . "/" . $params['bpackage'] .
             "/" . $version . "/" . "pool/main/" . substr($params['bpackage'], 0, 1) .
@@ -1072,7 +1088,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
     /**
      * Sync local data with Bintray
-     * 
+     *
      * @param array  $params  An associative array with all RPC call parameters
      * @param string $context The context of the user maing the RPC call
      *
@@ -1083,7 +1099,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         global $xmlConfig;
         $this->validateMethodContext(
             $context,
-            array("role" => OMV_ROLE_ADMINISTRATOR)
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         $settings = $xmlConfig->get($this->getXpath());
@@ -1098,13 +1114,13 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $packagesXpath = $this->getXpath() . "/packages";
         $xmlConfig->delete($reposXpath);
         $xmlConfig->delete($packagesXpath);
-        if (false === $xmlConfig->set($this->getXpath(), array("repos" => array()))) {
+        if (false === $xmlConfig->set($this->getXpath(), [ "repos" => [] ])) {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
                 $this->getXpath()
             );
         }
-        if (false === $xmlConfig->set($this->getXpath(), array("packages" => array()))) {
+        if (false === $xmlConfig->set($this->getXpath(), [ "packages" => [] ])) {
             throw new OMVException(
                 OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
                 $this->getXpath()
@@ -1114,8 +1130,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $url = "https://api.bintray.com/repos/openmediavault-plugin-developers";
         $repodata = json_decode($this->_doApiCall($url));
         foreach ($repodata as $repo) {
-            $object = array("name" => $repo->name);
-            if (false === $xmlConfig->set($reposXpath, array("repo" => $object))) {
+            $object = [ "name" => $repo->name ];
+            if (false === $xmlConfig->set($reposXpath, [ "repo" => $object ])) {
                 throw new OMVException(
                     OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
                     $this->getXpath()
@@ -1124,11 +1140,11 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             $url = "https://api.bintray.com/repos/openmediavault-plugin-developers/" . $repo->name . "/packages";
             $packagedata = json_decode($this->_doApiCall($url));
             foreach ($packagedata as $package) {
-                $object = array(
+                $object = [
                     "name" => $package->name,
                     "repo" => $repo->name
-                );
-                if (false === $xmlConfig->set($packagesXpath, array("package" => $object))) {
+                ];
+                if (false === $xmlConfig->set($packagesXpath, [ "package" => $object ])) {
                     throw new OMVException(
                         OMVErrorMsg::E_CONFIG_SET_OBJECT_FAILED,
                         $this->getXpath()
@@ -1140,7 +1156,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
     /**
      * Retrieve all files in location specified by package
-     * 
+     *
      * @param array  $params  An associative array with all RPC call parameters
      * @param string $context The context of the user maing the RPC call
      *
@@ -1151,7 +1167,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         global $xmlConfig;
         $this->validateMethodContext(
             $context,
-            array("role" => OMV_ROLE_ADMINISTRATOR)
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
         );
 
         // Get configuration object
@@ -1167,14 +1183,12 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             $sfPath = OMVRpc::exec(
                 "ShareMgmt",
                 "getPath",
-                array(
-                    "uuid" => $settings['sharedfolderref']
-                ),
+                [ "uuid" => $settings['sharedfolderref'] ],
                 $context
             );
         }
 
-        $objects = array();
+        $objects = [];
 
         $files = scandir($sfPath);
         foreach ($files as $file) {
@@ -1182,10 +1196,10 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                 if (!(is_dir($sfPath . "/" . $file))) {
                     array_push(
                         $objects,
-                        array(
+                        [
                             "filename" => $file,
                             "fullpath" => $sfPath . "/" . $file
-                        )
+                        ]
                     );
                 }
             }
