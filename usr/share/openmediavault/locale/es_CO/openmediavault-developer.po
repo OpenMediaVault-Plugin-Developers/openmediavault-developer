@@ -1,0 +1,339 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: openmediavault-developer\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-01-02 10:05-0600\n"
+"PO-Revision-Date: 2016-01-02 16:05+0000\n"
+"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"Language-Team: Spanish (Colombia) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-developer/language/es_CO/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es_CO\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid " to current github files ..."
+msgstr ""
+
+msgid "API key"
+msgstr ""
+
+msgid "Add changelog line ..."
+msgstr ""
+
+msgid "Add package"
+msgstr ""
+
+msgid "Add repo"
+msgstr ""
+
+msgid "Add upload location"
+msgstr ""
+
+msgid "Adding files for commit ..."
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "Architecture"
+msgstr ""
+
+msgid "Bintray"
+msgstr ""
+
+msgid "Bintray settings"
+msgstr ""
+
+msgid "Build"
+msgstr ""
+
+msgid "Build POT"
+msgstr ""
+
+msgid "Building translations ..."
+msgstr ""
+
+msgid "Changelog"
+msgstr ""
+
+msgid "Changelog for "
+msgstr ""
+
+msgid "Create Bintray package"
+msgstr ""
+
+msgid "Create Bintray repo"
+msgstr ""
+
+msgid "Create Github .netrc"
+msgstr ""
+
+msgid "Create Transifex configs"
+msgstr ""
+
+msgid "Create git config"
+msgstr ""
+
+msgid "Creating Github .netrc ..."
+msgstr ""
+
+msgid "Creating Transifex config ..."
+msgstr ""
+
+msgid "Creating commit ..."
+msgstr ""
+
+msgid "Creating git config ..."
+msgstr ""
+
+msgid "Creating tag ..."
+msgstr ""
+
+msgid "Deleting selected item(s)"
+msgstr ""
+
+msgid "Description"
+msgstr ""
+
+msgid "Developer"
+msgstr ""
+
+msgid "Directory"
+msgstr ""
+
+msgid "Dist"
+msgstr ""
+
+msgid "Done..."
+msgstr ""
+
+msgid "Edit upload location"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "File"
+msgstr ""
+
+msgid "File successfully published"
+msgstr ""
+
+msgid "Folder Exists"
+msgstr ""
+
+msgid "Full Name"
+msgstr ""
+
+msgid "GPG-key passphrase"
+msgstr ""
+
+msgid "Git"
+msgstr ""
+
+msgid "GitHub"
+msgstr ""
+
+msgid "Github Config"
+msgstr ""
+
+msgid "Hostname"
+msgstr ""
+
+msgid "Increment version ..."
+msgstr ""
+
+msgid "Install"
+msgstr ""
+
+msgid "Install OMV from svn"
+msgstr ""
+
+msgid "Installing "
+msgstr ""
+
+msgid "Installing OMV from svn ..."
+msgstr ""
+
+msgid "Locations"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Open repo page"
+msgstr ""
+
+msgid "Owner"
+msgstr ""
+
+msgid "Package"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Plugin"
+msgstr ""
+
+msgid "Plugins"
+msgstr ""
+
+msgid "Port"
+msgstr ""
+
+msgid "Publish file"
+msgstr ""
+
+msgid "Publish file on Bintray"
+msgstr ""
+
+msgid "Pull PO"
+msgstr ""
+
+msgid "Pulling translations ..."
+msgstr ""
+
+msgid "Push POT"
+msgstr ""
+
+msgid "Pushing files to Github ..."
+msgstr ""
+
+msgid "Release version ..."
+msgstr ""
+
+msgid "Remote Host"
+msgstr ""
+
+msgid "Remote Path"
+msgstr ""
+
+msgid "Reset"
+msgstr ""
+
+msgid "Resetting "
+msgstr ""
+
+msgid "Sending translations ..."
+msgstr ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Show changelog"
+msgstr ""
+
+msgid "Showing diff ..."
+msgstr ""
+
+msgid "Status ..."
+msgstr ""
+
+msgid "Success"
+msgstr ""
+
+msgid "Synchronize"
+msgstr ""
+
+msgid "Token"
+msgstr ""
+
+msgid "Transifex"
+msgstr ""
+
+msgid "Transifex Config"
+msgstr ""
+
+msgid "Update"
+msgstr ""
+
+msgid "Update All"
+msgstr ""
+
+msgid "Updating "
+msgstr ""
+
+msgid "Updating all plugins ..."
+msgstr ""
+
+msgid "Upload"
+msgstr ""
+
+msgid "Uploading "
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Version"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "amd64 only"
+msgstr ""
+
+msgid "amd64,armel,armhf,i386"
+msgstr ""
+
+msgid "amd64,armhf,i386"
+msgstr ""
+
+msgid "amd64,i386"
+msgstr ""
+
+msgid "arm64 only"
+msgstr ""
+
+msgid "armel only"
+msgstr ""
+
+msgid "armhf only"
+msgstr ""
+
+msgid "dch -a"
+msgstr ""
+
+msgid "dch -i"
+msgstr ""
+
+msgid "dch -r"
+msgstr ""
+
+msgid "git Config"
+msgstr ""
+
+msgid "git add"
+msgstr ""
+
+msgid "git commit"
+msgstr ""
+
+msgid "git diff"
+msgstr ""
+
+msgid "git push"
+msgstr ""
+
+msgid "git status"
+msgstr ""
+
+msgid "git tag"
+msgstr ""
+
+msgid "powerpc only"
+msgstr ""
