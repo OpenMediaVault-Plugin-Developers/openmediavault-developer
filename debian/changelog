@@ -1,3 +1,9 @@
+openmediavault-developer (3.0.1) stable; urgency=medium
+
+  * Fix tx location
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 02 Jan 2016 10:07:23 -0600
+
 openmediavault-developer (3.0) stable; urgency=low
 
   * Remove old plugins
