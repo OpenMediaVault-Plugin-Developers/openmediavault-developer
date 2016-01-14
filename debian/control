@@ -9,9 +9,21 @@ Homepage: http://omv-extras.org/
 
 Package: openmediavault-developer
 Architecture: all
-Depends: ${misc:Depends}, fakeroot, build-essential, devscripts, git,
- debhelper, openmediavault (>= 3), sshpass, transifex-client,
- subversion, equivs, curl, php5-curl, dh-systemd
+Depends: build-essential,
+         curl,
+         debhelper,
+         devscripts,
+         dh-systemd,
+         equivs,
+         fakeroot,
+         git,
+         openmediavault (>= 3),
+         quilt,
+         php5-curl,
+         sshpass,
+         subversion,
+         transifex-client,
+         ${misc:Depends}
 Description: OpenMediaVault Developer plugin
  Plugin to help developer download/ plugin code and setup system for
  plugin development.
