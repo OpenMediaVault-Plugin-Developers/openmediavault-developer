@@ -57,7 +57,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             "snapraid","sonarr","subsonic","syncthing",
         "teamspeak3","transmissionbt",
         "unionfilesystems",
-        "vdr","vdr-extras","virtualbox",
+        "vdr","vdr-extras","vdr-vnsiserver","virtualbox",
         "wakealarm","webdav","websites","wol","wordpress",
         "zfs"
     ];
