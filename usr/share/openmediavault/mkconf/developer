@@ -52,10 +52,29 @@ packagepath="${sfpath}/${package}"
 
 initial()
 {
+    export LANG=C
     if [ ! -d "${packagepath}" ]; then
         echo "Cloning ${package} from github to ${sfpath} ..."
+
         cd ${sfpath}
         git clone https://github.com/OpenMediaVault-Plugin-Developers/${package}.git
+
+        cd ${sfpath}/${package}
+        oIFS=${IFS}
+        IFS=$'
+'
+        remote_branches=$(git branch -r | grep -v HEAD | grep -v master)
+
+        if [ -n ${remote_branches} ]; then
+            for rbranch in ${remote_branches}; do
+                current=$(echo ${rbranch} | cut -d'/' -f2)
+                git checkout -b ${current} origin/${current}
+            done
+
+            git checkout master
+        fi
+
+        IFS=${oIFS}
     fi
 }
 
@@ -69,8 +88,8 @@ remove()
 
 build()
 {
-    echo "Building ${package}..."
     export LANG=C
+    echo "Building ${package}..."
     rm -f ${temppath}${package}*.deb
     rm -rf ${temppath}${package}
     cp -r ${packagepath} ${temppath}
@@ -93,9 +112,10 @@ build()
 
 update()
 {
+    export LANG=C
     cd ${packagepath}
     echo "Updating ${package} from github..."
-    git pull
+    git pull --all
     git status
 }
 
@@ -132,8 +152,7 @@ EOF
 
     # repos
     while read repo; do
-
-    cat <<EOF >> ${tx_file}
+        cat <<EOF >> ${tx_file}
 [${repo}.${repo}pot]
 file_filter = ${repo}/usr/share/openmediavault/locale/<lang>/${repo}.po
 source_file = ${repo}/usr/share/openmediavault/locale/${repo}.pot
@@ -204,6 +223,7 @@ install()
     export DEBIAN_FRONTEND=noninteractive
     cd ${packagepath}
     dpkg -i "${version}"
+    dpkg --configure -a
     apt-get --yes --force-yes --fix-missing -f install
 }
 
