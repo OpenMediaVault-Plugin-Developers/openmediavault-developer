@@ -223,7 +223,6 @@ install()
     export DEBIAN_FRONTEND=noninteractive
     cd ${packagepath}
     dpkg -i "${version}"
-    dpkg --configure -a
     apt-get --yes --force-yes --fix-missing -f install
 }
 
