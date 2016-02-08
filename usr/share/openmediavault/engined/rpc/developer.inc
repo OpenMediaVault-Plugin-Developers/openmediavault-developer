@@ -741,17 +741,16 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $this->validateMethodParams($params, '{
             "type"       : "object",
                 "properties" : {
-                    "command" : { "type" : "string" },
-                        "name"    : { "type" : "string" },
-                        "branch"  : { "type" : "string", "optional" : "true" }
+                        "plugin" : { "type" : "string" },
+                        "branch" : { "type" : "string" }
     }
     }');
 
-    if (!in_array($params['name'], self::$plugins))
+    if (!in_array($params['plugin'], self::$plugins))
     {
         throw new OMVException(
             OMVErrorMsg::E_MISC_OPERATION_DENIED,
-            sprinf("Unknown plugin - %s", $params['name'])
+            sprinf("Unknown plugin - %s", $params['plugin'])
         );
     }
 
@@ -769,8 +768,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $bgOutputFilename = $this->createBgProcOutput();
         $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
 
-        $cmd = sprintf("omv-mkconf developer %s %s %s2>&1",
-            "changebranch", $params['name'], $params['branch']);
+        $cmd = sprintf("omv-mkconf developer %s %s %s 2>&1",
+            "changebranch", $params['plugin'], trim(str_replace("*", "", $params['branch'])));
         $this->exec($cmd, $output, $bgOutputFilename);
 
         $this->finalizeBgProcStatus($bgStatusFilename, $output);
@@ -798,7 +797,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
 
         foreach ($out as $branch) {
             $objects[] = [
-                "branch" => trim(strstr($branch, " "))
+                "branch" => trim($branch)
             ];
         }
         return $objects;
