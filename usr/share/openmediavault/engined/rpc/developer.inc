@@ -155,6 +155,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $this->registerMethod("doCommand");
         $this->registerMethod("createConfig");
         $this->registerMethod("doGit");
+        $this->registerMethod("getBranches");
+        $this->registerMethod("doChangeBranch");
         $this->registerMethod("doDch");
         $this->registerMethod("doOmvSvn");
 
@@ -723,6 +725,83 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
         exit(1);
     }
+    }
+
+    public function doChangeBranch($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
+        );
+
+        // Validate the parameters of the RPC service method.
+        $this->validateMethodParams($params, '{
+            "type"       : "object",
+                "properties" : {
+                    "command" : { "type" : "string" },
+                        "name"    : { "type" : "string" },
+                        "branch"  : { "type" : "string", "optional" : "true" }
+    }
+    }');
+
+    if (!in_array($params['name'], self::$plugins))
+    {
+        throw new OMVException(
+            OMVErrorMsg::E_MISC_OPERATION_DENIED,
+            sprinf("Unknown plugin - %s", $params['name'])
+        );
+    }
+
+    // Create a background process.
+    $bgStatusFilename = $this->createBgProcStatus();
+    $pid = $this->fork();
+
+    if ($pid > 0) { // Parent process.
+        $this->initializeBgProcStatus($bgStatusFilename, $pid);
+        return $bgStatusFilename;
+    }
+
+    // Child process.
+    try {
+        $bgOutputFilename = $this->createBgProcOutput();
+        $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
+
+        $cmd = sprintf("omv-mkconf developer %s %s %s2>&1",
+            "changebranch", $params['name'], $params['branch']);
+        $this->exec($cmd, $output, $bgOutputFilename);
+
+        $this->finalizeBgProcStatus($bgStatusFilename, $output);
+        exit(0);
+    } catch(Exception $e) {
+        $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
+        exit(1);
+    }
+    }
+
+    public function getBranches($params, $context)
+    {
+        global $xmlConfig;
+
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
+        );
+
+        // Get configuration object
+        $objects = [];
+        $cmd = sprintf("omv-mkconf developer branches %s", $params['plugin']);
+        exec($cmd, $out);
+
+        foreach ($out as $branch) {
+            $objects[] = [
+                "branch" => trim(strstr($branch, " "))
+            ];
+        }
+        return $objects;
     }
 
     public function doDch($params, $context)

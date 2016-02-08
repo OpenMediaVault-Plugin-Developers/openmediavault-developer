@@ -3,7 +3,7 @@
  * @author    Volker Theile <volker.theile@openmediavault.org>
  * @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
  * @copyright Copyright (c) 2009-2013 Volker Theile
- * @copyright Copyright (c) 2014-2015 OpenMediaVault Plugin Developers
+ * @copyright Copyright (c) 2014-2016 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,23 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+// require("js/omv/Rpc.js")
 // require("js/omv/WorkspaceManager.js")
+// require("js/omv/data/Model.js")
+// require("js/omv/data/Store.js")
+// require("js/omv/data/proxy/Rpc.js")
+// require("js/omv/form/field/SharedFolderComboBox.js")
+// require("js/omv/util/Format.js")
 // require("js/omv/workspace/grid/Panel.js")
 // require("js/omv/workspace/window/Form.js")
 // require("js/omv/workspace/window/plugin/ConfigObject.js")
-// require("js/omv/util/Format.js")
-// require("js/omv/Rpc.js")
-// require("js/omv/data/Store.js")
-// require("js/omv/data/Model.js")
-// require("js/omv/data/proxy/Rpc.js")
-// require("js/omv/form/field/SharedFolderComboBox.js")
 
 Ext.define("OMV.module.admin.service.developer.Plugins", {
     extend   : "OMV.workspace.grid.Panel",
     requires : [
         "OMV.Rpc",
-        "OMV.data.Store",
         "OMV.data.Model",
+        "OMV.data.Store",
         "OMV.data.proxy.Rpc",
         "OMV.util.Format"
     ],
@@ -274,6 +274,10 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 text     : _("git diff"),
                 icon     : "images/edit.png",
                 handler  : Ext.Function.bind(me.onGitButton, me, [ "diff" ])
+            },{
+                text     : _("Change Branch"),
+                icon     : "images/edit.png",
+                handler  : Ext.Function.bind(me.onBranchButton, me, [ me ])
             }]
         },{
             id       : me.getId() + "-dch",
@@ -668,6 +672,57 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         wnd.setButtonDisabled("close", true);
         wnd.show();
         wnd.start();
+    },
+
+    onBranchButton: function() {
+        var me = this;
+        var record = me.getSelected();
+        Ext.create("OMV.workspace.window.Form", {
+            title        : _("Change Branch ..."),
+            rpcService   : "Developer",
+            rpcSetMethod : "doChangeBranch",
+            getFormItems : function() {
+                var me = this;
+                return [{
+                    xtype : "combo",
+                    name  : "branch",
+                    store : Ext.create("OMV.data.Store", {
+                        autoLoad : true,
+                        pageSize : 100,
+                        model    : OMV.data.Model.createImplicit({
+                            fields : [
+                                { name : "branch", type: "string" }
+                            ]
+                        }),
+                        proxy : {
+                            type    : "rpc",
+                            rpcData : {
+                                service : "Developer",
+                                method  : "getBranches",
+                                params  : {
+                                    plugin : record.get("name")
+                                }
+                            }
+                        }
+                    }),
+                    editable     : false,
+                    valueField   : "branch",
+                    displayField : "branch",
+                    fieldLabel   : _("Branch"),
+                    allowBlank   : false
+                },{
+                    xtype : "hiddenfield",
+                    name  : "plugin",
+                    value : record.get("name")
+                }];
+            },
+            listeners : {
+                scope  : me,
+                submit : function() {
+                    this.doReload();
+                }
+            }
+        }).show();
     },
 
     onOpenRepoButton : function() {

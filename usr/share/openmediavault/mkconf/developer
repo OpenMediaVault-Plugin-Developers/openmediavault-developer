@@ -115,7 +115,7 @@ update()
     export LANG=C
     cd ${packagepath}
     echo "Updating ${package} from github..."
-    git pull --all
+    git pull
     git status
 }
 
@@ -240,8 +240,8 @@ fixperms()
     varlibcronpath="/var/lib/openmediavault/cron.d/"
     prepath="/usr/share/openmediavault/releaseupgrade/pre.d/"
     postpath="/usr/share/openmediavault/releaseupgrade/post.d/"
-    echo "Fixing permissions..."
 
+    echo "Fixing permissions..."
     find "${packagepath}" -type f -exec chmod 644 {} +
     find "${packagepath}" -type d -exec chmod 755 {} +
 
@@ -349,6 +349,18 @@ gitdiff()
 {
     cd ${packagepath}
     git diff 2>&1
+}
+
+gitBranches()
+{
+    cd ${packagepath}
+    git branch
+}
+
+gitChangeBranch()
+{
+    cd ${packagepath}
+    git checkout ${location} 2>&1
 }
 
 dchi()
@@ -537,6 +549,18 @@ case ${command} in
         initial
         fixperms
         gitdiff
+    ;;
+
+    branches)
+        initial
+        fixperms > /dev/null
+        gitBranches
+    ;;
+
+    changebranch)
+        initial
+        fixperms
+        gitChangeBranch
     ;;
 
     dchi)
