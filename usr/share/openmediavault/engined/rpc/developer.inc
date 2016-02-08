@@ -320,8 +320,9 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
     foreach (self::$plugins as $plugin)
     {
         $pluginPath = sprintf("%s/openmediavault-%s", $sfPath, $plugin);
-        $exists = file_exists($pluginPath);
+        $exists  = file_exists($pluginPath);
         $version = "n/a";
+        $branch  = "master";
 
         if ($exists)
         {
@@ -342,6 +343,13 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                 $version = fgets($f);
                 fclose($f);
             }
+
+            if (file_exists(sprintf("%s/.git/HEAD", $pluginPath)))
+            {
+                $f = fopen(sprintf("%s/.git/HEAD", $pluginPath), 'r');
+                $branch = explode("/", fgets($f));
+                fclose($f);
+            }
         }
 
         $objects[] = [
@@ -349,6 +357,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             "fullname" => sprintf("openmediavault-%s", $plugin),
             "url"      => sprintf("https://github.com/OpenMediaVault-Plugin-Developers/openmediavault-%s", $plugin),
             "exists"   => $exists,
+            "branch"   => $branch[2],
             "version"  => $version
         ];
     }

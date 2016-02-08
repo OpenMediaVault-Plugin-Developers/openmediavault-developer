@@ -73,6 +73,11 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             return content;
         }
     },{
+        text      : _("Branch"),
+        sortable  : true,
+        dataIndex : "branch",
+        stateId   : "branch"
+    },{
         text      : _("Version"),
         sortable  : true,
         dataIndex : "version",
@@ -92,6 +97,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                         { name : "fullname", type : "string" },
                         { name : "url", type : "string" },
                         { name : "exists", type : "boolean" },
+                        { name : "branch", type : "string" },
                         { name : "version", type : "string" }
                     ]
                 }),
