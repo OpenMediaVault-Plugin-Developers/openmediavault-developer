@@ -1,3 +1,9 @@
+openmediavault-developer (3.2) stable; urgency=low
+
+  * Download plugin list from github
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 10 Feb 2016 10:49:11 -0600
+
 openmediavault-developer (3.1) stable; urgency=low
 
   * Add branch checkout

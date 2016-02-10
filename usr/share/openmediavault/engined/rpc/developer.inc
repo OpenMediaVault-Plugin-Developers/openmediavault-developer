@@ -34,33 +34,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         "dchi","dcha","dchr","changelog"
     ];
 
-    private static $plugins = [
-        "acestream","active-directory","anacron","autoshutdown",
-        "backup","btsync",
-        "calibre","couchpotato","cups",
-        "ddclient","deluge","developer","dnsmasq","docker",
-            "docker-gui","downloader",
-        "emby","extplorer",
-        "fail2ban","flashmemory",
-        "gateone","greyhole",
-        "headphones","hpraid",
-        "jdownloader",
-        "kerberos",
-        "letsencrypt","links","locate","luksencryption",
-        "mcmyadmin","mediabrowser","minidlna","mpd","mumble",
-            "mylar","mysql",
-        "nginx","nzbget","nzbdrone",
-        "offlineimap","omvextrasorg","openvpn","openvpnas",
-        "plexmediaserver","postgresql","pxe","pyload",
-        "remotedesktop","remoteshare","roundcube","rsnapshot",
-        "sabnzbd","sensors","shellinabox","sickbeard","skeleton",
-            "snapraid","sonarr","subsonic","syncthing",
-        "teamspeak3","transmissionbt",
-        "unionfilesystems",
-        "vdr","vdr-extras","vdr-vnsiserver","virtualbox",
-        "wakealarm","webdav","websites","wol","wordpress",
-        "zfs"
-    ];
+    private $plugins = [];
 
     const LOCATION = 'location';
 
@@ -97,6 +71,11 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
     private function getEventMessagePathLocation()
     {
         return sprintf( "%s.%ss.%s", $this->getEventMessagePath(), self::LOCATION, self::LOCATION );
+    }
+
+    private function getPluginCache()
+    {
+        return "/var/cache/openmediavault/dev_plugin_cache";
     }
 
     /**
@@ -312,12 +291,12 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         }
 
         $objects = [];
-
-        foreach (self::$plugins as $plugin) {
+        $this->fillPlugins();
+        foreach ($this->plugins as $plugin) {
             $pluginPath = sprintf("%s/openmediavault-%s", $sfPath, $plugin);
             $exists  = file_exists($pluginPath);
             $version = "n/a";
-            $branch  = "master";
+            $branch  = [ "", "", "n/a" ];
 
             if ($exists) {
                 if (file_exists(sprintf("%s/control", $pluginPath))) {
@@ -353,6 +332,37 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         // Filter the result.
         return $this->applyFilter($objects, $params['start'], $params['limit'],
             $params['sortfield'], $params['sortdir']);
+    }
+
+    private function fillPlugins()
+    {
+        // Get current time
+        $time = time();
+
+        // if the cache doesn't exist or is older than 1 day, download it
+        if ( !file_exists($this->getPluginCache()) or
+             ($time - filemtime($this->getPluginCache()) >= 60*60*24) ) {
+            // Github requires an user-agent:
+            //   https://developer.github.com/v3/#user-agent-required
+            $context = stream_context_create([
+                'http' => ['user_agent' => 'openmediavault-plugin-developers'],
+            ]);
+            $json = file_get_contents(
+                'https://api.github.com/orgs/openmediavault-plugin-developers/repos?per_page=100',
+                false, $context
+            );
+            // Get repos info and put in cache file
+            file_put_contents($this->getPluginCache(), $json);
+        }
+        $this->plugins = [];
+        $data = json_decode(file_get_contents($this->getPluginCache()), true);
+        foreach ($data as $plugin) {
+            if (empty($plugin))
+                continue;
+            if (substr($plugin["name"],0,15) !== "openmediavault-")
+                continue;
+            $this->plugins[] = str_replace("openmediavault-","",$plugin["name"]); 
+        }    
     }
 
     public function getLocation($params, $context)
@@ -525,15 +535,6 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             );
         }
 
-        if ($params['plugin'] != "all") {
-            if (!in_array($params['plugin'], self::$plugins)) {
-                throw new OMVException(
-                    OMVErrorMsg::E_MISC_OPERATION_DENIED,
-                    sprinf("Unknown plugin - %s", $params['plugin'])
-                );
-            }
-        }
-
         // Create a background process.
         $bgStatusFilename = $this->createBgProcStatus();
         $pid = $this->fork();
@@ -555,7 +556,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             }
             else
             {
-                foreach (self::$plugins as $plugin)
+                foreach ($this->plugins as $plugin)
                 {
                     $cmd = sprintf("omv-mkconf developer update %s 2>&1",$plugin);
                     $this->exec($cmd, $output, $bgOutputFilename);
@@ -634,7 +635,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                     $object['txtoken'], $object['txusername']);
                 file_put_contents($configFile, $config);
 
-                foreach (self::$plugins as $plugin) {
+                foreach ($this->plugins as $plugin) {
                     $repo = sprintf("openmediavault-%s\n", $plugin);
                     file_put_contents("/tmp/repos", $repo, FILE_APPEND);
                 }
@@ -671,13 +672,6 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             throw new OMVException(
                 OMVErrorMsg::E_MISC_OPERATION_DENIED,
                 sprinf("Unknown command - %s", $params['command'])
-            );
-        }
-
-        if (!in_array($params['plugin'], self::$plugins)) {
-            throw new OMVException(
-                OMVErrorMsg::E_MISC_OPERATION_DENIED,
-                sprinf("Unknown plugin - %s", $params['plugin'])
             );
         }
 
@@ -725,13 +719,6 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                         "branch" : { "type" : "string" }
                 }
         }');
-
-        if (!in_array($params['plugin'], self::$plugins)) {
-            throw new OMVException(
-                OMVErrorMsg::E_MISC_OPERATION_DENIED,
-                sprinf("Unknown plugin - %s", $params['plugin'])
-            );
-        }
 
         // Create a background process.
         $bgStatusFilename = $this->createBgProcStatus();
@@ -806,13 +793,6 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             throw new OMVException(
                 OMVErrorMsg::E_MISC_OPERATION_DENIED,
                 sprinf("Unknown command - %s", $params['command'])
-            );
-        }
-
-        if (!in_array($params['plugin'], self::$plugins)) {
-            throw new OMVException(
-                OMVErrorMsg::E_MISC_OPERATION_DENIED,
-                sprinf("Unknown plugin - %s", $params['plugin'])
             );
         }
 
