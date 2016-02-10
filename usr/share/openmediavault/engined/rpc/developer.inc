@@ -138,6 +138,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $this->registerMethod("doChangeBranch");
         $this->registerMethod("doDch");
         $this->registerMethod("doOmvSvn");
+        $this->registerMethod("doResetCache");
 
         $this->registerMethod("getBintrayRepos");
         $this->registerMethod("addBintrayRepo");
@@ -850,6 +851,16 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             $this->finalizeBgProcStatus($bgStatusFilename, "", $e);
             exit(1);
         }
+    }
+
+    public function doResetCache($params, $context)
+    {
+        // Validate the RPC caller context.
+        $this->validateMethodContext(
+            $context,
+            [ "role" => OMV_ROLE_ADMINISTRATOR ]
+        );
+        unlink($this->getPluginCache());
     }
 
     /**

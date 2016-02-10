@@ -151,6 +151,11 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                     maxSelections : 1
                 }
             },{
+                text     : _("Reset Cache"),
+                icon     : "images/reboot.png",
+                handler  : Ext.Function.bind(me.onResetCacheButton, me, [ me ]),
+                disabled : false
+            },{
                 text     : _("Open repo page"),
                 icon     : "images/home.png",
                 handler  : Ext.Function.bind(me.onOpenRepoButton, me, [ me ]),
@@ -396,6 +401,23 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         wnd.setButtonDisabled("close", true);
         wnd.show();
         wnd.start();
+    },
+
+    onResetCacheButton : function(plugin) {
+        var me = this;
+        OMV.MessageBox.wait(null, _("Resetting plugin list cache ..."));
+        OMV.Rpc.request({
+            scope       : me,
+            relayErrors : false,
+            rpcData     : {
+                service  : "Developer",
+                method   : "doResetCache"
+            },
+            success : function(id, success, response) {
+                me.doReload();
+                OMV.MessageBox.hide();
+            }
+        });
     },
 
     onBuildButton : function() {
