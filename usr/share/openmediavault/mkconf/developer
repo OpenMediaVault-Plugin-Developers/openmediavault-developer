@@ -138,10 +138,10 @@ upload()
     version=`ls ${search}`
 
     echo "Uploading ${version} to ${remotehost} ..."
-    if [ -n ${password} ]; then
+    if [ -n "${password}" ]; then
         sshpass -p ${password} scp -P ${port} -o StrictHostKeyChecking=no "${version}" ${username}@${remotehost}:"${remotepath}"
     else
-        su - ${owner} -c 'scp -P ${port} -o StrictHostKeyChecking=no "${version}" ${username}@${remotehost}:"${remotepath}"'
+        su - ${owner} -c "scp -P ${port} -o StrictHostKeyChecking=no \"${version}\" ${username}@${remotehost}:\"${remotepath}\""
     fi
 }
 
