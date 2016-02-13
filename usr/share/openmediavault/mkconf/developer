@@ -109,8 +109,11 @@ build()
     rm -f ${temppath}${package}*.deb
     rm -rf ${temppath}${package}
     chown ${owner}:users ${packagepath}*.deb
-    if [ -d ${copylocation} ]; then
-        cp ${packagepath}*.deb ${copylocation}
+    if [ -n "${copylocation}" ]; then
+        if [ -d "${copylocation}" ]; then
+            echo "Copying package to ${copylocation} ..."
+            cp ${packagepath}*.deb "${copylocation}"
+        fi
     fi
 }
 

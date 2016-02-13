@@ -80,10 +80,27 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                 value      : "nobody",
                 userType   : "normal"
             },{
-                xtype      : "textfield",
-                name       : "copylocation",
-                fieldLabel : _("Copy Location"),
-                allowBlank : true
+                xtype          : "textfield",
+                name           : "copylocation",
+                fieldLabel     : _("Copy Location"),
+                allowBlank     : true,
+                triggers       : {
+                    folder : {
+                        cls     : Ext.baseCSSPrefix + "form-folder-trigger",
+                        handler : "onTriggerClick"
+                    }
+                },
+                onTriggerClick : function() {
+                    Ext.create("OMV.window.RootFolderBrowser", {
+                        listeners : {
+                            scope  : this,
+                            select : function(wnd, node, path) {
+                                // Set the selected path.
+                                this.setValue(path);
+                            }
+                        }
+                    }).show();
+                }
             }]
         },{
             xtype    : "fieldset",
