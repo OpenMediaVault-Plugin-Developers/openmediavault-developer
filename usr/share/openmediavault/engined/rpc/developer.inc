@@ -187,18 +187,19 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             "type"       : "object",
                 "properties" : {
                     "sharedfolderref" : { ' . $GLOBALS["OMV_JSONSCHEMA_UUID"] . ' },
-                        "owner"           : { "type" : "string" },
-                        "gitname"         : { "type" : "string", "optional" : true },
-                        "gitemail"        : { "type" : "string", "optional" : true },
-                        "ghusername"      : { "type" : "string", "optional" : true },
-                        "ghpassword"      : { "type" : "string", "optional" : true },
-                        "txhostname"      : { "type" : "string", "optional" : true },
-                        "txpassword"      : { "type" : "string", "optional" : true },
-                        "txtoken"         : { "type" : "string", "optional" : true },
-                        "txusername"      : { "type" : "string", "optional" : true },
-                        "btusername"      : { "type" : "string", "optional" : true },
-                        "btapikey"        : { "type" : "string", "optional" : true },
-                        "btgpgpass"       : { "type" : "string", "optional" : true }
+                    "owner"           : { "type" : "string" },
+                    "copylocation"    : { "type" : "string", "optional" : true },
+                    "gitname"         : { "type" : "string", "optional" : true },
+                    "gitemail"        : { "type" : "string", "optional" : true },
+                    "ghusername"      : { "type" : "string", "optional" : true },
+                    "ghpassword"      : { "type" : "string", "optional" : true },
+                    "txhostname"      : { "type" : "string", "optional" : true },
+                    "txpassword"      : { "type" : "string", "optional" : true },
+                    "txtoken"         : { "type" : "string", "optional" : true },
+                    "txusername"      : { "type" : "string", "optional" : true },
+                    "btusername"      : { "type" : "string", "optional" : true },
+                    "btapikey"        : { "type" : "string", "optional" : true },
+                    "btgpgpass"       : { "type" : "string", "optional" : true }
                 }
         }');
 
@@ -215,6 +216,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
         $object = [
             "sharedfolderref" => $params["sharedfolderref"],
             "owner"           => $params['owner'],
+            "copylocation"    => $params['copylocation'],
             "gitname"         => $params['gitname'],
             "gitemail"        => $params['gitemail'],
             "ghusername"      => $params['ghusername'],
@@ -362,8 +364,8 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                 continue;
             if (substr($plugin["name"],0,15) !== "openmediavault-")
                 continue;
-            $this->plugins[] = str_replace("openmediavault-","",$plugin["name"]); 
-        }    
+            $this->plugins[] = str_replace("openmediavault-","",$plugin["name"]);
+        }
     }
 
     public function getLocation($params, $context)

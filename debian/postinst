@@ -4,7 +4,7 @@
 # @author    Volker Theile <volker.theile@openmediavault.org>
 # @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 # @copyright Copyright (c) 2009-2013 Volker Theile
-# @copyright Copyright (c) 2014-2015 OpenMediaVault Plugin Developers
+# @copyright Copyright (c) 2014-2016 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -31,53 +31,18 @@ case "$1" in
 
         if ! omv_config_exists "${SERVICE_XPATH}"; then
             omv_config_add_element "/config/services" "${SERVICE_XPATH_NAME}" ""
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/sharedfolderref"; then
             omv_config_add_element "${SERVICE_XPATH}" "sharedfolderref" ""
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/owner"; then
             omv_config_add_element "${SERVICE_XPATH}" "owner" ""
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/gitname"; then
+            omv_config_add_element "${SERVICE_XPATH}" "copylocation" ""
             omv_config_add_element "${SERVICE_XPATH}" "gitname" ""
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/gitemail"; then
             omv_config_add_element "${SERVICE_XPATH}" "gitemail" ""
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/txhostname"; then
             omv_config_add_element "${SERVICE_XPATH}" "txhostname" "https://www.transifex.com"
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/txpassword"; then
             omv_config_add_element "${SERVICE_XPATH}" "txpassword" ""
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/txtoken"; then
             omv_config_add_element "${SERVICE_XPATH}" "txtoken" ""
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/txusername"; then
             omv_config_add_element "${SERVICE_XPATH}" "txusername" ""
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/locations"; then
             omv_config_add_element "${SERVICE_XPATH}" "locations"
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/btusername"; then
             omv_config_add_element "${SERVICE_XPATH}" "btusername"
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/btapikey"; then
             omv_config_add_element "${SERVICE_XPATH}" "btapikey"
-        fi
-
-        if ! omv_config_exists "${SERVICE_XPATH}/btgpgpass"; then
             omv_config_add_element "${SERVICE_XPATH}" "btgpgpass"
         fi
 

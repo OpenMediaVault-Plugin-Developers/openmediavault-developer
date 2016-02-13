@@ -1,3 +1,10 @@
+openmediavault-developer (3.3) stable; urgency=low
+
+  * Add second location to copy .deb when building package
+  * Allow uploading to location using ssh keys as owner
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 13 Feb 2016 07:37:12 -0600
+
 openmediavault-developer (3.2) stable; urgency=low
 
   * Download plugin list from github

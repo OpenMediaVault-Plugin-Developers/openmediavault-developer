@@ -89,6 +89,7 @@ remove()
 build()
 {
     export LANG=C
+    copylocation=$(omv_config_get "${xpath}/copylocation")
     echo "Building ${package}..."
     rm -f ${temppath}${package}*.deb
     rm -rf ${temppath}${package}
@@ -108,6 +109,9 @@ build()
     rm -f ${temppath}${package}*.deb
     rm -rf ${temppath}${package}
     chown ${owner}:users ${packagepath}*.deb
+    if [ -d ${copylocation} ]; then
+        cp ${packagepath}*.deb ${copylocation}
+    fi
 }
 
 update()
@@ -131,7 +135,11 @@ upload()
     version=`ls ${search}`
 
     echo "Uploading ${version} to ${remotehost} ..."
-    sshpass -p ${password} scp -P ${port} -o StrictHostKeyChecking=no "${version}" ${username}@${remotehost}:"${remotepath}"
+    if [ -n ${password} ]; then
+        sshpass -p ${password} scp -P ${port} -o StrictHostKeyChecking=no "${version}" ${username}@${remotehost}:"${remotepath}"
+    else
+        su - ${owner} -c 'scp -P ${port} -o StrictHostKeyChecking=no "${version}" ${username}@${remotehost}:"${remotepath}"'
+    fi
 }
 
 tx()
@@ -189,13 +197,13 @@ buildpot()
     mkdir -p "${OMV_POT_DIR}"
 
     find ./ \( -iname *.js -o -iname *.php -o -iname *.inc \) \
-	  -type f -print0 | xargs -0r xgettext --keyword=_ \
-	  --output-dir="${OMV_POT_DIR}" --output="${package}.pot" \
-	  --force-po --no-location --no-wrap --sort-output \
-	  --package-name="${package}" -
-	# Remove '#, c-format' comments, otherwise manuall upload of translation
-	# files confuses Transifex.
-	sed --in-place '/^#, c-format/d' "${OMV_POT_DIR}/${package}.pot"
+      -type f -print0 | xargs -0r xgettext --keyword=_ \
+      --output-dir="${OMV_POT_DIR}" --output="${package}.pot" \
+      --force-po --no-location --no-wrap --sort-output \
+      --package-name="${package}" -
+    # Remove '#, c-format' comments, otherwise manuall upload of translation
+    # files confuses Transifex.
+    sed --in-place '/^#, c-format/d' "${OMV_POT_DIR}/${package}.pot"
     movefrom
 }
 
