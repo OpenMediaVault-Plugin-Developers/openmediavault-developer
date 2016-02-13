@@ -76,7 +76,7 @@ Ext.define("OMV.module.admin.service.developer.Location", {
                 xtype      : "passwordfield",
                 name       : "password",
                 fieldLabel : _("Password"),
-                allowBlank : false
+                allowBlank : true
         }];
     }
 });
