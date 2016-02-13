@@ -413,7 +413,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                         "remotepath" : { "type" : "string" },
                         "port"       : { "type" : "integer" },
                         "username"   : { "type" : "string" },
-                        "password"   : { "type" : "string" }
+                        "password"   : { "type" : "string", "optional" : true }
                 }
         }');
 
