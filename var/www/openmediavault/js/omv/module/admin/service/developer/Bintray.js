@@ -227,7 +227,12 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
                                 service: "Developer",
                                 method: "getPluginList"
                             }
-                        }
+                        },
+                        remoteSort: true,
+                        sorters: [{
+                            direction: "ASC",
+                            property: "fullname"
+                        }]
                     }),
                     editable: false,
                     valueField: "fullname",
