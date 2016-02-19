@@ -325,6 +325,7 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
                             [ "arm64", _("arm64 only") ],
                             [ "armel", _("armel only") ],
                             [ "armhf", _("armhf only") ],
+                            [ "i386", _("i386 only") ],                            
                             [ "powerpc", _("powerpc only") ],
                             [ "amd64,i386", _("amd64,i386") ],
                             [ "amd64,armhf,i386", _("amd64,armhf,i386") ],

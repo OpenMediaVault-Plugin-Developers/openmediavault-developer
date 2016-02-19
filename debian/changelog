@@ -1,3 +1,9 @@
+openmediavault-developer (3.3.1) stable; urgency=low
+
+  * Add i386 only option to bintray upload
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 18 Feb 2016 21:31:40 -0600
+
 openmediavault-developer (3.3) stable; urgency=low
 
   * Add second location to copy .deb when building package
