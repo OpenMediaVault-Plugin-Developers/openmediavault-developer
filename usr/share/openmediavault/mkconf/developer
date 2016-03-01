@@ -65,7 +65,7 @@ initial()
 '
         remote_branches=$(git branch -r | grep -v HEAD | grep -v master)
 
-        if [ -n ${remote_branches} ]; then
+        if [ -n "${remote_branches}" ]; then
             for rbranch in ${remote_branches}; do
                 current=$(echo ${rbranch} | cut -d'/' -f2)
                 git checkout -b ${current} origin/${current}
@@ -302,6 +302,10 @@ fixperms()
         chmod 755 "${packagepath}/debian/${plugin}.init"
     fi
 
+    if [ -f "${packagepath}/debian/${plugin}.service" ]; then
+        chmod 755 "${packagepath}/debian/${plugin}.service"
+    fi
+
     if [ -d "${packagepath}${prepath}" ]; then
         chmod 755 "${packagepath}${prepath}"/*
     fi
@@ -407,7 +411,7 @@ dchr()
     cd ${packagepath}
     if [ -f "debian/changelog" ]; then
         echo "Release version ..."
-        dch -U --no-auto-nmu -r "release" 2>&1
+        dch -U --no-auto-nmu -r "release" -u "low" 2>&1
         head -n 1 debian/changelog
     else
         echo "No changelog found."
