@@ -1093,7 +1093,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
             );
         }
 
-        if (!(preg_match('/^.*_([\d]+\.[\d\.]+)_(.*)\.deb$/', $params['file'], $matches))) {
+        if (!(preg_match('/^.*_(.*)_(.*)\.deb$/', $params['file'], $matches))) {
             throw new OMVException(
                 OMVErrorMsg::E_EXEC_MISC,
                 "Failed to get data from filename:" .
