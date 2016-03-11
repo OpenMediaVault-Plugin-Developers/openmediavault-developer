@@ -250,6 +250,7 @@ fixperms()
     varlibcronpath="/var/lib/openmediavault/cron.d/"
     prepath="/usr/share/openmediavault/releaseupgrade/pre.d/"
     postpath="/usr/share/openmediavault/releaseupgrade/post.d/"
+    sleeppath="/etc/pm/sleep.d/"
 
     echo "Fixing permissions..."
     find "${packagepath}" -type f -exec chmod 644 {} +
@@ -312,6 +313,10 @@ fixperms()
 
     if [ -d "${packagepath}${postpath}" ]; then
         chmod 755 "${packagepath}${postpath}"/*
+    fi
+
+    if [ -d "${packagepath}${sleeppath}" ]; then
+        chmod 755 "${packagepath}${sleeppath}"/*
     fi
 
     chown -R ${owner}:users "${packagepath}"
