@@ -366,6 +366,7 @@ class OMVRpcServiceDeveloper extends OMVRpcServiceAbstract
                 continue;
             $this->plugins[] = str_replace("openmediavault-","",$plugin["name"]);
         }
+        asort($this->plugins);
     }
 
     public function getLocation($params, $context)
