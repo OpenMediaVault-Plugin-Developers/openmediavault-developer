@@ -31,6 +31,10 @@ case "$1" in
     purge)
         # Remove the configuration data
         omv_config_delete "/config/services/developer"
+        rm -f /var/cache/openmediavault/dev_package_cache \
+              /var/cache/openmediavault/dev_plugin_cache \
+              /var/cache/openmediavault/dev_repo_cache
+
     ;;
 
     upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)

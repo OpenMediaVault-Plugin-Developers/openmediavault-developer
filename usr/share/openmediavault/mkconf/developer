@@ -389,7 +389,7 @@ dchi()
     cd ${packagepath}
     if [ -f "debian/changelog" ]; then
         echo "Increment version ..."
-        dch -U --no-auto-nmu -i "${commit}" 2>&1
+        dch -U --no-auto-nmu "${commit}" 2>&1
         head -n 1 debian/changelog
     else
         echo "No changelog found."

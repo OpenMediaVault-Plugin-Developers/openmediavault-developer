@@ -1,3 +1,9 @@
+openmediavault-developer (3.4.0) stable; urgency=low
+
+  * Update for datamodels introduced in OMV 3.0.15
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 26 Apr 2016 14:05:36 -0500
+
 openmediavault-developer (3.3.5) stable; urgency=low
 
   * Fix Update All
