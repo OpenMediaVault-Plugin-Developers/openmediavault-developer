@@ -127,7 +127,8 @@
 				"type": "string",
 				"enum": [
 					"build","update","upload",
-					"install","reset","changelog"
+					"install","reset","changelog",
+					"buildpot","pushpot","pullpo"
 				],
 				"required": true
 			},

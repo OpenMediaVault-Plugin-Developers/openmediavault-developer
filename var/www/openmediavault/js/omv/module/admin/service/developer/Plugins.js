@@ -414,7 +414,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 method   : "doResetCache"
             },
             success : function(id, success, response) {
-                me.doReload();
+                this.doReload();
                 OMV.MessageBox.hide();
             }
         });
@@ -444,6 +444,9 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 exception : function(wnd, error) {
                     OMV.MessageBox.error(null, error);
                     wnd.setButtonDisabled("close", false);
+                },
+                close     : function() {
+                    this.doReload();
                 }
             }
         });
@@ -476,6 +479,9 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 exception : function(wnd, error) {
                     OMV.MessageBox.error(null, error);
                     wnd.setButtonDisabled("close", false);
+                },
+                close     : function() {
+                    this.doReload();
                 }
             }
         });
@@ -509,6 +515,9 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 exception : function(wnd, error) {
                     OMV.MessageBox.error(null, error);
                     wnd.setButtonDisabled("close", false);
+                },
+                close     : function() {
+                    this.doReload();
                 }
             }
         });
@@ -551,6 +560,9 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 exception : function(wnd, error) {
                     OMV.MessageBox.error(null, error);
                     wnd.setButtonDisabled("close", false);
+                },
+                close     : function() {
+                    this.doReload();
                 }
             }
         });
@@ -584,7 +596,8 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                     wnd.setButtonDisabled("close", false);
                 },
                 close     : function() {
-                    document.location.reload();
+                    //document.location.reload();
+                    this.reload();
                 }
             }
         });
@@ -645,6 +658,9 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 exception : function(wnd, error) {
                     OMV.MessageBox.error(null, error);
                     wnd.setButtonDisabled("close", false);
+                },
+                close     : function() {
+                    this.doReload();
                 }
             }
         });

@@ -23,9 +23,7 @@ require_once("openmediavault/functions.inc");
 
 class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
 {
-    private $githubURL   = "https://github.com/OpenMediaVault-Plugin-Developers";
-    private $bintrayURL  = "https://api.bintray.com/packages/openmediavault-plugin-developers";
-    private $contentType = "\"Content-Type: application/json\"";
+    private $logFile = "/var/log/omv_developer.log";
 
     private $packageCache = "/var/cache/openmediavault/dev_package_cache";
     private $pluginCache  = "/var/cache/openmediavault/dev_plugin_cache";
@@ -240,7 +238,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 false, $context
             );
             // Get repos info and put in cache file
-            file_put_contents($this->pluginCache, $json);
+            file_put_contents($this->pluginCache, $json, FILE_APPEND);
         }
         $this->plugins = [];
         $data = json_decode(file_get_contents($this->pluginCache), true);
@@ -372,31 +370,20 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         try {
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
-            // Update package database.
-            $cmdArgs = [];
-            $cmdArgs[] = "developer";
 
+            // Execute command.
             if ($params['plugin'] != "all") {
-                $cmdArgs[] = $params['command'];
-                $cmdArgs[] = $params['plugin'];
-                $cmdArgs[] = $params['location'];
-                $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
-                $cmd->setRedirect2to1(TRUE);
-                $cmd->execute();
-                if (0 !== $this->exec($cmd->getCommandLine(), $output, $bgOutputFilename)) {
-                    throw new \OMV\ExecException($cmd->getCommandLine(), $output);
-                }
+                $cmd = sprintf("export LANG=C; omv-mkconf developer %s %s %s 2>&1",
+                    $params['command'], $params['plugin'], $params['location']
+                );
+                file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
+                $this->exec($cmd, $output, $bgOutputFilename);
             } else {
                 $this->fillPlugins();
                 foreach ($this->plugins as $plugin) {
-                    $cmdArgs[] = "update";
-                    $cmdArgs[] = $params['plugin'];
-                    $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
-                    $cmd->setRedirect2to1(TRUE);
-                    $cmd->execute();
-                    if (0 !== $this->exec($cmd->getCommandLine(), $output, $bgOutputFilename)) {
-                        throw new \OMV\ExecException($cmd->getCommandLine(), $output);
-                    }
+                    $cmd = sprintf("omv-mkconf developer update %s 2>&1",$plugin);
+                    file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
+                    $this->exec($cmd, $output, $bgOutputFilename);
                 }
             }
             $this->finalizeBgProcStatus($bgStatusFilename, $output);
@@ -430,7 +417,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 $config = sprintf("[user]\n\tname = %s\n\temail = %s\n",
                     $object->get("gitname"), $object->get("gitemail")
                 );
-                file_put_contents($configFile, $config);
+                file_put_contents($configFile, $config, FILE_APPEND);
 
                 chmod($configFile, 0644);
                 break;
@@ -442,7 +429,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 );
 
                 if ( file_exists($configFile) === false) {
-                    file_put_contents($configFile, $config);
+                    file_put_contents($configFile, $config, FILE_APPEND);
                 } else {
                     if ( strpos(file_get_contents($configFile), "machine github.com") === false )
                         file_put_contents($configFile, $config, FILE_APPEND);
@@ -456,20 +443,15 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                     $object->get("txhostname"), $object->get("txhostname"),$object->get("txpassword"),
                     $object->get("txtoken"), $object->get("txusername")
                 );
-                file_put_contents($configFile, $config);
+                file_put_contents($configFile, $config, FILE_APPEND);
 
                 foreach ($this->plugins as $plugin) {
                     $repo = sprintf("openmediavault-%s\n", $plugin);
                     file_put_contents("/tmp/repos", $repo, FILE_APPEND);
                 }
-
-                $cmd = new \OMV\System\Process("omv-mkconf", "developer tx");
-                $cmd->setRedirect2to1(TRUE);
-                $cmd->setQuiet(TRUE);
-                $cmd->execute($output, $exitStatus);
-                if (0 !== $exitStatus) {
-                    throw new \OMV\ExecException($cmd->getCommandLine(), $output);
-                }
+                $cmd = "export lang=c; omv-mkconf developer tx";
+                file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
+                exec($cmd, $output);
                 break;
         }
     }
@@ -494,19 +476,10 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
             // Update package database.
-            $cmdArgs = [];
-            $cmdArgs[] = "developer";
-            $cmdArgs[] = $params['command'];
-            $cmdArgs[] = $params['plugin'];
-            $cmdArgs[] = sprintf("_%s", $params['commit']);
-            $cmdArgs[] = sprintf("_%s", $params['tag']);
-            $cmdArgs[] = sprintf("_%s", escapeshellarg($params['message']));
-            $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
-            $cmd->setRedirect2to1(TRUE);
-            $cmd->execute();
-            if (0 !== $this->exec($cmd->getCommandLine(), $output, $bgOutputFilename)) {
-                throw new \OMV\ExecException($cmd->getCommandLine(), $output);
-            }
+            $cmd = sprintf("omv-mkconf developer %s %s _%s _%s _%s2>&1",
+                $params['command'], $params['plugin'], $params['commit'], $params['tag'], $params['message']);
+            file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
+            $this->exec($cmd, $output, $bgOutputFilename);
             $this->finalizeBgProcStatus($bgStatusFilename, $output);
             exit(0);
         } catch(\Exception $e) {
@@ -534,18 +507,10 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         try {
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
-            // Update package database.
-            $cmdArgs = [];
-            $cmdArgs[] = "developer";
-            $cmdArgs[] = "changebranch";
-            $cmdArgs[] = $params['plugin'];
-            $cmdArgs[] = trim(str_replace("*", "", $params['branch']));
-            $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
-            $cmd->setRedirect2to1(TRUE);
-            $cmd->execute();
-            if (0 !== $this->exec($cmd->getCommandLine(), $output, $bgOutputFilename)) {
-                throw new \OMV\ExecException($cmd->getCommandLine(), $output);
-            }
+            $cmd = sprintf("omv-mkconf developer %s %s %s 2>&1",
+                "changebranch", $params['plugin'], trim(str_replace("*", "", $params['branch'])));
+            file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
+            $this->exec($cmd, $output, $bgOutputFilename);
             $this->finalizeBgProcStatus($bgStatusFilename, $output);
             exit(0);
         } catch(\Exception $e) {
@@ -565,9 +530,10 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         // Get configuration object
         $objects = [];
         $cmd = sprintf("omv-mkconf developer branches %s", $params['plugin']);
-        exec($cmd, $out);
+        file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
+        exec($cmd, $output);
 
-        foreach ($out as $branch) {
+        foreach ($output as $branch) {
             $objects[] = [
                 "branch" => trim($branch)
             ];
@@ -594,18 +560,11 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         try {
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
-            // Update package database.
-            $cmdArgs = [];
-            $cmdArgs[] = "developer";
-            $cmdArgs[] = $params['command'];
-            $cmdArgs[] = $params['plugin'];
-            $cmdArgs[] = sprintf("_%s", escapeshellarg($params['commit']));
-            $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
-            $cmd->setRedirect2to1(TRUE);
-            $cmd->execute();
-            if (0 !== $this->exec($cmd->getCommandLine(), $output, $bgOutputFilename)) {
-                throw new \OMV\ExecException($cmd->getCommandLine(), $output);
-            }
+            $cmd = sprintf("export LANG=C; omv-mkconf developer %s %s _%s 2>&1",
+                $params['command'], $params['plugin'], $params['commit']
+            );
+            file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
+            $this->exec($cmd, $output, $bgOutputFilename);
             $this->finalizeBgProcStatus($bgStatusFilename, $output);
             exit(0);
         } catch(\Exception $e) {
@@ -630,14 +589,9 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         try {
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
-            // Update package database.
-            $cmdArgs = [];
-            $cmd = new \OMV\System\Process("omv-mkconf", "developer omvsvn");
-            $cmd->setRedirect2to1(TRUE);
-            $cmd->execute();
-            if (0 !== $this->exec($cmd->getCommandLine(), $output, $bgOutputFilename)) {
-                throw new \OMV\ExecException($cmd->getCommandLine(), $output);
-            }
+            $cmd = "export LANG=C; omv-mkconf developer omvsvn 2>&1";
+            file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
+            $this->exec($cmd, $output, $bgOutputFilename);
             $this->finalizeBgProcStatus($bgStatusFilename, $output);
             exit(0);
         } catch(\Exception $e) {
@@ -734,18 +688,21 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
 
-        $contentD = "'{ \"type\": \"debian\", \"private\": false, \"premium\": false, \"desc\": \"\" }'";
+        // Get the existing configuration object.
+        $db = \OMV\Config\Database::getInstance();
+        $object = $db->get('conf.service.developer');
+        $object->remove('locations');
 
-        $cmb = sprintf("curl -H %s -u %s:%s -X POST -d %s %s/%s",
-            $contentType, $settings->get("btusername"), $settings->get("btapikey"),
-            $params['desc'], $contentD, $bintrayURL, $params['repo']);
+        $url = "https://api.bintray.com/repos/openmediavault-plugin-developers/" . $params['repo'];
+        $cmd = "curl -H \"Content-Type: application/json\" -u" . $object->get('btusername') . ":" . $object->get('btapikey') . " " .
+            "-X POST -d '{ \"type\": \"debian\", \"private\": false, \"premium\": false, \"desc\": \"" . $params['desc'] . "\" }' " .
+            $url;
+        file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
+        exec($cmd, $output);
 
-        OMVutil::exec($cmd, $out, $res);
-
-        if (!(preg_match('/^\{.*\"created\".*\}$/', $out[0]))) {
-            throw new \OMV\Exception($out[0]);
+        if (!(preg_match('/^\{.*\"created\".*\}$/', $output[0]))) {
+            throw new \OMV\Exception($output[0]);
         }
-
         $fp = fopen($this->repoCache, "w");
         fwrite($fp, $params['name'] . PHP_EOL);
         fclose($fp);
@@ -800,28 +757,19 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         }
         $desc = trim($desc);
 
-        $url = $bintrayURL . "/" . $params['repo'];
-        $cmd = "curl -H \"Content-Type: application/json\" -u" . $settings['btusername'] . ":" . $settings['btapikey'] . " " .
+        $url = "https://api.bintray.com/packages/openmediavault-plugin-developers/" . $params['repo'];
+        $cmd = "curl -H \"Content-Type: application/json\" -u" . $object->get('btusername') . ":" . $object->get('btapikey') . " " .
             "-X POST -d '{ \"name\": \"" . $params['name'] . "\", \"desc\": \"" . $desc . "\", \"licenses\": [\"GPL-3.0\"], " .
             "\"vcs_url\": \"https://github.com/OpenMediaVault-Plugin-Developers/" . $params['name'] . ".git\", " .
             "\"github_repo\": \"OpenMediaVault-Plugin-Developers/" . $params['name'] . "\", " .
             "\"public_download_numbers\": true }' " .
             $url;
+        file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
+        exec($cmd, $output);
 
-        $details = sprintf(
-            "{ \"name\": \"%s\", \"desc\": \"%s\", \"licenses\": \"%s\", \"vcs_url\": \"%s/%s.git\", \"github_repo\": \"%s/%s\", \"public_download_numbers\": true }'",
-            $params['name'], $desc, "GPL-3.0", $githubURL, $params['name'], "OpenMediaVault-Plugin-Developers",  $params['name']
-        );
-
-        $cmd = sprintf("curl -H %s -u %s:%s -X POST -d %s %s/%s",
-            $contentType, $settings['btusername'], $settings['btapikey'], $details, $bintrayURL, $params['repo']
-        );
-        OMVutil::exec($cmd, $out, $res);
-
-        if (!(preg_match('/^\{.*\"created\".*\}$/', $out[0]))) {
-            throw new \OMV\Exception($out[0]);
+        if (!(preg_match('/^\{.*\"created\".*\}$/', $output[0]))) {
+            throw new \OMV\Exception($output[0]);
         }
-
         $fp = fopen($this->packageCache, "w");
         fwrite($fp, sprintf("%s,%s\n", $params['name'], $params['repo']));
         fclose($fp);
@@ -842,7 +790,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
 
         // Get the existing configuration object.
         $db = \OMV\Config\Database::getInstance();
-        $settings = $db->get("conf.service.developer");
+        $object = $db->get('conf.service.developer');
         $object->remove('locations');
 
         if (!empty($object->get("sharedfolderref"))) {
@@ -875,17 +823,17 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             "/" . $params['bpackage'] . "/" . $params['file'];
 
         $cmd = "curl -X PUT -T " . $sfPath . "/" . $params['file'] . " " .
-            "-H 'X-GPG-PASSPHRASE: " . $settings['btgpgpass'] . "' " .
+            "-H 'X-GPG-PASSPHRASE: " . $object->get('btgpgpass') . "' " .
             "-H 'X-Bintray-Debian-Distribution: " . $params['dist'] . "' " .
             "-H 'X-Bintray-Debian-Component: main' " .
             "-H 'X-Bintray-Debian-Architecture: " . $arch . "' " .
             "-H 'X-Bintray-Publish: 1' " .
-            "-u" . $settings['btusername'] . ":" . $settings['btapikey'] . " " . $url;
+            "-u" . $object->get('btusername') . ":" . $object->get('btapikey') . " " . $url;
+        file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
+        exec($cmd, $output);
 
-        OMVutil::exec($cmd, $out, $res);
-
-        if (!(strcmp($out[0], "{}") === 0)) {
-            throw new \OMV\Exception($out[0]);
+        if (!(strcmp($output[0], "{}") === 0)) {
+            throw new \OMV\Exception($output[0]);
         }
     }
     /**
@@ -979,7 +927,6 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 }
             }
         }
-
         return $objects;
     }
 }

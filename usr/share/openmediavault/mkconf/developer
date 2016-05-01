@@ -44,7 +44,7 @@ txpath=".tx"
 txbin="/usr/bin/tx"
 
 if [ -z "${sfpath}" ]; then
-    echo "Error - Path not set."
+    echo "Error - shared folder not set."
     exit 1
 fi
 
