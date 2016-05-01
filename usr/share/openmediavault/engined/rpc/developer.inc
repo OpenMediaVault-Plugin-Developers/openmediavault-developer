@@ -238,7 +238,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 false, $context
             );
             // Get repos info and put in cache file
-            file_put_contents($this->pluginCache, $json, FILE_APPEND);
+            file_put_contents($this->pluginCache, $json);
         }
         $this->plugins = [];
         $data = json_decode(file_get_contents($this->pluginCache), true);
@@ -417,7 +417,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 $config = sprintf("[user]\n\tname = %s\n\temail = %s\n",
                     $object->get("gitname"), $object->get("gitemail")
                 );
-                file_put_contents($configFile, $config, FILE_APPEND);
+                file_put_contents($configFile, $config);
 
                 chmod($configFile, 0644);
                 break;
@@ -429,7 +429,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 );
 
                 if ( file_exists($configFile) === false) {
-                    file_put_contents($configFile, $config, FILE_APPEND);
+                    file_put_contents($configFile, $config);
                 } else {
                     if ( strpos(file_get_contents($configFile), "machine github.com") === false )
                         file_put_contents($configFile, $config, FILE_APPEND);
@@ -443,11 +443,11 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                     $object->get("txhostname"), $object->get("txhostname"),$object->get("txpassword"),
                     $object->get("txtoken"), $object->get("txusername")
                 );
-                file_put_contents($configFile, $config, FILE_APPEND);
+                file_put_contents($configFile, $config);
 
                 foreach ($this->plugins as $plugin) {
                     $repo = sprintf("openmediavault-%s\n", $plugin);
-                    file_put_contents("/tmp/repos", $repo, FILE_APPEND);
+                    file_put_contents("/tmp/repos", $repo);
                 }
                 $cmd = "export lang=c; omv-mkconf developer tx";
                 file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
