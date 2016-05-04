@@ -654,6 +654,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                 finish    : function(wnd, response) {
                     wnd.appendValue(_("Done..."));
                     wnd.setButtonDisabled("close", false);
+                    this.doReload();
                 },
                 exception : function(wnd, error) {
                     OMV.MessageBox.error(null, error);

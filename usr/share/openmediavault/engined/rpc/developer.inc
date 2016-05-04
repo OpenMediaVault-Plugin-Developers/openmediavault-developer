@@ -258,31 +258,12 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
 
         // Validate the parameters of the RPC service method.
-        $this->validateMethodParams($params, "rpc.developer.setlocation");
+        $this->validateMethodParams($params, "rpc.common.objectuuid");
 
-        // Prepare the configuration object.
-        $object = new \OMV\Config\ConfigObject("conf.service.developer.location");
-        $object->setAssoc($params);
-
-        // Set the configuration object.
-        $isNew = $object->isNew();
+        // Get the configuration object.
         $db = \OMV\Config\Database::getInstance();
-        if (TRUE === $isNew) {
-            // Check uniqueness.
-            $db->assertIsUnique($object, "name");
-        }
-        $db->set($object);
 
-        // Notify configuration changes.
-        $dispatcher = \OMV\Engine\Notify\Dispatcher::getInstance();
-        $dispatcher->notify(
-            $isNew ? OMV_NOTIFY_CREATE : OMV_NOTIFY_MODIFY,
-            "org.openmediavault.conf.service.developer.location",
-            $object->getAssoc()
-        );
-
-        // Return the configuration object.
-        return $object->getAssoc();
+        return $db->getAssoc("conf.service.developer.location", $params['uuid']);
     }
 
     public function setLocation($params, $context)
