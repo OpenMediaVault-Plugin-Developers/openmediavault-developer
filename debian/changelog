@@ -1,3 +1,9 @@
+openmediavault-developer (3.4.2) stable; urgency=low
+
+  * Add arm64 arch to all list
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 08 May 2016 22:48:35 -0500
+
 openmediavault-developer (3.4.1) stable; urgency=low
 
   * Code cleanup
