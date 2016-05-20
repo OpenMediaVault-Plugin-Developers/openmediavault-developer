@@ -1,3 +1,9 @@
+openmediavault-developer (3.4.3) stable; urgency=low
+
+  * Fix transifex config file creation
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 20 May 2016 09:00:56 -0500
+
 openmediavault-developer (3.4.2) stable; urgency=low
 
   * Add arm64 arch to all list

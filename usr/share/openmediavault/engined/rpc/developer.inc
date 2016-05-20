@@ -426,10 +426,9 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 );
                 file_put_contents($configFile, $config);
 
-                foreach ($this->plugins as $plugin) {
-                    $repo = sprintf("openmediavault-%s\n", $plugin);
-                    file_put_contents("/tmp/repos", $repo);
-                }
+                $this->fillPlugins();
+                file_put_contents("/root/.repos", implode(PHP_EOL, $this->plugins));
+
                 $cmd = "export lang=c; omv-mkconf developer tx";
                 file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
                 exec($cmd, $output);

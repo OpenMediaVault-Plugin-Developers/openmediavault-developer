@@ -147,7 +147,7 @@ upload()
 
 tx()
 {
-    repos="/tmp/repos"
+    repos="/root/.repos"
     tx_dir="${sfpath}/.tx"
     tx_file="${tx_dir}/config"
 
@@ -164,9 +164,9 @@ EOF
     # repos
     while read repo; do
         cat <<EOF >> ${tx_file}
-[${repo}.${repo}pot]
-file_filter = ${repo}/usr/share/openmediavault/locale/<lang>/${repo}.po
-source_file = ${repo}/usr/share/openmediavault/locale/${repo}.pot
+[openmediavault-${repo}.openmediavault-${repo}pot]
+file_filter = openmediavault-${repo}/usr/share/openmediavault/locale/<lang>/openmediavault-${repo}.po
+source_file = openmediavault-${repo}/usr/share/openmediavault/locale/openmediavault-${repo}.pot
 source_lang = en
 
 EOF
