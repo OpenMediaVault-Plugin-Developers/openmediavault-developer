@@ -596,8 +596,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                     wnd.setButtonDisabled("close", false);
                 },
                 close     : function() {
-                    //document.location.reload();
-                    this.reload();
+                    document.location.reload();
                 }
             }
         });
