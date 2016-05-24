@@ -21,7 +21,6 @@ Depends: build-essential,
          php5-curl,
          quilt,
          sshpass,
-         subversion,
          transifex-client,
          ${misc:Depends}
 Description: OpenMediaVault Developer plugin

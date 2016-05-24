@@ -95,7 +95,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         $this->registerMethod("getBranches");
         $this->registerMethod("doChangeBranch");
         $this->registerMethod("doDch");
-        $this->registerMethod("doOmvSvn");
+        $this->registerMethod("doOmvGit");
         $this->registerMethod("doResetCache");
 
         $this->registerMethod("getBintrayRepos");
@@ -553,7 +553,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         }
     }
 
-    public function doOmvSvn($params, $context)
+    public function doOmvGit($params, $context)
     {
         // Validate the RPC caller context.
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
@@ -569,7 +569,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         try {
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
-            $cmd = "export LANG=C; omv-mkconf developer omvsvn 2>&1";
+            $cmd = "export LANG=C; omv-mkconf developer omvgit 2>&1";
             file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
             $this->exec($cmd, $output, $bgOutputFilename);
             $this->finalizeBgProcStatus($bgStatusFilename, $output);

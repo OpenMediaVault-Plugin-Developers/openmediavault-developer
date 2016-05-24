@@ -424,26 +424,26 @@ dchr()
 
 }
 
-omvsvn()
+omvgit()
 {
-    echo "Installing OMV svn ..."
+    echo "Installing OMV from github ..."
     export LANG=C
     export DEBIAN_FRONTEND=noninteractive
 
-    omvcode="openmediavault-code"
+    omvcode="openmediavault"
     omvcodepath="${sfpath}/${omvcode}"
 
     if [ ! -d "${omvcodepath}" ]; then
         cd ${sfpath}
-        svn checkout svn://svn.code.sf.net/p/openmediavault/code/trunk ${omvcode}
+        git clone https://github.com/openmediavault/openmediavault.git
     else
         cd ${omvcodepath}
-        svn update
+        git pull
     fi
 
     # get revision
     cd ${omvcodepath}
-    revision=$(svn info | grep "Revision:" | cut -f2 -d":" | tr -d " ")
+    revision=$(git rev-parse HEAD)
     echo "Revision ${revision}..."
 
     # get version
@@ -456,13 +456,13 @@ omvsvn()
     cp -rf ${omvcodepath}/deb/openmediavault ${temppath}
     cp -f  ${omvcodepath}/deb/openmediavault.mk ${temppath}
 
-    # make svn package
+    # make git package
     cd ${temppath}openmediavault
-    svn update
+    #svn update
     fakeroot debian/rules clean binary
-    mv -v ../openmediavault_${version}_all.deb ${sfpath}openmediavault_${version}-svn${revision}_all.deb
+    mv -v ../openmediavault_${version}_all.deb ${sfpath}openmediavault_${version}-git${revision}_all.deb
 
-    dpkg --force-confold -i ${sfpath}/openmediavault_${version}-svn${revision}_all.deb
+    dpkg --force-confold -i ${sfpath}/openmediavault_${version}-git${revision}_all.deb
     apt-get --yes --force-yes --fix-missing -f install
 
     echo "Purging internal cache ..."
@@ -599,8 +599,8 @@ case ${command} in
         dchr
     ;;
 
-    omvsvn)
-        omvsvn
+    omvgit)
+        omvgit
     ;;
 
     changelog)

@@ -50,13 +50,13 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
         var me = this;
         var items = me.callParent(arguments);
         items.push({
-            id       : me.getId() + "-omvsvn",
+            id       : me.getId() + "-omvgit",
             xtype    : "button",
-            text     : _("Install OMV from svn"),
+            text     : _("Install OMV from github"),
             icon     : "images/add.png",
             iconCls  : Ext.baseCSSPrefix + "btn-icon-16x16",
             scope    : me,
-            handler  : Ext.Function.bind(me.onOmvSvnButton, me, [ me ])
+            handler  : Ext.Function.bind(me.onOmvGitButton, me, [ me ])
         });
         return items;
     },
@@ -240,12 +240,12 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
         });
     },
 
-    onOmvSvnButton: function() {
+    onOmvGitButton: function() {
         var me = this;
         var wnd = Ext.create("OMV.window.Execute", {
-            title           : _("Installing OMV from svn ..."),
+            title           : _("Installing OMV from github ..."),
             rpcService      : "Developer",
-            rpcMethod       : "doOmvSvn",
+            rpcMethod       : "doOmvGit",
             rpcIgnoreErrors : true,
             hideStartButton : true,
             hideStopButton  : true,
