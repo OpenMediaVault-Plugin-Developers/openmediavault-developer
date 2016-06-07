@@ -138,14 +138,6 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         // Remove useless properties from the object.
         $object->remove("locations");
 
-        // Notify configuration changes.
-        $dispatcher = \OMV\Engine\Notify\Dispatcher::getInstance();
-        $dispatcher->notify(
-            OMV_NOTIFY_MODIFY,
-            "org.openmediavault.conf.service.developer",
-            $object->getAssoc()
-        );
-
         // Return the configuration object.
         return $object->getAssoc();
     }
@@ -287,14 +279,6 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         }
         $db->set($object);
 
-        // Notify configuration changes.
-        $dispatcher = \OMV\Engine\Notify\Dispatcher::getInstance();
-        $dispatcher->notify(
-            $isNew ? OMV_NOTIFY_CREATE : OMV_NOTIFY_MODIFY,
-            "org.openmediavault.conf.service.developer.location",
-            $object->getAssoc()
-        );
-
         // Return the configuration object.
         return $object->getAssoc();
     }
@@ -325,11 +309,12 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         $this->validateMethodParams($params, "rpc.common.objectuuid");
 
         // Delete the configuration object.
-        return $this->deleteConfigObjectByUuid(
-            "conf.service.developer.location",
-            $params['uuid'],
-            "org.openmediavault.conf.service.developer.location"
-        );
+        $db = \OMV\Config\Database::getInstance();
+        $object = $db->get("conf.service.developer.location", $params['uuid']);
+        $db->delete($object);
+
+        // Return the deleted configuration object.
+        return $object->getAssoc();
     }
 
     public function doCommand($params, $context)
