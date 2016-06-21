@@ -1,3 +1,9 @@
+openmediavault-developer (3.6.1) stable; urgency=low
+
+  * Github issue #6 - Add dependency of libfile-fcntllock-perl
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 21 Jun 2016 07:53:33 -0500
+
 openmediavault-developer (3.6.0) stable; urgency=low
 
   * Make use of automatic notifications
