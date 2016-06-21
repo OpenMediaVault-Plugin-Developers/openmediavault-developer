@@ -1,3 +1,9 @@
+openmediavault-developer (3.6.2) UNRELEASED; urgency=medium
+
+  * Fix url on Open Repo button
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 21 Jun 2016 09:47:22 -0500
+
 openmediavault-developer (3.6.1) stable; urgency=low
 
   * Github issue #6 - Add dependency of libfile-fcntllock-perl
