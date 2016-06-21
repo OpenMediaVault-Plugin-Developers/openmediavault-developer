@@ -771,7 +771,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
 
     onOpenRepoButton : function() {
         var record = this.getSelected();
-        window.open(record.get("url"), "_blank");
+        window.open("https://github.com/OpenMediaVault-Plugin-Developers" + record.get("url"), "_blank");
     }
 });
 
