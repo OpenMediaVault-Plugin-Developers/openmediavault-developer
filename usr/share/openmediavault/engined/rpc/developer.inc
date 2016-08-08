@@ -441,7 +441,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
             // Update package database.
-            $cmd = sprintf("omv-mkconf developer %s %s _%s _%s _%s2>&1",
+            $cmd = sprintf("omv-mkconf developer %s %s %s %s %s2>&1",
                 $params['command'], $params['plugin'], $params['commit'], $params['tag'], $params['message']);
             file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
             $this->exec($cmd, $output, $bgOutputFilename);
@@ -525,7 +525,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         try {
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
-            $cmd = sprintf("export LANG=C; omv-mkconf developer %s %s _%s 2>&1",
+            $cmd = sprintf("export LANG=C; omv-mkconf developer %s %s %s 2>&1",
                 $params['command'], $params['plugin'], $params['commit']
             );
             file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);

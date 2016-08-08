@@ -23,12 +23,12 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
-command=`echo $1 | cut -d \  -f 1`
-plugin=`echo $1 | cut -d \  -f 2`
-location=`echo $1 | cut -d \  -f 3`
-commit=`echo $1 | cut -d \_ -f 2`
-tag=`echo $1 | cut -d \_ -f 3 | tr -d '[[:space:]]'`
-message=`echo $1 | cut -d \_ -f 4 | tr -d '[[:space:]]'`
+command=$1
+plugin=$2
+location=$3
+commit=$3
+tag=`echo ${3} | tr -d '[[:space:]]'`
+message=`echo ${4} | tr -d '[[:space:]]'`
 package="openmediavault-${plugin}"
 
 xpath="//services/developer"
