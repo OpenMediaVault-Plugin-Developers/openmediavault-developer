@@ -27,8 +27,8 @@ command=$1
 plugin=$2
 location=$3
 commit=$3
-tag=`echo ${3} | tr -d '[[:space:]]'`
-message=`echo ${4} | tr -d '[[:space:]]'`
+tag=$(echo ${3} | tr -d '[[:space:]]')
+message=$(echo ${4} | tr -d '[[:space:]]')
 package="openmediavault-${plugin}"
 
 xpath="//services/developer"

@@ -339,7 +339,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
 
             // Execute command.
             if ($params['plugin'] != "all") {
-                $cmd = sprintf("export LANG=C; omv-mkconf developer %s %s %s 2>&1",
+                $cmd = sprintf("export LANG=C; omv-mkconf developer %s %s \"%s\" 2>&1",
                     $params['command'], $params['plugin'], $params['location']
                 );
                 file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
@@ -441,7 +441,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
             // Update package database.
-            $cmd = sprintf("omv-mkconf developer %s %s %s %s %s2>&1",
+            $cmd = sprintf("omv-mkconf developer %s %s \"%s\" \"%s\" \"%s\"2>&1",
                 $params['command'], $params['plugin'], $params['commit'], $params['tag'], $params['message']);
             file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
             $this->exec($cmd, $output, $bgOutputFilename);
@@ -472,7 +472,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         try {
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
-            $cmd = sprintf("omv-mkconf developer %s %s %s 2>&1",
+            $cmd = sprintf("omv-mkconf developer %s %s \"%s\" 2>&1",
                 "changebranch", $params['plugin'], trim(str_replace("*", "", $params['branch'])));
             file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
             $this->exec($cmd, $output, $bgOutputFilename);
@@ -525,7 +525,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         try {
             $bgOutputFilename = $this->createBgProcOutput();
             $this->updateBgProcStatus($bgStatusFilename, "outputfilename", $bgOutputFilename);
-            $cmd = sprintf("export LANG=C; omv-mkconf developer %s %s %s 2>&1",
+            $cmd = sprintf("export LANG=C; omv-mkconf developer %s %s \"%s\" 2>&1",
                 $params['command'], $params['plugin'], $params['commit']
             );
             file_put_contents($this->logFile, $cmd . PHP_EOL, FILE_APPEND);
