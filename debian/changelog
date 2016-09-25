@@ -1,3 +1,9 @@
+openmediavault-developer (3.6.6) stable; urgency=low
+
+  * Update for new shell helper functions
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sun, 25 Sep 2016 08:37:37 -0500
+
 openmediavault-developer (3.6.5) stable; urgency=low
 
   * Use execBgProc
