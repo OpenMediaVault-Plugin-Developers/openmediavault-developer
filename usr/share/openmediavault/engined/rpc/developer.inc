@@ -333,7 +333,6 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                     $cmdArgs[] = $params['plugin'];
                     $cmdArgs[] = sprintf("\"%s\"", $params['location']);
                     $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
-                    $cmd->setRedirect2to1(true);
                     $cmdLine = $cmd->getCommandLine();
                     if (0 !== $this->exec($cmdLine, $output, $bgOutputFilename))
                         throw new \OMV\ExecException($cmdLine, $output);
@@ -345,7 +344,6 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                         $cmdArgs[] = "update";
                         $cmdArgs[] = $plugin;
                         $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
-                        $cmd->setRedirect2to1(true);
                         $cmdLine = $cmd->getCommandLine();
                         if (0 !== $this->exec($cmdLine, $output, $bgOutputFilename))
                             throw new \OMV\ExecException($cmdLine, $output);
@@ -435,7 +433,6 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 $cmdArgs[] = sprintf("\"%s\"", $params['tag']);
                 $cmdArgs[] = sprintf("\"%s\"", $params['message']);
                 $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
-                $cmd->setRedirect2to1(true);
                 $cmdLine = $cmd->getCommandLine();
                 if (0 !== $this->exec($cmdLine, $output, $bgOutputFilename))
                     throw new \OMV\ExecException($cmdLine, $output);
@@ -461,7 +458,6 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 $cmdArgs[] = $params['plugin'];
                 $cmdArgs[] = trim(str_replace("*", "", $params['branch']));
                 $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
-                $cmd->setRedirect2to1(true);
                 $cmdLine = $cmd->getCommandLine();
                 if (0 !== $this->exec($cmdLine, $output, $bgOutputFilename))
                     throw new \OMV\ExecException($cmdLine, $output);
@@ -508,7 +504,6 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 $cmdArgs[] = $params['plugin'];
                 $cmdArgs[] = sprintf("\"%s\"", $params['commit']);
                 $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
-                $cmd->setRedirect2to1(true);
                 $cmdLine = $cmd->getCommandLine();
                 if (0 !== $this->exec($cmdLine, $output, $bgOutputFilename))
                     throw new \OMV\ExecException($cmdLine, $output);
@@ -526,7 +521,6 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         return $this->execBgProc(function($bgStatusFilename, $bgOutputFilename)
             use ($params) {
                 $cmd = new \OMV\System\Process("omv-mkconf", "developer", "omvgit");
-                $cmd->setRedirect2to1(true);
                 $cmdLine = $cmd->getCommandLine();
                 if (0 !== $this->exec($cmdLine, $output, $bgOutputFilename))
                     throw new \OMV\ExecException($cmdLine, $output);
