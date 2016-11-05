@@ -171,7 +171,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         $objects = [];
         $this->fillPlugins();
         foreach ($this->plugins as $plugin) {
-            $pluginPath = sprintf("%s/openmediavault-%s", $sfPath, $plugin);
+            $pluginPath = sprintf("%s/%s", $sfPath, $plugin);
             $exists  = file_exists($pluginPath);
             $version = "n/a";
             $branch  = [ "", "", "n/a" ];
@@ -197,8 +197,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             }
             $objects[] = [
                 "name"     => $plugin,
-                "fullname" => sprintf("openmediavault-%s", $plugin),
-                "url"      => sprintf("%s/openmediavault-%s", $this->githubURL, $plugin),
+                "url"      => sprintf("%s/%s", $this->githubURL, $plugin),
                 "exists"   => $exists,
                 "branch"   => $branch[2],
                 "version"  => $version
@@ -235,9 +234,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         foreach ($data as $plugin) {
             if (empty($plugin))
                 continue;
-            if (substr($plugin["name"],0,15) !== "openmediavault-")
-                continue;
-            $this->plugins[] = str_replace("openmediavault-","",$plugin["name"]);
+            $this->plugins[] = $plugin["name"];
         }
         asort($this->plugins);
     }

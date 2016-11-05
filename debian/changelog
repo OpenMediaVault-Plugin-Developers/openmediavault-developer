@@ -1,3 +1,9 @@
+openmediavault-developer (3.6.8) stable; urgency=low
+
+  * Allow non-plugins in plugin list
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 05 Nov 2016 09:41:16 -0500
+
 openmediavault-developer (3.6.7) stable; urgency=low
 
   * Remove stderr redirect

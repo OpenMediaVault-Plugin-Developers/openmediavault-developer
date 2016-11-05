@@ -55,11 +55,6 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         dataIndex : "name",
         stateId   : "name"
     },{
-        text      : _("Full Name"),
-        sortable  : true,
-        dataIndex : "fullname",
-        stateId   : "fullname"
-    },{
         text      : _("Folder Exists"),
         sortable  : true,
         dataIndex : "exists",
@@ -94,7 +89,6 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
                     idProperty : "name",
                     fields     : [
                         { name : "name", type : "string" },
-                        { name : "fullname", type : "string" },
                         { name : "url", type : "string" },
                         { name : "exists", type : "boolean" },
                         { name : "branch", type : "string" },
@@ -331,7 +325,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             cmd = "all";
         } else {
             var record = me.getSelected();
-            name = record.get("fullname");
+            name = record.get("name");
             title = _("Updating ") + name + " ...";
             cmd = record.get("name");
         }
@@ -369,7 +363,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
     onResetButton : function(plugin) {
         var me = this;
         var record = me.getSelected();
-        name = record.get("fullname");
+        name = record.get("name");
         cmd = record.get("name");
 
         var wnd = Ext.create("OMV.window.Execute", {
@@ -423,7 +417,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
     onBuildButton : function() {
         var me = this;
         var record = me.getSelected();
-        var title = _("Updating ") + record.get("fullname") + " ...";
+        var title = _("Updating ") + record.get("name") + " ...";
         var wnd = Ext.create("OMV.window.Execute", {
             title           : title,
             rpcService      : "Developer",
@@ -458,7 +452,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
     onChangelogButton : function() {
         var me = this;
         var record = me.getSelected();
-        var title = _("Changelog for ") + record.get("fullname") + " ...";
+        var title = _("Changelog for ") + record.get("name") + " ...";
         var wnd = Ext.create("OMV.window.Execute", {
             title           : title,
             rpcService      : "Developer",
@@ -493,7 +487,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
     onUploadButton : function() {
         var me = this;
         var record = me.getSelected();
-        var title = _("Uploading ") + record.get("fullname") + " ...";
+        var title = _("Uploading ") + record.get("name") + " ...";
         var wnd = Ext.create("OMV.window.Execute", {
             title           : title,
             rpcService      : "Developer",
@@ -575,7 +569,7 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
         var me = this;
         var record = me.getSelected();
         var wnd = Ext.create("OMV.window.Execute", {
-            title           : _("Installing ") + record.get("fullname") + " ...",
+            title           : _("Installing ") + record.get("name") + " ...",
             rpcService      : "Developer",
             rpcMethod       : "doCommand",
             rpcParams       : {

@@ -29,7 +29,6 @@ location=$3
 commit=$3
 tag=$(echo ${3} | tr -d '[[:space:]]')
 message=$(echo ${4} | tr -d '[[:space:]]')
-package="openmediavault-${plugin}"
 
 xpath="//services/developer"
 xpathlocation="${xpath}/locations/location[uuid='${location}']"
@@ -48,18 +47,18 @@ if [ -z "${sfpath}" ]; then
     exit 1
 fi
 
-packagepath="${sfpath}/${package}"
+packagepath="${sfpath}/${plugin}"
 
 initial()
 {
     export LANG=C
     if [ ! -d "${packagepath}" ]; then
-        echo "Cloning ${package} from github to ${sfpath} ..."
+        echo "Cloning ${plugin} from github to ${sfpath} ..."
 
         cd ${sfpath}
-        git clone https://github.com/OpenMediaVault-Plugin-Developers/${package}.git
+        git clone https://github.com/OpenMediaVault-Plugin-Developers/${plugin}.git
 
-        cd ${sfpath}/${package}
+        cd ${sfpath}/${plugin}
         oIFS=${IFS}
         IFS=$'
 '
@@ -90,14 +89,14 @@ build()
 {
     export LANG=C
     copylocation=$(omv_config_get "${xpath}/copylocation")
-    echo "Building ${package}..."
-    rm -f ${temppath}${package}*.deb
-    rm -rf ${temppath}${package}
+    echo "Building ${plugin}..."
+    rm -f ${temppath}${plugin}*.deb
+    rm -rf ${temppath}${plugin}
     cp -r ${packagepath} ${temppath}
-    cd ${temppath}${package}
-    if [ -f "${temppath}${package}/control" ]; then
+    cd ${temppath}${plugin}
+    if [ -f "${temppath}${plugin}/control" ]; then
         equivs-build control 2>&1
-        mv ${temppath}${package}/*.deb ${temppath}
+        mv ${temppath}${plugin}/*.deb ${temppath}
     else
         # debuild -b -us -uc -I
         # debuild clean
@@ -105,9 +104,9 @@ build()
         fakeroot debian/rules clean binary 2>&1
     fi
     rm -f ${packagepath}*.deb
-    cp -f ${temppath}${package}*.deb ${sfpath}/
-    rm -f ${temppath}${package}*.deb
-    rm -rf ${temppath}${package}
+    cp -f ${temppath}${plugin}*.deb ${sfpath}/
+    rm -f ${temppath}${plugin}*.deb
+    rm -rf ${temppath}${plugin}
     chown ${owner}:users ${packagepath}*.deb
     if [ -n "${copylocation}" ]; then
         if [ -d "${copylocation}" ]; then
@@ -121,7 +120,7 @@ update()
 {
     export LANG=C
     cd ${packagepath}
-    echo "Updating ${package} from github..."
+    echo "Updating ${plugin} from github..."
     git pull
     git status
 }
@@ -178,7 +177,7 @@ EOF
 
 moveto()
 {
-    rm -rf ${temppath}${package}
+    rm -rf ${temppath}${plugin}
     rm -rf ${temppath}${txpath}
     cp -r ${packagepath} ${temppath}
     cp -r ${sfpath}/${txpath} ${temppath}
@@ -186,41 +185,41 @@ moveto()
 
 movefrom()
 {
-    cp -rf ${temppath}${package} ${sfpath}/
-    rm -rf ${temppath}${package}
+    cp -rf ${temppath}${plugin} ${sfpath}/
+    rm -rf ${temppath}${plugin}
 }
 
 buildpot()
 {
-    OMV_POT_DIR="${temppath}${package}/usr/share/openmediavault/locale"
+    OMV_POT_DIR="${temppath}${plugin}/usr/share/openmediavault/locale"
 
     moveto
-    cd "${temppath}${package}"
+    cd "${temppath}${plugin}"
     echo "Building PO template file ..." >&2
     mkdir -p "${OMV_POT_DIR}"
 
     find ./ \( -iname *.js -o -iname *.php -o -iname *.inc \) \
       -type f -print0 | xargs -0r xgettext --keyword=_ \
-      --output-dir="${OMV_POT_DIR}" --output="${package}.pot" \
+      --output-dir="${OMV_POT_DIR}" --output="${plugin}.pot" \
       --force-po --no-location --no-wrap --sort-output \
-      --package-name="${package}" -
+      --package-name="${plugin}" -
     # Remove '#, c-format' comments, otherwise manuall upload of translation
     # files confuses Transifex.
-    sed --in-place '/^#, c-format/d' "${OMV_POT_DIR}/${package}.pot"
+    sed --in-place '/^#, c-format/d' "${OMV_POT_DIR}/${plugin}.pot"
     movefrom
 }
 
 pushpot()
 {
     moveto
-    ${txbin} --root="${temppath}" push --source --resource="${package}.${package}pot"
+    ${txbin} --root="${temppath}" push --source --resource="${plugin}.${plugin}pot"
     movefrom
 }
 
 pullpo()
 {
     moveto
-    ${txbin} --root="${temppath}" pull --all --force --resource="${package}.${package}pot"
+    ${txbin} --root="${temppath}" pull --all --force --resource="${plugin}.${plugin}pot"
     movefrom
 }
 
@@ -229,7 +228,7 @@ install()
     search="${packagepath}_*"
     version=`ls ${search}`
 
-    echo "Installing ${package} ..."
+    echo "Installing ${plugin} ..."
     export LANG=C
     export DEBIAN_FRONTEND=noninteractive
     cd ${packagepath}

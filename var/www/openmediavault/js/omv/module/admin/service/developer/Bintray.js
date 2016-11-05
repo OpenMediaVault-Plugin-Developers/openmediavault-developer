@@ -218,7 +218,7 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
                         pageSize: 100,
                         model: OMV.data.Model.createImplicit({
                             fields: [
-                                { name: "fullname", type: "string" }
+                                { name: "name", type: "string" }
                             ]
                         }),
                         proxy: {
@@ -231,12 +231,12 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
                         remoteSort: true,
                         sorters: [{
                             direction: "ASC",
-                            property: "fullname"
+                            property: "name"
                         }]
                     }),
                     editable: false,
-                    valueField: "fullname",
-                    displayField: "fullname",
+                    valueField: "name",
+                    displayField: "name",
                     fieldLabel: _("Plugin"),
                     allowBlank: false
                 },{
@@ -325,7 +325,7 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
                             [ "arm64", _("arm64 only") ],
                             [ "armel", _("armel only") ],
                             [ "armhf", _("armhf only") ],
-                            [ "i386", _("i386 only") ],                            
+                            [ "i386", _("i386 only") ],
                             [ "powerpc", _("powerpc only") ],
                             [ "amd64,i386", _("amd64,i386") ],
                             [ "amd64,armhf,i386", _("amd64,armhf,i386") ],
