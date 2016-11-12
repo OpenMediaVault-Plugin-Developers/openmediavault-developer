@@ -380,18 +380,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 break;
 
             case "gh":
-                $configFile = "/root/.netrc";
-                $config = sprintf("machine github.com\nlogin %s\npassword %s\nprotocol https\n",
-                    $object->get("ghusername"), $object->get("ghpassword")
-                );
-
-                if ( file_exists($configFile) === false) {
-                    file_put_contents($configFile, $config);
-                } else {
-                    if ( strpos(file_get_contents($configFile), "machine github.com") === false )
-                        file_put_contents($configFile, $config, FILE_APPEND);
-                }
-                chmod($configFile, 0600);
+                exec("omv-mkconf netrc", $output);
                 break;
 
             case "tx":
