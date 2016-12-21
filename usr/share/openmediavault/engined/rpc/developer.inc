@@ -331,8 +331,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                     $cmdArgs[] = sprintf("\"%s\"", $params['location']);
                     $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
                     $cmdLine = $cmd->getCommandLine();
-                    if (0 !== $this->exec($cmdLine, $output, $bgOutputFilename))
-                        throw new \OMV\ExecException($cmdLine, $output);
+                    $this->exec($cmdLine, $output, $bgOutputFilename);
                 } else {
                     $this->fillPlugins();
                     foreach ($this->plugins as $plugin) {
@@ -342,8 +341,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                         $cmdArgs[] = $plugin;
                         $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
                         $cmdLine = $cmd->getCommandLine();
-                        if (0 !== $this->exec($cmdLine, $output, $bgOutputFilename))
-                            throw new \OMV\ExecException($cmdLine, $output);
+                        $this->exec($cmdLine, $output, $bgOutputFilename);
                     }
                 }
                 return $output;
