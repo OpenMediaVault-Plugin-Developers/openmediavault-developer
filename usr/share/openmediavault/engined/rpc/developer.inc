@@ -418,8 +418,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 $cmdArgs[] = sprintf("\"%s\"", $params['message']);
                 $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
                 $cmdLine = $cmd->getCommandLine();
-                if (0 !== $this->exec($cmdLine, $output, $bgOutputFilename))
-                    throw new \OMV\ExecException($cmdLine, $output);
+                $this->exec($cmdLine, $output, $bgOutputFilename);
                 return $output;
             }
         );
@@ -443,8 +442,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 $cmdArgs[] = trim(str_replace("*", "", $params['branch']));
                 $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
                 $cmdLine = $cmd->getCommandLine();
-                if (0 !== $this->exec($cmdLine, $output, $bgOutputFilename))
-                    throw new \OMV\ExecException($cmdLine, $output);
+                $this->exec($cmdLine, $output, $bgOutputFilename);
                 return $output;
             }
         );
@@ -489,8 +487,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 $cmdArgs[] = sprintf("\"%s\"", $params['commit']);
                 $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
                 $cmdLine = $cmd->getCommandLine();
-                if (0 !== $this->exec($cmdLine, $output, $bgOutputFilename))
-                    throw new \OMV\ExecException($cmdLine, $output);
+                $this->exec($cmdLine, $output, $bgOutputFilename);
                 return $output;
             }
         );
@@ -506,8 +503,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             use ($params) {
                 $cmd = new \OMV\System\Process("omv-mkconf", "developer", "omvgit");
                 $cmdLine = $cmd->getCommandLine();
-                if (0 !== $this->exec($cmdLine, $output, $bgOutputFilename))
-                    throw new \OMV\ExecException($cmdLine, $output);
+                $this->exec($cmdLine, $output, $bgOutputFilename);
                 return $output;
             }
         );

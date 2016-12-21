@@ -1,3 +1,9 @@
+openmediavault-developer (3.6.11) stable; urgency=low
+
+  * Fix errors
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 21 Dec 2016 06:28:08 -0600
+
 openmediavault-developer (3.6.10) stable; urgency=low
 
   * Fix update plugin when no code downloaded
