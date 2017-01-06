@@ -457,9 +457,8 @@ omvgit()
 
     # make git package
     cd ${temppath}openmediavault
-    #svn update
     fakeroot debian/rules clean binary
-    mv -v ../openmediavault_${version}_all.deb ${sfpath}openmediavault_${version}-git${revision}_all.deb
+    mv -v ../openmediavault_${version}_all.deb ${sfpath}/openmediavault_${version}-git${revision}_all.deb
 
     dpkg --force-confold -i ${sfpath}/openmediavault_${version}-git${revision}_all.deb
     apt-get --yes --force-yes --fix-missing -f install
