@@ -611,7 +611,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         if (!(preg_match('/^\{.*\"created\".*\}$/', $output[0]))) {
             throw new \OMV\Exception($output[0]);
         }
-        $fp = fopen($this->repoCache, "w");
+        $fp = fopen($this->repoCache, "a");
         fwrite($fp, $params['name'] . PHP_EOL);
         fclose($fp);
     }
@@ -738,10 +738,11 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             "-u" . $object->get('btusername') . ":" . $object->get('btapikey') . " " . $url;
         exec($cmd, $output);
 
-        if (!(strcmp($output[0], "{}") === 0)) {
+        if (!(preg_match('/^\{.*\"success\".*\}$/', $output[0]))) {
             throw new \OMV\Exception($output[0]);
         }
     }
+
     /**
      * Sync local data with Bintray
      *
