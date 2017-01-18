@@ -1,3 +1,9 @@
+openmediavault-developer (3.7) stable; urgency=low
+
+  * Update for OMV 3.0.60
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Tue, 17 Jan 2017 06:11:01 -0600
+
 openmediavault-developer (3.6.14) stable; urgency=low
 
   * fix repo creation and package upload

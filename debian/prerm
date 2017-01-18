@@ -25,21 +25,17 @@ set -e
 . /usr/share/openmediavault/scripts/helper-functions
 
 case "$1" in
-    configure)
-        dpkg-trigger update-fixperms
-        dpkg-trigger update-locale
-
-        echo "Updating configuration database ..."
-        echo "${DPKG_MAINTSCRIPT_PACKAGE}"
-        omv-confdbadm create "${DPKG_MAINTSCRIPT_PACKAGE}"
-        omv-confdbadm migrate "${DPKG_MAINTSCRIPT_PACKAGE}" "${2}"
+    purge)
+        # Remove the configuration data
+        echo "Cleaning up configuration database ..."
+        omv-confdbadm delete "${DPKG_MAINTSCRIPT_PACKAGE}"
     ;;
 
-    abort-upgrade|abort-remove|abort-deconfigure)
+    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;
 
     *)
-        echo "postinst called with unknown argument '$1'" >&2
+        echo "prerm called with unknown argument '$1'" >&2
         exit 1
     ;;
 esac

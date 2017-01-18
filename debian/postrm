@@ -4,7 +4,7 @@
 # @author    Volker Theile <volker.theile@openmediavault.org>
 # @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 # @copyright Copyright (c) 2009-2013 Volker Theile
-# @copyright Copyright (c) 2014-2015 OpenMediaVault Plugin Developers
+# @copyright Copyright (c) 2014-2017 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,19 +25,15 @@ set -e
 . /usr/share/openmediavault/scripts/helper-functions
 
 case "$1" in
-    remove)
-        ;;
-
     purge)
-        # Remove the configuration data
-        omv_config_delete "/config/services/developer"
+        # Remove cache files
         rm -f /var/cache/openmediavault/dev_package_cache \
               /var/cache/openmediavault/dev_plugin_cache \
               /var/cache/openmediavault/dev_repo_cache
 
     ;;
 
-    upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
+    remove|upgrade|failed-upgrade|abort-install|abort-upgrade|disappear)
     ;;
 
     *)
