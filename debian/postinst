@@ -30,9 +30,8 @@ case "$1" in
         dpkg-trigger update-locale
 
         echo "Updating configuration database ..."
-        echo "${DPKG_MAINTSCRIPT_PACKAGE}"
-        omv-confdbadm create "${DPKG_MAINTSCRIPT_PACKAGE}"
-        omv-confdbadm migrate "${DPKG_MAINTSCRIPT_PACKAGE}" "${2}"
+        omv-confdbadm create "conf.service.developer"
+        omv-confdbadm migrate "conf.service.developer" "${2}"
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
