@@ -1,3 +1,9 @@
+openmediavault-developer (3.8) stable; urgency=low
+
+  * Add compatibility for stretch
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Thu, 23 Feb 2017 10:36:10 -0600
+
 openmediavault-developer (3.7) stable; urgency=low
 
   * Update for OMV 3.0.60

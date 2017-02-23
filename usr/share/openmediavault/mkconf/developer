@@ -440,6 +440,12 @@ omvgit()
         git pull
     fi
 
+    if [ "$(omv_product_info versionname)" = "Erasmus" ]; then
+        # checkout 3.x branch since 4.x has been started
+        git checkout 3.x
+        git pull
+    fi
+
     # get revision
     cd ${omvcodepath}
     revision=$(git rev-parse HEAD)

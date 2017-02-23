@@ -303,7 +303,8 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
                         ],
                         data: [
                             { distribution: "wheezy" },
-                            { distribution: "jessie" }
+                            { distribution: "jessie" },
+                            { distribution: "stretch" }
                         ]
                     }),
                     editable: false,
