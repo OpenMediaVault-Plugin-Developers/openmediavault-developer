@@ -50,11 +50,13 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
     stateful          : true,
     stateId           : "b317a72d-1804-1632-a31b-1f48f0ea6aae",
     columns           : [{
+        xtype     : "textcolumn",
         text      : _("Name"),
         sortable  : true,
         dataIndex : "name",
         stateId   : "name"
     },{
+        xtype     : "textcolumn",
         text      : _("Folder Exists"),
         sortable  : true,
         dataIndex : "exists",
@@ -68,11 +70,13 @@ Ext.define("OMV.module.admin.service.developer.Plugins", {
             return content;
         }
     },{
+        xtype     : "textcolumn",
         text      : _("Branch"),
         sortable  : true,
         dataIndex : "branch",
         stateId   : "branch"
     },{
+        xtype     : "textcolumn",
         text      : _("Version"),
         sortable  : true,
         dataIndex : "version",

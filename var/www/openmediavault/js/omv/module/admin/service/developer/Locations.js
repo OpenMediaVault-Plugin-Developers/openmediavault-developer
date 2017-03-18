@@ -97,26 +97,31 @@ Ext.define("OMV.module.admin.service.developer.Locations", {
     stateful          : true,
     stateId           : "3339057b-b2c0-4c48-a4c1-8c9b1fb34d1b",
     columns           : [{
+        xtype     : "textcolumn",
         text      : _("Name"),
         sortable  : true,
         dataIndex : "name",
         stateId   : "name"
     },{
+        xtype     : "textcolumn",
         text      : _("Remote Host"),
         sortable  : true,
         dataIndex : "remotehost",
         stateId   : "remotehost",
     },{
+        xtype     : "textcolumn",
         text      : _("Remote Path"),
         sortable  : true,
         dataIndex : "remotepath",
         stateId   : "remotepath",
     },{
+        xtype     : "textcolumn",
         text      : _("Port"),
         sortable  : true,
         dataIndex : "port",
         stateId   : "port",
     },{
+        xtype     : "textcolumn",
         text      : _("Username"),
         sortable  : true,
         dataIndex : "username",

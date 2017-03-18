@@ -1,3 +1,9 @@
+openmediavault-developer (3.9) stable; urgency=low
+
+  * Improve foreign content handling
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 18 Mar 2017 09:26:32 -0500
+
 openmediavault-developer (3.8) stable; urgency=low
 
   * Add compatibility for stretch
