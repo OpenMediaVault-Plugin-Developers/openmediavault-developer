@@ -19,12 +19,13 @@ Depends: build-essential,
          git,
          libfile-fcntllock-perl,
          omvextras-netrc,
-         openmediavault (>= 3.0.67),
-         php5-curl | php7.0-curl,
+         openmediavault (>= 4.0.4),
+         php7.0-curl,
          quilt,
          sshpass,
          transifex-client,
          ${misc:Depends}
+Breaks: openmediavault (<< 4.0)
 Description: OpenMediaVault Developer plugin
  Plugin to help developer download/ plugin code and setup system for
  plugin development.

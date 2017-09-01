@@ -310,7 +310,7 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
                     editable: false,
                     valueField: "distribution",
                     displayField: "distribution",
-                    value: "jessie",
+                    value: "stretch",
                     fieldLabel: _("Dist"),
                     allowBlank: false
                 },{
