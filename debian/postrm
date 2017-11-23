@@ -26,6 +26,8 @@ set -e
 
 case "$1" in
     purge)
+        omv_config_delete "/config/services/developer"
+
         # Remove cache files
         rm -f /var/cache/openmediavault/dev_package_cache \
               /var/cache/openmediavault/dev_plugin_cache \
