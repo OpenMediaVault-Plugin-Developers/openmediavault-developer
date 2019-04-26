@@ -1,3 +1,9 @@
+openmediavault-developer (4.2) stable; urgency=low
+
+  * Update for OMV 5.x
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Fri, 26 Apr 2019 06:02:36 -0500
+
 openmediavault-developer (4.1) stable; urgency=low
 
   * make file executable

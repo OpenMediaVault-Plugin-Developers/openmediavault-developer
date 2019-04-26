@@ -304,13 +304,14 @@ Ext.define("OMV.module.admin.service.developer.Bintray", {
                         data: [
                             { distribution: "wheezy" },
                             { distribution: "jessie" },
-                            { distribution: "stretch" }
+                            { distribution: "stretch" },
+                            { distribution: "buster" }
                         ]
                     }),
                     editable: false,
                     valueField: "distribution",
                     displayField: "distribution",
-                    value: "stretch",
+                    value: "buster",
                     fieldLabel: _("Dist"),
                     allowBlank: false
                 },{
