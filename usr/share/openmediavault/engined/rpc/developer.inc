@@ -378,7 +378,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 break;
 
             case "gh":
-                exec("omv-mkconf netrc", $output);
+                exec("omv-salt deploy run --quiet netrc", $output);
                 break;
 
             case "tx":
