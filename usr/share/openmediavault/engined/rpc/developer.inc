@@ -3,7 +3,7 @@
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
  * @author    Volker Theile <volker.theile@openmediavault.org>
  * @copyright Copyright (c) 2009-2013 Volker Theile
- * @copyright Copyright (c) 2013-2017 OpenMediaVault Plugin Developers
+ * @copyright Copyright (c) 2013-2019 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,6 +23,8 @@ require_once("openmediavault/functions.inc");
 
 class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
 {
+    private $omvDeveloper = "/usr/sbin/omv-developer";
+
     private $packageCache = "/var/cache/openmediavault/dev_package_cache";
     private $pluginCache  = "/var/cache/openmediavault/dev_plugin_cache";
     private $repoCache    = "/var/cache/openmediavault/dev_repo_cache";
@@ -325,21 +327,19 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             use ($params) {
                 if ($params['plugin'] != "all") {
                     $cmdArgs = [];
-                    $cmdArgs[] = "developer";
                     $cmdArgs[] = $params['command'];
                     $cmdArgs[] = $params['plugin'];
                     $cmdArgs[] = sprintf("\"%s\"", $params['location']);
-                    $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
+                    $cmd = new \OMV\System\Process($this->omvDeveloper, $cmdArgs);
                     $cmdLine = $cmd->getCommandLine();
                     $this->exec($cmdLine, $output, $bgOutputFilename);
                 } else {
                     $this->fillPlugins();
                     foreach ($this->plugins as $plugin) {
                         $cmdArgs = [];
-                        $cmdArgs[] = "developer";
                         $cmdArgs[] = "update";
                         $cmdArgs[] = $plugin;
-                        $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
+                        $cmd = new \OMV\System\Process($this->omvDeveloper, $cmdArgs);
                         $cmdLine = $cmd->getCommandLine();
                         $this->exec($cmdLine, $output, $bgOutputFilename);
                     }
@@ -392,7 +392,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 $this->fillPlugins();
                 file_put_contents("/root/.repos", implode(PHP_EOL, $this->plugins));
 
-                $cmd = "export lang=c; omv-mkconf developer tx";
+                $cmd = sprintf("export lang=c; %s tx", $this->omvDeveloper);
                 exec($cmd, $output);
                 break;
         }
@@ -410,13 +410,12 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         return $this->execBgProc(function($bgStatusFilename, $bgOutputFilename)
             use ($params) {
                 $cmdArgs = [];
-                $cmdArgs[] = "developer";
                 $cmdArgs[] = $params['command'];
                 $cmdArgs[] = $params['plugin'];
                 $cmdArgs[] = sprintf("\"%s\"", $params['commit']);
                 $cmdArgs[] = sprintf("\"%s\"", $params['tag']);
                 $cmdArgs[] = sprintf("\"%s\"", $params['message']);
-                $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
+                $cmd = new \OMV\System\Process($this->omvDeveloper, $cmdArgs);
                 $cmdLine = $cmd->getCommandLine();
                 $this->exec($cmdLine, $output, $bgOutputFilename);
                 return $output;
@@ -436,11 +435,10 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         return $this->execBgProc(function($bgStatusFilename, $bgOutputFilename)
             use ($params) {
                 $cmdArgs = [];
-                $cmdArgs[] = "developer";
                 $cmdArgs[] = "changebranch";
                 $cmdArgs[] = $params['plugin'];
                 $cmdArgs[] = trim(str_replace("*", "", $params['branch']));
-                $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
+                $cmd = new \OMV\System\Process($this->omvDeveloper, $cmdArgs);
                 $cmdLine = $cmd->getCommandLine();
                 $this->exec($cmdLine, $output, $bgOutputFilename);
                 return $output;
@@ -458,7 +456,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
 
         // Get configuration object
         $objects = [];
-        $cmd = sprintf("omv-mkconf developer branches %s", $params['plugin']);
+        $cmd = sprintf("%s branches %s", $this->omvDeveloper, $params['plugin']);
         exec($cmd, $output);
 
         foreach ($output as $branch) {
@@ -481,11 +479,10 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         return $this->execBgProc(function($bgStatusFilename, $bgOutputFilename)
             use ($params) {
                 $cmdArgs = [];
-                $cmdArgs[] = "developer";
                 $cmdArgs[] = $params['command'];
                 $cmdArgs[] = $params['plugin'];
                 $cmdArgs[] = sprintf("\"%s\"", $params['commit']);
-                $cmd = new \OMV\System\Process("omv-mkconf", $cmdArgs);
+                $cmd = new \OMV\System\Process($this->omvDeveloper, $cmdArgs);
                 $cmdLine = $cmd->getCommandLine();
                 $this->exec($cmdLine, $output, $bgOutputFilename);
                 return $output;
@@ -501,7 +498,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         // Create the background process.
         return $this->execBgProc(function($bgStatusFilename, $bgOutputFilename)
             use ($params) {
-                $cmd = new \OMV\System\Process("omv-mkconf", "developer", "omvgit");
+                $cmd = new \OMV\System\Process($this->omvDeveloper, "omvgit");
                 $cmdLine = $cmd->getCommandLine();
                 $this->exec($cmdLine, $output, $bgOutputFilename);
                 return $output;
