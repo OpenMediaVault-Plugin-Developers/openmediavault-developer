@@ -8,6 +8,6 @@ create_netrc_developer:
       - login {{ config.ghusername }}
       - password {{ config.ghpassword }}
       - protcol https
-      -
+      - ""
     - require_in:
       - file: append_netrc_entries
