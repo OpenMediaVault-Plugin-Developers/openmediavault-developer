@@ -91,7 +91,7 @@ Ext.define("OMV.module.admin.service.developer.Settings", {
                     }
                 },
                 onTriggerClick : function() {
-                    Ext.create("OMV.window.RootFolderBrowser", {
+                    Ext.create("OmvExtras.window.RootFolderBrowser", {
                         listeners : {
                             scope  : this,
                             select : function(wnd, node, path) {
