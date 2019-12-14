@@ -224,12 +224,16 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             $context = stream_context_create([
                 'http' => ['user_agent' => 'openmediavault-plugin-developers'],
             ]);
-            $json = file_get_contents(
-                'https://api.github.com/orgs/openmediavault-plugin-developers/repos?per_page=100',
-                false, $context
-            );
+            $list = [];
+            for ($i = 1; $i <= 3; $i++) {
+                $json = file_get_contents(
+                    'https://api.github.com/orgs/openmediavault-plugin-developers/repos?per_page=100&page=' . $i,
+                    false, $context
+                );
+                $list = array_merge($list, json_decode($json));
+            }
             // Get repos info and put in cache file
-            file_put_contents($this->pluginCache, $json);
+            file_put_contents($this->pluginCache, json_encode($list));
         }
         $this->plugins = [];
         $data = json_decode(file_get_contents($this->pluginCache), true);
