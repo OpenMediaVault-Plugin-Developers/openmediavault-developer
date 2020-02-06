@@ -3,7 +3,7 @@
 # @author    Volker Theile <volker.theile@openmediavault.org>
 # @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 # @copyright Copyright (c) 2009-2013 Volker Theile
-# @copyright Copyright (c) 2014-2019 OpenMediaVault Plugin Developers
+# @copyright Copyright (c) 2014-2020 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -100,8 +100,14 @@ build()
     else
         # debuild -b -us -uc -I
         # debuild clean
-        # dpkg-buildpackage -b
-        fakeroot debian/rules clean binary 2>&1
+        if grep -q "Architecture: any" debian/control; then
+            for i in amd64 armhf arm64 i386; do
+                echo $i
+                dpkg-buildpackage -b -a $i
+            done
+        else
+            fakeroot debian/rules clean binary 2>&1
+        fi
     fi
     rm -f ${packagepath}*.deb
     cp -f ${temppath}${plugin}*.deb ${sfpath}/

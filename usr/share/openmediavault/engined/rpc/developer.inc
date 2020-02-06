@@ -3,7 +3,7 @@
  * @license   http://www.gnu.org/licenses/gpl.html GPL Version 3
  * @author    Volker Theile <volker.theile@openmediavault.org>
  * @copyright Copyright (c) 2009-2013 Volker Theile
- * @copyright Copyright (c) 2013-2019 OpenMediaVault Plugin Developers
+ * @copyright Copyright (c) 2013-2020 OpenMediaVault Plugin Developers
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -227,7 +227,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             $list = [];
             for ($i = 1; $i <= 3; $i++) {
                 $json = file_get_contents(
-                    'https://api.github.com/orgs/openmediavault-plugin-developers/repos?per_page=100&page=' . $i,
+                    'https://api.github.com/orgs/openmediavault-plugin-developers/repos?per_page=200&page=' . $i,
                     false, $context
                 );
                 $list = array_merge($list, json_decode($json));
