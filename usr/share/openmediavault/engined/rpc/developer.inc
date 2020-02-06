@@ -227,7 +227,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             $list = [];
             for ($i = 1; $i <= 3; $i++) {
                 $json = file_get_contents(
-                    'https://api.github.com/orgs/openmediavault-plugin-developers/repos?per_page=200&page=' . $i,
+                    'https://api.github.com/orgs/openmediavault-plugin-developers/repos?per_page=100&page=' . $i,
                     false, $context
                 );
                 $list = array_merge($list, json_decode($json));
