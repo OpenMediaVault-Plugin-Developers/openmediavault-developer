@@ -257,6 +257,7 @@ fixperms()
     postpath="/usr/share/openmediavault/releaseupgrade/post.d/"
     sleeppath="/etc/pm/sleep.d/"
     libextraspath="/usr/lib/omvextras/"
+    libsystemdsleep="/lib/systemd/system-sleep/"
 
     echo "Fixing permissions..."
     find "${packagepath}" -type f -exec chmod 644 {} +
@@ -327,6 +328,10 @@ fixperms()
 
     if [ -d "${packagepath}${libextraspath}" ]; then
         chmod 755 "${packagepath}${libextraspath}"/*
+    fi
+
+    if [ -d "${packagepath}${libsystemdsleep}" ]; then
+        chmod +x "${packagepath}${libsystemdsleep}"/*
     fi
 
     chown -R ${owner}:users "${packagepath}"
