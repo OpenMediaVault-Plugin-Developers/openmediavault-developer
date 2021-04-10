@@ -18,10 +18,7 @@ if ! omv_config_exists "${SERVICE_XPATH}"; then
     omv_config_add_key "${SERVICE_XPATH}" "txpassword" ""
     omv_config_add_key "${SERVICE_XPATH}" "txtoken" ""
     omv_config_add_key "${SERVICE_XPATH}" "txusername" ""
-    omv_config_add_key "${SERVICE_XPATH}" "btusername" ""
-    omv_config_add_key "${SERVICE_XPATH}" "btapikey" ""
     omv_config_add_key "${SERVICE_XPATH}" "btgpgpass" ""
-    omv_config_add_node "${SERVICE_XPATH}" "locations"
 fi
 
 exit 0

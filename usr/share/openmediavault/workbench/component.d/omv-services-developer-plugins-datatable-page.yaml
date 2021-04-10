@@ -1,0 +1,218 @@
+version: "1.0"
+type: component
+data:
+  name: omv-services-developer-plugins-datatable-page
+  type: datatablePage
+  config:
+    autoReload: false
+    stateId: b317a72d-1804-1632-a31b-1f48f0ea6aae
+    sorters:
+      - dir: asc
+        prop: name
+    store:
+      proxy:
+        service: Developer
+        get:
+          method: getPluginList
+    columns:
+      - name: _("Name")
+        prop: name
+        flexGrow: 1
+        sortable: true
+      - name: _("Folder Exists")
+        prop: exists
+      - name: _("Branch")
+        prop: branch
+        flexGrow: 1
+        sortable: true
+      - name: _("Version")
+        prop: version
+        flexGrow: 1
+        sortable: true
+    actions:
+      - type: menu
+        icon: mdi:github
+        tooltip: _("GitHub")
+        actions:
+          - text: _("Update all")
+            icon: mdi:update
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "update"
+                  plugin: "all"
+                task: true
+          - text: _("Update")
+            icon: mdi:update
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "update"
+                  plugin: "{{ name }}"
+                task: true
+          - text: _("Reset")
+            icon: mdi:lock-reset
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "reset"
+                  plugin: "{{ name }}"
+                task: true
+      - type: menu
+        icon: mdi:package-variant
+        tooltip: _("Package")
+        actions:
+          - text: _("Build")
+            icon: mdi:wrench-outline
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "build"
+                  plugin: "{{ name }}"
+                task: true
+          - text: _("Install")
+            icon: mdi:archive-outline
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "install"
+                  plugin: "{{ name }}"
+                task: true
+      - type: menu
+        icon: mdi:translate
+        tooltip: _("Transifex")
+        actions:
+          - text: _("Build")
+            icon: mdi:wrench-outline
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "buildpot"
+                  plugin: "{{ name }}"
+                task: true
+          - text: _("Push")
+            icon: mdi:source-commit
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "pushpot"
+                  plugin: "{{ name }}"
+                task: true
+          - text: _("Pull")
+            icon: mdi:source-pull
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "pullpo"
+                  plugin: "{{ name }}"
+                task: true
+      - type: menu
+        icon: mdi:git
+        tooltip: _("Git")
+        actions:
+          - text: _("Add")
+            icon: mdi:source-branch-plus
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "add"
+                  plugin: "{{ name }}"
+                  commit: ""
+                  tag: ""
+                  message: ""
+                task: true
+          - text: _("Commit")
+            icon: mdi:source-commit
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "commit"
+                  plugin: "{{ name }}"
+                  commit: ""
+                  tag: ""
+                  message: ""
+                task: true
+          - text: _("Push")
+            icon: mdi:source-merge
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "push"
+                  plugin: "{{ name }}"
+                  commit: ""
+                  tag: ""
+                  message: ""
+                task: true
+      - type: menu
+        icon: mdi:note-multiple-outline
+        tooltip: _("Changelog")
+        actions:
+          - text: _("dch -i")
+            icon: mdi:playlist-plus
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "dchi"
+                  plugin: "{{ name }}"
+                  commit: ""
+                task: true
+          - text: _("dch -a")
+            icon: mdi:playlist-edit
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "dcha"
+                  plugin: "{{ name }}"
+                  commit: ""
+                task: true
+          - text: _("dch -r")
+            icon: mdi:playlist-check
+            execute:
+              type: request
+              request:
+                service: Developer
+                method: doCommand
+                params:
+                  command: "dchr"
+                  plugin: "{{ name }}"
+                  commit: ""
+                task: true

@@ -1,0 +1,110 @@
+version: "1.0"
+type: component
+data:
+  name: omv-services-developer-settings-form-page
+  type: formPage
+  config:
+    request:
+      service: Developer
+      get:
+        method: getSettings
+      post:
+        method: setSettings
+    fields:
+      - type: paragraph
+        text: _("Settings")
+      - type: sharedFolderSelect
+        name: sharedfolderref
+        label: _("Shared Folder")
+      - type: textInput
+        name: owner
+        label: _("Owner")
+        value: "nobody"
+      - type: paragraph
+        text: _("git config")
+      - type: textInput
+        name: gitname
+        label: _("Name")
+        value: ""
+      - type: textInput
+        name: gitemail
+        label: _("Email")
+        value: ""
+      - type: paragraph
+        text: _("Github config")
+      - type: textInput
+        name: ghusername
+        label: _("Username")
+        value: ""
+      - type: passwordInput
+        name: ghpassword
+        label: _("Password")
+        value: ""
+      - type: paragraph
+        text: _("Transifex config")
+      - type: textInput
+        name: txhostname
+        label: _("Hostname")
+        value: ""
+      - type: passwordInput
+        name: txpassword
+        label: _("Password")
+        value: ""
+      - type: textInput
+        name: txtoken
+        label: _("Token")
+        value: ""
+      - type: textInput
+        name: txusername
+        label: _("Username")
+        value: ""
+      - type: paragraph
+        text: _("gpg config")
+      - type: passwordInput
+        name: btgpgpass
+        label: _("GPG-key passphrase")
+        value: ""
+    buttons:
+      - template: submit
+      - template: cancel
+        execute:
+          type: url
+          url: "/services/developer"
+      - text: _('Create git config')
+        execute:
+          type: request
+          request:
+            service: Developer
+            method: createConfig
+            params:
+              command: "git"
+            task: true
+            progressMessage: _('Creating git config ...')
+      - text: _('Create Github .netrc')
+        execute:
+          type: request
+          request:
+            service: Developer
+            method: createConfig
+            params:
+              command: "gh"
+            task: true
+            progressMessage: _('Creating Github .netrc ...')
+      - text: _('Create Transifex configs')
+        execute:
+          type: request
+          request:
+            service: Developer
+            method: createConfig
+            params:
+              command: "tx"
+            task: true
+            progressMessage: _('Creating Transifex configs ...')
+      - text: _('Update OMV')
+        execute:
+          type: request
+          request:
+            service: Developer
+            method: doOmvGit
+            task: true
+            progressMessage: _('Updating OMV from git ...')

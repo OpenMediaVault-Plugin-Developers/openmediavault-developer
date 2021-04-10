@@ -1,0 +1,7 @@
+version: "1.0"
+type: navigation-item
+data:
+  path: "services.developer"
+  text: _("Developer")
+  icon: "mdi:developer-board"
+  url: "/services/developer"

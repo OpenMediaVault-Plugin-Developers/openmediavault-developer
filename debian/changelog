@@ -1,3 +1,9 @@
+openmediavault-developer (6.0) stable; urgency=low
+
+  * Update for OMV 6.x
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 10 Apr 2021 15:27:39 -0600
+
 openmediavault-developer (5.0.1) stable; urgency=low
 
   * build architecture specific packages if architecture is 'any'

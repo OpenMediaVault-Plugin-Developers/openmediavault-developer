@@ -1,0 +1,6 @@
+version: "1.0"
+type: route
+data:
+  url: "/services/developer/settings"
+  title: _("Settings")
+  component: omv-services-developer-settings-form-page

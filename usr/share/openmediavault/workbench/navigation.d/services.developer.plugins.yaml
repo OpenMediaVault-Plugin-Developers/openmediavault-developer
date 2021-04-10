@@ -1,0 +1,8 @@
+version: "1.0"
+type: navigation-item
+data:
+  path: "services.developer.plugins"
+  text: _("Plugins")
+  position: 10
+  icon: mdi:power-plug-outline
+  url: "/services/developer/plugins"

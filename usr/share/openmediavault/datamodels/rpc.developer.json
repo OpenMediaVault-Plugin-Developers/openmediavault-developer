@@ -13,9 +13,6 @@
 				"type": "string",
 				"required": true
 			},
-			"copylocation": {
-				"type": "string"
-			},
 			"gitname": {
 				"type": "string"
 			},
@@ -40,51 +37,7 @@
 			"txusername": {
 				"type": "string"
 			},
-			"btusername": {
-				"type": "string"
-			},
-			"btapikey": {
-				"type": "string"
-			},
 			"btgpgpass": {
-				"type": "string"
-			}
-		}
-	}
-},{
-	"type": "rpc",
-	"id": "rpc.developer.setlocation",
-	"params": {
-		"type": "object",
-		"properties": {
-			"uuid": {
-				"type": "string",
-				"format": "uuidv4",
-				"required": true
-			},
-			"name": {
-				"type": "string",
-				"required": true
-			},
-			"remotehost": {
-				"type": "string",
-				"required": true
-			},
-			"remotepath": {
-				"type": "string",
-				"required": true
-			},
-			"port": {
-				"type": "integer",
-				"minimum": 1,
-				"maximum": 65535,
-				"required": true
-			},
-			"username": {
-				"type": "string",
-				"required": true
-			},
-			"password": {
 				"type": "string"
 			}
 		}

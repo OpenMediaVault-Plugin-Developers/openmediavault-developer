@@ -1,0 +1,6 @@
+version: "1.0"
+type: route
+data:
+  url: "/services/developer/plugins"
+  title: _("Plugins")
+  component: omv-services-developer-plugins-datatable-page
