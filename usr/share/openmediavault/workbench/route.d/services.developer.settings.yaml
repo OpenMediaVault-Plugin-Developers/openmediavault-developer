@@ -3,4 +3,6 @@ type: route
 data:
   url: "/services/developer/settings"
   title: _("Settings")
+  editing: true
+  notificationTitle: _("Updated Developer settings.")
   component: omv-services-developer-settings-form-page

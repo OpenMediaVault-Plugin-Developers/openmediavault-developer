@@ -37,36 +37,54 @@ data:
           - text: _("Update all")
             icon: mdi:update
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "update"
-                  plugin: "all"
-                task: true
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Update all plugins from Github ...")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doCommand
+                    params:
+                      command: "update"
+                      plugin: "all"
+                successUrl: /services/developer/plugins
           - text: _("Update")
             icon: mdi:update
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "update"
-                  plugin: "{{ name }}"
-                task: true
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Update from Github")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doCommand
+                    params:
+                      command: "update"
+                      plugin: "{{ _selected[0].name }}"
+                  buttons:
+                    stop:
+                      hidden: true
+                successUrl: /services/developer/plugins
           - text: _("Reset")
             icon: mdi:lock-reset
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "reset"
-                  plugin: "{{ name }}"
-                task: true
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Reset ...")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doCommand
+                    params:
+                      command: "reset"
+                      plugin: "{{ _selected[0].name }}"
+                  buttons:
+                    stop:
+                      hidden: true
+                successUrl: /services/developer/plugins
       - type: menu
         icon: mdi:package-variant
         tooltip: _("Package")
@@ -74,25 +92,39 @@ data:
           - text: _("Build")
             icon: mdi:wrench-outline
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "build"
-                  plugin: "{{ name }}"
-                task: true
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Build ...")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doCommand
+                    params:
+                      command: "build"
+                      plugin: "{{ _selected[0].name }}"
+                  buttons:
+                    stop:
+                      hidden: true
+                successUrl: /services/developer/plugins
           - text: _("Install")
             icon: mdi:archive-outline
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "install"
-                  plugin: "{{ name }}"
-                task: true
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Installing ...")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doCommand
+                    params:
+                      command: "install"
+                      plugin: "{{ _selected[0].name }}"
+                  buttons:
+                    stop:
+                      hidden: true
+                successUrl: /services/developer/plugins
       - type: menu
         icon: mdi:translate
         tooltip: _("Transifex")
@@ -100,36 +132,57 @@ data:
           - text: _("Build")
             icon: mdi:wrench-outline
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "buildpot"
-                  plugin: "{{ name }}"
-                task: true
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Building locale file ...")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doCommand
+                    params:
+                      command: "buildpot"
+                      plugin: "{{ _selected[0].name }}"
+                  buttons:
+                    stop:
+                      hidden: true
+                successUrl: /services/developer/plugins
           - text: _("Push")
             icon: mdi:source-commit
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "pushpot"
-                  plugin: "{{ name }}"
-                task: true
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Pushing locale file to Transifex ...")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doCommand
+                    params:
+                      command: "pushpot"
+                      plugin: "{{ _selected[0].name }}"
+                  buttons:
+                    stop:
+                      hidden: true
+                successUrl: /services/developer/plugins
           - text: _("Pull")
             icon: mdi:source-pull
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "pullpo"
-                  plugin: "{{ name }}"
-                task: true
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Pulling locale files from Transifex ...")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doCommand
+                    params:
+                      command: "pullpo"
+                      plugin: "{{ _selected[0].name }}"
+                  buttons:
+                    stop:
+                      hidden: true
+                successUrl: /services/developer/plugins
       - type: menu
         icon: mdi:git
         tooltip: _("Git")
@@ -137,17 +190,24 @@ data:
           - text: _("Add")
             icon: mdi:source-branch-plus
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "add"
-                  plugin: "{{ name }}"
-                  commit: ""
-                  tag: ""
-                  message: ""
-                task: true
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Adding all files to commit ...")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doCommand
+                    params:
+                      command: "add"
+                      plugin: "{{ _selected[0].name }}"
+                      commit: ""
+                      tag: ""
+                      message: ""
+                  buttons:
+                    stop:
+                      hidden: true
+                successUrl: /services/developer/plugins
           - text: _("Commit")
             icon: mdi:source-commit
             execute:
@@ -157,7 +217,7 @@ data:
                 method: doCommand
                 params:
                   command: "commit"
-                  plugin: "{{ name }}"
+                  plugin: "{{ _selected[0].name }}"
                   commit: ""
                   tag: ""
                   message: ""
@@ -165,17 +225,24 @@ data:
           - text: _("Push")
             icon: mdi:source-merge
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "push"
-                  plugin: "{{ name }}"
-                  commit: ""
-                  tag: ""
-                  message: ""
-                task: true
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Pushing to Github ...")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doCommand
+                    params:
+                      command: "push"
+                      plugin: "{{ _selected[0].name }}"
+                      commit: ""
+                      tag: ""
+                      message: ""
+                  buttons:
+                    stop:
+                      hidden: true
+                successUrl: /services/developer/plugins
       - type: menu
         icon: mdi:note-multiple-outline
         tooltip: _("Changelog")
@@ -189,7 +256,7 @@ data:
                 method: doCommand
                 params:
                   command: "dchi"
-                  plugin: "{{ name }}"
+                  plugin: "{{ _selected[0].name }}"
                   commit: ""
                 task: true
           - text: _("dch -a")
@@ -201,7 +268,7 @@ data:
                 method: doCommand
                 params:
                   command: "dcha"
-                  plugin: "{{ name }}"
+                  plugin: "{{ _selected[0].name }}"
                   commit: ""
                 task: true
           - text: _("dch -r")
@@ -213,6 +280,6 @@ data:
                 method: doCommand
                 params:
                   command: "dchr"
-                  plugin: "{{ name }}"
+                  plugin: "{{ _selected[0].name }}"
                   commit: ""
                 task: true

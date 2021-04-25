@@ -64,6 +64,16 @@ data:
         name: btgpgpass
         label: _("GPG-key passphrase")
         value: ""
+      - type: hidden
+        name: rootfsref
+        label: _("Root ref")
+        value: "79684322-3eac-11ea-a974-63a080abab18"
+      - type: folderBrowser
+        name: reldirpath
+        label: _("path")
+        value: '/{{ reldirpath }}'
+        dirType: mntent
+        dirRefIdField: rootfsref
     buttons:
       - template: submit
       - template: cancel
