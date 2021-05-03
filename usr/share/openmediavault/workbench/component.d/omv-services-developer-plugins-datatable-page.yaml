@@ -272,36 +272,71 @@ data:
           - text: _("dch -i")
             icon: mdi:playlist-plus
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "dchi"
-                  plugin: "{{ _selected[0].name }}"
-                  commit: ""
-                task: true
+              type: formDialog
+              formDialog:
+                title: _('Enter changelog message')
+                fields:
+                  - type: hidden
+                    name: command
+                    label: _('Command')
+                    value: 'dchi'
+                  - type: textInput
+                    name: plugin
+                    label: _('Plugin')
+                    value: "{{ _selected[0].name }}"
+                    readonly: true
+                  - type: textInput
+                    name: commit
+                    label: _('Message')
+                    value: ''
+                buttons:
+                  submit:
+                    text: _('Increment version')
+                    execute:
+                      type: request
+                      request:
+                        service: Developer
+                        method: doDch
+                successUrl: /services/developer/plugins
           - text: _("dch -a")
             icon: mdi:playlist-edit
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "dcha"
-                  plugin: "{{ _selected[0].name }}"
-                  commit: ""
-                task: true
+              type: formDialog
+              formDialog:
+                title: _('Enter changelog message')
+                fields:
+                  - type: hidden
+                    name: command
+                    label: _('Command')
+                    value: 'dcha'
+                  - type: textInput
+                    name: plugin
+                    label: _('Plugin')
+                    value: "{{ _selected[0].name }}"
+                    readonly: true
+                  - type: textInput
+                    name: commit
+                    label: _('Message')
+                    value: ''
+                buttons:
+                  submit:
+                    text: _('Add entry')
+                    execute:
+                      type: request
+                      request:
+                        service: Developer
+                        method: doDch
+                successUrl: /services/developer/plugins
           - text: _("dch -r")
             icon: mdi:playlist-check
             execute:
               type: request
               request:
                 service: Developer
-                method: doCommand
+                method: doDch
                 params:
                   command: "dchr"
                   plugin: "{{ _selected[0].name }}"
                   commit: ""
                 task: true
+                successUrl: /services/developer/plugins
