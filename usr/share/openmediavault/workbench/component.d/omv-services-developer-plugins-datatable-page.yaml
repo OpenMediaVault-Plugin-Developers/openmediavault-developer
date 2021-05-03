@@ -51,6 +51,9 @@ data:
                 successUrl: /services/developer/plugins
           - text: _("Update")
             icon: mdi:update
+            enabledConstraints:
+              minSelected: 1
+              maxSelected: 1
             execute:
               type: taskDialog
               taskDialog:
@@ -69,6 +72,9 @@ data:
                 successUrl: /services/developer/plugins
           - text: _("Reset")
             icon: mdi:lock-reset
+            enabledConstraints:
+              minSelected: 1
+              maxSelected: 1
             execute:
               type: taskDialog
               taskDialog:
@@ -88,6 +94,9 @@ data:
       - type: menu
         icon: mdi:package-variant
         tooltip: _("Package")
+        enabledConstraints:
+          minSelected: 1
+          maxSelected: 1
         actions:
           - text: _("Build")
             icon: mdi:wrench-outline
@@ -128,6 +137,9 @@ data:
       - type: menu
         icon: mdi:translate
         tooltip: _("Transifex")
+        enabledConstraints:
+          minSelected: 1
+          maxSelected: 1
         actions:
           - text: _("Build")
             icon: mdi:wrench-outline
@@ -186,6 +198,9 @@ data:
       - type: menu
         icon: mdi:git
         tooltip: _("Git")
+        enabledConstraints:
+          minSelected: 1
+          maxSelected: 1
         actions:
           - text: _("Add")
             icon: mdi:source-branch-plus
@@ -265,9 +280,87 @@ data:
                     stop:
                       hidden: true
                 successUrl: /services/developer/plugins
+          - text: _("Status")
+            icon: mdi:list-status
+            execute:
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Status ...")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doGit
+                    params:
+                      command: "status"
+                      plugin: "{{ _selected[0].name }}"
+                      commit: ""
+                      tag: ""
+                      message: ""
+                  buttons:
+                    stop:
+                      hidden: true
+                successUrl: /services/developer/plugins
+          - text: _("Diff")
+            icon: mdi:vector-difference
+            execute:
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Showing diff ...")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doGit
+                    params:
+                      command: "diff"
+                      plugin: "{{ _selected[0].name }}"
+                      commit: ""
+                      tag: ""
+                      message: ""
+                  buttons:
+                    stop:
+                      hidden: true
+                successUrl: /services/developer/plugins
+          - text: _("Change branch")
+            icon: mdi:source-branch
+            execute:
+              type: formDialog
+              formDialog:
+                title: _('Change branch')
+                fields:
+                  - type: textInput
+                    name: plugin
+                    label: _('Plugin')
+                    value: "{{ _selected[0].name }}"
+                    readonly: true
+                  - type: select
+                    name: branch
+                    label: _('Branches')
+                    textField: branch
+                    valueField: branch
+                    store:
+                      proxy:
+                        service: 'Developer'
+                        get:
+                          method: 'getBranches'
+                          params:
+                            plugin:  "{{ _selected[0].name }}"
+                buttons:
+                  submit:
+                    text: _('Change branch')
+                    execute:
+                      type: request
+                      request:
+                        service: Developer
+                        method: doChangeBranch
+                successUrl: /services/developer/plugins
       - type: menu
         icon: mdi:note-multiple-outline
         tooltip: _("Changelog")
+        enabledConstraints:
+          minSelected: 1
+          maxSelected: 1
         actions:
           - text: _("dch -i")
             icon: mdi:playlist-plus
@@ -339,4 +432,22 @@ data:
                   plugin: "{{ _selected[0].name }}"
                   commit: ""
                 task: true
+                successUrl: /services/developer/plugins
+          - text: _("Show changelog")
+            icon: mdi:eye-outline
+            execute:
+              type: taskDialog
+              taskDialog:
+                config:
+                  title: _("Showing changelog ...")
+                  startOnInit: true
+                  request:
+                    service: Developer
+                    method: doCommand
+                    params:
+                      command: "changelog"
+                      plugin: "{{ _selected[0].name }}"
+                  buttons:
+                    stop:
+                      hidden: true
                 successUrl: /services/developer/plugins
