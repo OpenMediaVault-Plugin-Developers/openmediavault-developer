@@ -197,7 +197,7 @@ data:
                   startOnInit: true
                   request:
                     service: Developer
-                    method: doCommand
+                    method: doGit
                     params:
                       command: "add"
                       plugin: "{{ _selected[0].name }}"
@@ -211,17 +211,39 @@ data:
           - text: _("Commit")
             icon: mdi:source-commit
             execute:
-              type: request
-              request:
-                service: Developer
-                method: doCommand
-                params:
-                  command: "commit"
-                  plugin: "{{ _selected[0].name }}"
-                  commit: ""
-                  tag: ""
-                  message: ""
-                task: true
+              type: formDialog
+              formDialog:
+                title: _('Enter commit message')
+                fields:
+                  - type: hidden
+                    name: command
+                    label: _('Command')
+                    value: 'commit'
+                  - type: textInput
+                    name: plugin
+                    label: _('Plugin')
+                    value: "{{ _selected[0].name }}"
+                    readonly: true
+                  - type: textInput
+                    name: commit
+                    label: _('Commit')
+                    value: ''
+                  - type: hidden
+                    name: tag
+                    label: _('Tag')
+                    value: ''
+                  - type: hidden
+                    name: message
+                    label: _('Message')
+                    value: ''
+                buttons:
+                  submit:
+                    text: _('Commit')
+                    execute:
+                      type: request
+                      request:
+                        service: Developer
+                        method: doGit
           - text: _("Push")
             icon: mdi:source-merge
             execute:
@@ -232,7 +254,7 @@ data:
                   startOnInit: true
                   request:
                     service: Developer
-                    method: doCommand
+                    method: doGit
                     params:
                       command: "push"
                       plugin: "{{ _selected[0].name }}"
