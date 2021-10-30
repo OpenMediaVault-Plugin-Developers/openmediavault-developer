@@ -3,7 +3,7 @@
 # This file is distributed under the same license as the openmediavault-developer package.
 # 
 # Translators:
-# Toshihiro Kan <kansuke4649@gmail.com>, 2016
+# Jonatan Nyberg <jonatan@autistici.org>, 2018,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-developer\n"
@@ -11,12 +11,12 @@ msgstr ""
 "POT-Creation-Date: 2021-10-30 16:13-0500\n"
 "PO-Revision-Date: 2021-10-30 21:13+0000\n"
 "Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
-"Language-Team: Japanese (Japan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-developer/language/ja_JP/)\n"
+"Language-Team: Swedish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-developer/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: ja_JP\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"Language: sv\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Add"
 msgstr ""
@@ -28,7 +28,7 @@ msgid "Branch"
 msgstr ""
 
 msgid "Build"
-msgstr "ビルド"
+msgstr "Bygg"
 
 msgid "Build ..."
 msgstr ""
@@ -40,25 +40,25 @@ msgid "Change branch"
 msgstr ""
 
 msgid "Changelog"
-msgstr "チェンジログ"
+msgstr "Ändringslogg"
 
 msgid "Commit"
 msgstr ""
 
 msgid "Developer"
-msgstr "デベロッパー"
+msgstr "Utvecklare"
 
 msgid "Diff"
 msgstr ""
 
 msgid "Email"
-msgstr "電子メール"
+msgstr "E-post"
 
 msgid "Folder Exists"
-msgstr "フォルダーは既に存在します"
+msgstr "Mappen finns"
 
 msgid "GPG-key passphrase"
-msgstr "GPG-key パスフレーズ"
+msgstr "GPG-nyckel lösenfras"
 
 msgid "Git"
 msgstr "Git"
@@ -70,28 +70,28 @@ msgid "Github config"
 msgstr ""
 
 msgid "Hostname"
-msgstr "ホスト名"
+msgstr "Värdnamn"
 
 msgid "Install"
-msgstr "インストール"
+msgstr "Installera"
 
 msgid "Installing ..."
 msgstr ""
 
 msgid "Name"
-msgstr "名前"
+msgstr "Namn"
 
 msgid "Owner"
-msgstr "オーナー"
+msgstr "Ägare"
 
 msgid "Package"
-msgstr "パッケージ"
+msgstr "Paket"
 
 msgid "Password"
-msgstr "パスワード"
+msgstr "Lösenord"
 
 msgid "Plugins"
-msgstr "プラグイン"
+msgstr "Tillägg"
 
 msgid "Pull"
 msgstr ""
@@ -109,7 +109,7 @@ msgid "Pushing to Github ..."
 msgstr ""
 
 msgid "Reset"
-msgstr "リセット"
+msgstr "Återställa"
 
 msgid "Reset ..."
 msgstr ""
@@ -118,28 +118,28 @@ msgid "Root ref"
 msgstr ""
 
 msgid "Settings"
-msgstr "設定"
+msgstr "Inställningar"
 
 msgid "Shared Folder"
 msgstr ""
 
 msgid "Show changelog"
-msgstr "チェンジログの表示"
+msgstr "Visa ändringslogg"
 
 msgid "Showing changelog ..."
 msgstr ""
 
 msgid "Showing diff ..."
-msgstr "差分を表示しています ..."
+msgstr "Visar diff..."
 
 msgid "Status"
 msgstr ""
 
 msgid "Status ..."
-msgstr "ステータス ..."
+msgstr "Status..."
 
 msgid "Token"
-msgstr "トークン"
+msgstr "Token"
 
 msgid "Transifex"
 msgstr "Transifex"
@@ -148,7 +148,7 @@ msgid "Transifex config"
 msgstr ""
 
 msgid "Update"
-msgstr "アップデート"
+msgstr "Uppdatera"
 
 msgid "Update all"
 msgstr ""
@@ -163,10 +163,10 @@ msgid "Updated Developer settings."
 msgstr ""
 
 msgid "Username"
-msgstr "ユーザー名"
+msgstr "Användarnamn"
 
 msgid "Version"
-msgstr "バージョン"
+msgstr "Version"
 
 msgid "dch -a"
 msgstr "dch -a"
