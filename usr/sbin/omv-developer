@@ -3,7 +3,7 @@
 # @author    Volker Theile <volker.theile@openmediavault.org>
 # @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 # @copyright Copyright (c) 2009-2013 Volker Theile
-# @copyright Copyright (c) 2014-2020 OpenMediaVault Plugin Developers
+# @copyright Copyright (c) 2014-2021 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -37,7 +37,6 @@ owner=$(omv_config_get "${xpath}/owner")
 sfref=$(omv_config_get "${xpath}/sharedfolderref")
 sfpath=$(omv_get_sharedfolder_path "${sfref}")
 temppath="/tmp/"
-localepath="usr/share/openmediavault/locale"
 
 txpath=".tx"
 txbin="/usr/bin/tx"
@@ -140,7 +139,7 @@ upload()
     password=$(omv_config_get "${xpathlocation}/password")
 
     search="${packagepath}_*"
-    version=`ls ${search}`
+    version=$(ls ${search})
 
     echo "Uploading ${version} to ${remotehost} ..."
     if [ -n "${password}" ]; then
@@ -199,16 +198,33 @@ buildpot()
 {
     OMV_POT_DIR="${temppath}${plugin}/usr/share/openmediavault/locale"
 
+    OMV_XGETTEXT_ARGS=" --keyword=_ --output-dir=${OMV_POT_DIR} \
+      --output=${plugin}.pot --force-po --no-location --no-wrap \
+      --sort-output --package-name=${plugin} --from-code=UTF-8 \
+      --join-existing"
+
     moveto
     cd "${temppath}${plugin}"
     echo "Building PO template file ..." >&2
     mkdir -p "${OMV_POT_DIR}"
 
-    find ./ \( -iname *.js -o -iname *.php -o -iname *.inc \) \
-      -type f -print0 | xargs -0r xgettext --keyword=_ \
-      --output-dir="${OMV_POT_DIR}" --output="${plugin}.pot" \
-      --force-po --no-location --no-wrap --sort-output \
-      --package-name="${plugin}" -
+    # Extract strings from YAML files.
+    find ./usr/share/openmediavault/workbench/ \
+      \( -iname "*.yaml" \) -type f -print0 | \
+      xargs -0r xgettext ${OMV_XGETTEXT_ARGS} -
+
+    # Extract strings from PHP files in usr/share/php if it exists
+    if [ -d "./usr/share/php" ]; then
+      find ./usr/share/php/ \
+        \( -iname "*.php" -o -iname "*.inc" \) -type f -print0 | \
+        xargs -0r xgettext ${OMV_XGETTEXT_ARGS} -
+    fi
+
+    # Extract strings from PHP files in usr/share/openmediavault
+    find ./usr/share/openmediavault/ \
+      \( -iname "*.php" -o -iname "*.inc" \) -type f -print0 | \
+      xargs -0r xgettext ${OMV_XGETTEXT_ARGS} -
+
     # Remove '#, c-format' comments, otherwise manuall upload of translation
     # files confuses Transifex.
     sed --in-place '/^#, c-format/d' "${OMV_POT_DIR}/${plugin}.pot"
@@ -232,7 +248,7 @@ pullpo()
 install()
 {
     search="${packagepath}_*"
-    version=`ls ${search}`
+    version=$(ls ${search})
 
     echo "Installing ${plugin} ..."
     export LANG=C

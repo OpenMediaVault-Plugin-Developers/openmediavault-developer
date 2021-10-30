@@ -1,3 +1,9 @@
+openmediavault-developer (6.0.1) stable; urgency=low
+
+  * Update locale generation
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 30 Oct 2021 16:11:43 -0500
+
 openmediavault-developer (6.0) stable; urgency=low
 
   * Update for OMV 6.x
