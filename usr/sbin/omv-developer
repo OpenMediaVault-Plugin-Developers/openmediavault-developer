@@ -68,8 +68,11 @@ initial()
                 current=$(echo ${rbranch} | cut -d'/' -f2)
                 git checkout -b ${current} origin/${current}
             done
-
-            git checkout master
+            if git branch -r | grep master; then
+                git checkout master
+            else
+                git checkout main
+            fi
         fi
 
         IFS=${oIFS}
