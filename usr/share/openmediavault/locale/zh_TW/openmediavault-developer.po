@@ -3,14 +3,14 @@
 # This file is distributed under the same license as the openmediavault-developer package.
 # 
 # Translators:
-# kochin <kochinc@outlook.com>, 2016
+# kochin <kochinc@outlook.com>, 2016,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-developer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-30 16:13-0500\n"
-"PO-Revision-Date: 2021-10-30 21:13+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
+"POT-Creation-Date: 2021-11-04 08:12-0500\n"
+"PO-Revision-Date: 2021-11-03 18:52+0000\n"
+"Last-Translator: kochin <kochinc@outlook.com>\n"
 "Language-Team: Chinese (Taiwan) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-developer/language/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,37 +19,37 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Add"
-msgstr ""
+msgstr "加入"
 
 msgid "Adding all files to commit ..."
-msgstr ""
+msgstr "將全部檔案加入確定提交 ..."
 
 msgid "Branch"
-msgstr ""
+msgstr "分支"
 
 msgid "Build"
 msgstr "組建"
 
 msgid "Build ..."
-msgstr ""
+msgstr "組建 ..."
 
 msgid "Building locale file ..."
-msgstr ""
+msgstr "組建區域語言檔案中 ..."
 
 msgid "Change branch"
-msgstr ""
+msgstr "變換分支"
 
 msgid "Changelog"
-msgstr "Changelog"
+msgstr "變更日誌"
 
 msgid "Commit"
-msgstr ""
+msgstr "確定提交"
 
 msgid "Developer"
 msgstr "開發者"
 
 msgid "Diff"
-msgstr ""
+msgstr "差異"
 
 msgid "Email"
 msgstr "電子郵件"
@@ -67,7 +67,7 @@ msgid "GitHub"
 msgstr "GitHub"
 
 msgid "Github config"
-msgstr ""
+msgstr "Github 設置"
 
 msgid "Hostname"
 msgstr "主機名稱"
@@ -76,7 +76,7 @@ msgid "Install"
 msgstr "安裝"
 
 msgid "Installing ..."
-msgstr ""
+msgstr "安裝中 ..."
 
 msgid "Name"
 msgstr "名稱"
@@ -94,46 +94,46 @@ msgid "Plugins"
 msgstr "插件"
 
 msgid "Pull"
-msgstr ""
+msgstr "拉取"
 
 msgid "Pulling locale files from Transifex ..."
-msgstr ""
+msgstr "從 Transifex 拉取區域語言檔案中 ..."
 
 msgid "Push"
-msgstr ""
+msgstr "推送"
 
 msgid "Pushing locale file to Transifex ..."
-msgstr ""
+msgstr "推送區域語言檔案到 Transifex 中 ..."
 
 msgid "Pushing to Github ..."
-msgstr ""
+msgstr "推送到 Github 中 ..."
 
 msgid "Reset"
 msgstr "重設"
 
 msgid "Reset ..."
-msgstr ""
+msgstr "重設 ..."
 
 msgid "Root ref"
-msgstr ""
+msgstr "根檔案系統參考"
 
 msgid "Settings"
 msgstr "設定"
 
 msgid "Shared Folder"
-msgstr ""
+msgstr "共享檔案夾"
 
 msgid "Show changelog"
-msgstr "顯示 changelog"
+msgstr "顯示變更日誌"
 
 msgid "Showing changelog ..."
-msgstr ""
+msgstr "顯示變更日誌中 ..."
 
 msgid "Showing diff ..."
-msgstr "顯示 diff 中 ..."
+msgstr "顯示差異中 ..."
 
 msgid "Status"
-msgstr ""
+msgstr "狀態"
 
 msgid "Status ..."
 msgstr "狀態 ..."
@@ -145,22 +145,22 @@ msgid "Transifex"
 msgstr "Transifex"
 
 msgid "Transifex config"
-msgstr ""
+msgstr "Transifex 設置"
 
 msgid "Update"
 msgstr "更新"
 
 msgid "Update all"
-msgstr ""
+msgstr "更新全部"
 
 msgid "Update all plugins from Github ..."
-msgstr ""
+msgstr "從 Github 更新全部的插件 ..."
 
 msgid "Update from Github"
-msgstr ""
+msgstr "從 Github 更新"
 
 msgid "Updated Developer settings."
-msgstr ""
+msgstr "已更新開發者的設定。"
 
 msgid "Username"
 msgstr "用戶名稱"
@@ -178,10 +178,10 @@ msgid "dch -r"
 msgstr "dch -r"
 
 msgid "git config"
-msgstr ""
+msgstr "git 配置"
 
 msgid "gpg config"
-msgstr ""
+msgstr "gpg 配置"
 
 msgid "path"
-msgstr ""
+msgstr "路徑"
