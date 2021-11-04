@@ -61,7 +61,7 @@ initial()
         oIFS=${IFS}
         IFS=$'
 '
-        remote_branches=$(git branch -r | grep -v HEAD | grep -v "master$")
+        remote_branches=$(git branch -r | grep -v HEAD | grep -Ev "(master|main)$")
 
         if [ -n "${remote_branches}" ]; then
             for rbranch in ${remote_branches}; do
