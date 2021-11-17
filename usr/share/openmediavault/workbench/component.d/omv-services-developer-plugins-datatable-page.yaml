@@ -4,8 +4,10 @@ data:
   name: omv-services-developer-plugins-datatable-page
   type: datatablePage
   config:
-    autoReload: false
+    autoReload: 60000
+    hasSearchField: true
     stateId: b317a72d-1804-1632-a31b-1f48f0ea6aae
+    rowId: name
     sorters:
       - dir: asc
         prop: name
