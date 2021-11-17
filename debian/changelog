@@ -1,3 +1,9 @@
+openmediavault-developer (6.0.3) stable; urgency=low
+
+  * Improve datatable
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Wed, 17 Nov 2021 07:08:58 -0600
+
 openmediavault-developer (6.0.2) stable; urgency=low
 
   * Fix for using main branch
