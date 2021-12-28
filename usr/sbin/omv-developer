@@ -250,8 +250,9 @@ pullpo()
 
 install()
 {
+    arch="$(dpkg --print-architecture)"
     search="${packagepath}_*"
-    version=$(ls ${search})
+    version=$(ls ${search} | grep -E "_all|_${arch}")
 
     echo "Installing ${plugin} ..."
     export LANG=C
