@@ -88,7 +88,7 @@ data:
             method: createConfig
             params:
               command: "git"
-            task: true
+            task: false
             progressMessage: _('Creating git config ...')
       - text: _('Create Github .netrc')
         execute:
@@ -98,7 +98,7 @@ data:
             method: createConfig
             params:
               command: "gh"
-            task: true
+            task: false
             progressMessage: _('Creating Github .netrc ...')
       - text: _('Create Transifex configs')
         execute:
@@ -108,7 +108,7 @@ data:
             method: createConfig
             params:
               command: "tx"
-            task: true
+            task: false
             progressMessage: _('Creating Transifex configs ...')
       - text: _('Update OMV')
         execute:
@@ -116,5 +116,5 @@ data:
           request:
             service: Developer
             method: doOmvGit
-            task: true
+            task: false
             progressMessage: _('Updating OMV from git ...')
