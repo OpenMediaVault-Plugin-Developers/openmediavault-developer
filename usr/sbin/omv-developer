@@ -207,6 +207,8 @@ buildpot()
       --join-existing"
 
     moveto
+    mkdir -p "${OMV_POT_DIR}"
+    touch "${OMV_POT_DIR}/${plugin}.pot"
     cd "${temppath}${plugin}"
     echo "Building PO template file ..." >&2
     mkdir -p "${OMV_POT_DIR}"
