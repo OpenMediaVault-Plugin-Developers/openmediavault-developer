@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the openmediavault-developer package.
 # 
 # Translators:
-# songming <by@songming.me>, 2016
+# songming <by@songming.me>, 2016,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-developer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-04 08:12-0500\n"
-"PO-Revision-Date: 2021-10-30 21:13+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
-"Language-Team: Chinese (China) (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-developer/language/zh_CN/)\n"
+"PO-Revision-Date: 2016-01-02 16:05+0000\n"
+"Last-Translator: songming <by@songming.me>, 2016,2021\n"
+"Language-Team: Chinese (China) (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-developer/language/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,43 +19,43 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 msgid "Add"
-msgstr ""
+msgstr "添加"
 
 msgid "Adding all files to commit ..."
-msgstr ""
+msgstr "添加所有文件中 ..."
 
 msgid "Branch"
-msgstr ""
+msgstr "分支"
 
 msgid "Build"
-msgstr "编译"
+msgstr "构建"
 
 msgid "Build ..."
-msgstr ""
+msgstr "构建 ..."
 
 msgid "Building locale file ..."
-msgstr ""
+msgstr "构建本地文件 ..."
 
 msgid "Change branch"
-msgstr ""
+msgstr "变更分支"
 
 msgid "Changelog"
 msgstr "变更日志"
 
 msgid "Commit"
-msgstr ""
+msgstr "确定提交"
 
 msgid "Developer"
 msgstr "开发者"
 
 msgid "Diff"
-msgstr ""
+msgstr "差异"
 
 msgid "Email"
 msgstr "Email"
 
 msgid "Folder Exists"
-msgstr ""
+msgstr "文件夹已存在"
 
 msgid "GPG-key passphrase"
 msgstr "GPG-key密钥"
@@ -67,7 +67,7 @@ msgid "GitHub"
 msgstr "GitHub"
 
 msgid "Github config"
-msgstr ""
+msgstr "Github 配置"
 
 msgid "Hostname"
 msgstr "主机名"
@@ -76,7 +76,7 @@ msgid "Install"
 msgstr "安装"
 
 msgid "Installing ..."
-msgstr ""
+msgstr "安装中 ..."
 
 msgid "Name"
 msgstr "名称"
@@ -94,73 +94,73 @@ msgid "Plugins"
 msgstr "插件"
 
 msgid "Pull"
-msgstr ""
+msgstr "拉取"
 
 msgid "Pulling locale files from Transifex ..."
-msgstr ""
+msgstr "从 Transifex 拉取到本地文件 ..."
 
 msgid "Push"
-msgstr ""
+msgstr "推送"
 
 msgid "Pushing locale file to Transifex ..."
-msgstr ""
+msgstr "从本地文件推送到 Transifex ..."
 
 msgid "Pushing to Github ..."
-msgstr ""
+msgstr "推送到 Github ..."
 
 msgid "Reset"
 msgstr "重置"
 
 msgid "Reset ..."
-msgstr ""
+msgstr "重置 ..."
 
 msgid "Root ref"
-msgstr ""
+msgstr "Root ref"
 
 msgid "Settings"
 msgstr "设置"
 
 msgid "Shared Folder"
-msgstr ""
+msgstr "共享文件夹"
 
 msgid "Show changelog"
 msgstr "显示变更日志"
 
 msgid "Showing changelog ..."
-msgstr ""
+msgstr "显示变更日志中 ..."
 
 msgid "Showing diff ..."
-msgstr ""
+msgstr "显示差异中 ..."
 
 msgid "Status"
-msgstr ""
+msgstr "状态"
 
 msgid "Status ..."
 msgstr "状态 ..."
 
 msgid "Token"
-msgstr ""
+msgstr "令牌"
 
 msgid "Transifex"
 msgstr "Transifex"
 
 msgid "Transifex config"
-msgstr ""
+msgstr "Transifex 配置"
 
 msgid "Update"
 msgstr "上传"
 
 msgid "Update all"
-msgstr ""
+msgstr "更新全部"
 
 msgid "Update all plugins from Github ..."
-msgstr ""
+msgstr "从 Github 更新全部插件 ..."
 
 msgid "Update from Github"
-msgstr ""
+msgstr "从 Github 更新"
 
 msgid "Updated Developer settings."
-msgstr ""
+msgstr "更新开发者设置。"
 
 msgid "Username"
 msgstr "用户名"
@@ -178,10 +178,10 @@ msgid "dch -r"
 msgstr "dch -r"
 
 msgid "git config"
-msgstr ""
+msgstr "git 配置"
 
 msgid "gpg config"
-msgstr ""
+msgstr "gpg 配置"
 
 msgid "path"
-msgstr ""
+msgstr "路径"

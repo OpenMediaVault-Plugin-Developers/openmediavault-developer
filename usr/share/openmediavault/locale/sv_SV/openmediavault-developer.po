@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the openmediavault-developer package.
 # 
 # Translators:
-# Jonatan Nyberg <jonatan@autistici.org>, 2018,2021
+# Jonatan Nyberg, 2023
+# Jonatan Nyberg, 2018,2021
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-developer\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-04 08:12-0500\n"
-"PO-Revision-Date: 2021-10-30 21:13+0000\n"
-"Last-Translator: Aaron Murray <aaronmurray27@gmail.com>\n"
-"Language-Team: Swedish (http://www.transifex.com/openmediavault-plugin-developers/openmediavault-developer/language/sv/)\n"
+"PO-Revision-Date: 2016-01-02 16:05+0000\n"
+"Last-Translator: Jonatan Nyberg, 2023\n"
+"Language-Team: Swedish (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-developer/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,25 +20,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Add"
-msgstr ""
+msgstr "Lägg till"
 
 msgid "Adding all files to commit ..."
-msgstr ""
+msgstr "Lägger till alla filer för att begå ..."
 
 msgid "Branch"
-msgstr ""
+msgstr "Gren"
 
 msgid "Build"
 msgstr "Bygg"
 
 msgid "Build ..."
-msgstr ""
+msgstr "Bygg ..."
 
 msgid "Building locale file ..."
-msgstr ""
+msgstr "Bygger språkfil ..."
 
 msgid "Change branch"
-msgstr ""
+msgstr "Byt gren"
 
 msgid "Changelog"
 msgstr "Ändringslogg"
@@ -67,7 +68,7 @@ msgid "GitHub"
 msgstr "GitHub"
 
 msgid "Github config"
-msgstr ""
+msgstr "Github-konfiguration"
 
 msgid "Hostname"
 msgstr "Värdnamn"
@@ -76,7 +77,7 @@ msgid "Install"
 msgstr "Installera"
 
 msgid "Installing ..."
-msgstr ""
+msgstr "Installerar ..."
 
 msgid "Name"
 msgstr "Namn"
@@ -94,25 +95,25 @@ msgid "Plugins"
 msgstr "Tillägg"
 
 msgid "Pull"
-msgstr ""
+msgstr "Hämta"
 
 msgid "Pulling locale files from Transifex ..."
-msgstr ""
+msgstr "Hämtar språkfiler från Transifex ..."
 
 msgid "Push"
-msgstr ""
+msgstr "Skicka"
 
 msgid "Pushing locale file to Transifex ..."
-msgstr ""
+msgstr "Skickar språkfil till Transifex ..."
 
 msgid "Pushing to Github ..."
-msgstr ""
+msgstr "Skickar till Github ..."
 
 msgid "Reset"
 msgstr "Återställa"
 
 msgid "Reset ..."
-msgstr ""
+msgstr "Återställ ..."
 
 msgid "Root ref"
 msgstr ""
@@ -121,19 +122,19 @@ msgid "Settings"
 msgstr "Inställningar"
 
 msgid "Shared Folder"
-msgstr ""
+msgstr "Delad mapp"
 
 msgid "Show changelog"
 msgstr "Visa ändringslogg"
 
 msgid "Showing changelog ..."
-msgstr ""
+msgstr "Visar ändringslogg ..."
 
 msgid "Showing diff ..."
 msgstr "Visar diff..."
 
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 msgid "Status ..."
 msgstr "Status..."
@@ -145,22 +146,22 @@ msgid "Transifex"
 msgstr "Transifex"
 
 msgid "Transifex config"
-msgstr ""
+msgstr "Transifex-konfiguration"
 
 msgid "Update"
 msgstr "Uppdatera"
 
 msgid "Update all"
-msgstr ""
+msgstr "Uppdatera alla"
 
 msgid "Update all plugins from Github ..."
-msgstr ""
+msgstr "Uppdatera alla insticksmoduler från Github ..."
 
 msgid "Update from Github"
-msgstr ""
+msgstr "Uppdatera från Github"
 
 msgid "Updated Developer settings."
-msgstr ""
+msgstr "Uppdaterade utvecklarinställningar."
 
 msgid "Username"
 msgstr "Användarnamn"
@@ -184,4 +185,4 @@ msgid "gpg config"
 msgstr ""
 
 msgid "path"
-msgstr ""
+msgstr "sökväg"
