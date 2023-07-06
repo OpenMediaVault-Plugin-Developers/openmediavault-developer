@@ -11,8 +11,8 @@ data:
       post:
         method: setSettings
     fields:
-      - type: paragraph
-        text: _("Settings")
+      - type: divider
+        title: _("Settings")
       - type: sharedFolderSelect
         name: sharedfolderref
         label: _("Shared Folder")
@@ -20,8 +20,8 @@ data:
         name: owner
         label: _("Owner")
         value: "nobody"
-      - type: paragraph
-        text: _("git config")
+      - type: divider
+        title: _("git config")
       - type: textInput
         name: gitname
         label: _("Name")
@@ -30,8 +30,8 @@ data:
         name: gitemail
         label: _("Email")
         value: ""
-      - type: paragraph
-        text: _("Github config")
+      - type: divider
+        title: _("Github config")
       - type: textInput
         name: ghusername
         label: _("Username")
@@ -40,8 +40,8 @@ data:
         name: ghpassword
         label: _("Password")
         value: ""
-      - type: paragraph
-        text: _("Transifex config")
+      - type: divider
+        title: _("Transifex config")
       - type: textInput
         name: txhostname
         label: _("Hostname")
@@ -50,7 +50,7 @@ data:
         name: txpassword
         label: _("Password")
         value: ""
-      - type: textInput
+      - type: passwordInput
         name: txtoken
         label: _("Token")
         value: ""
@@ -58,8 +58,8 @@ data:
         name: txusername
         label: _("Username")
         value: ""
-      - type: paragraph
-        text: _("gpg config")
+      - type: divider
+        title: _("gpg config")
       - type: passwordInput
         name: btgpgpass
         label: _("GPG-key passphrase")

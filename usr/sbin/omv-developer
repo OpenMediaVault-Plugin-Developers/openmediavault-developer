@@ -39,7 +39,7 @@ sfpath=$(omv_get_sharedfolder_path "${sfref}")
 temppath="/tmp/"
 
 txpath=".tx"
-txbin="/usr/bin/tx"
+txbin="/srv/plugins/tx/tx"
 
 if [ -z "${sfpath}" ]; then
     echo "Error - shared folder not set."
@@ -164,17 +164,17 @@ tx()
 [main]
 host = https://www.transifex.com
 lang_map = de: de_DE, it: it_IT, ru: ru_RU, uk: uk_UK, da: da_DA, no: no_NO, sv: sv_SV, es: es_ES, fr: fr_FR, nl: nl_NL
-type = PO
 
 EOF
 
     # repos
     while read repo; do
         cat <<EOF >> ${tx_file}
-[${repo}.${repo}pot]
+[o:openmediavault-plugin-developers:p:${repo}:r:${repo}pot]
 file_filter = ${repo}/usr/share/openmediavault/locale/<lang>/${repo}.po
 source_file = ${repo}/usr/share/openmediavault/locale/${repo}.pot
 source_lang = en
+typo = PO
 
 EOF
     done < ${repos}
@@ -239,14 +239,16 @@ buildpot()
 pushpot()
 {
     moveto
-    ${txbin} --root="${temppath}" push --source --resource="${plugin}.${plugin}pot"
+    cd ${temppath}
+    ${txbin} push --source ${plugin}.${plugin}pot
     movefrom
 }
 
 pullpo()
 {
     moveto
-    ${txbin} --root="${temppath}" pull --all --force --resource="${plugin}.${plugin}pot"
+    cd ${temppath}
+    ${txbin} pull --all --force ${plugin}.${plugin}pot
     movefrom
 }
 

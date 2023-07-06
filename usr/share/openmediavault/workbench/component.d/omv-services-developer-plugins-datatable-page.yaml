@@ -5,6 +5,7 @@ data:
   type: datatablePage
   config:
     autoReload: 60000
+    limit: 100
     hasSearchField: true
     stateId: b317a72d-1804-1632-a31b-1f48f0ea6aae
     rowId: name
@@ -19,18 +20,20 @@ data:
     columns:
       - name: _("Name")
         prop: name
-        flexGrow: 1
+        flexGrow: 2
         sortable: true
-      - name: _("Folder Exists")
-        prop: exists
       - name: _("Branch")
         prop: branch
         flexGrow: 1
         sortable: true
       - name: _("Version")
         prop: version
-        flexGrow: 1
+        flexGrow: 4
         sortable: true
+      - name: _("Folder Exists")
+        prop: exists
+        flexGrow: 1
+        cellTemplateName: checkIcon
     actions:
       - type: menu
         icon: mdi:github

@@ -197,6 +197,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                     $cmdArgs[] = $params['plugin'];
                     $cmdArgs[] = sprintf("\"%s\"", $params['location']);
                     $cmd = new \OMV\System\Process($this->omvDeveloper, $cmdArgs);
+                    $cmd->setRedirect2to1(true);
                     $cmdLine = $cmd->getCommandLine();
                     $this->exec($cmdLine, $output, $bgOutputFilename);
                 } else {
@@ -206,6 +207,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                         $cmdArgs[] = "update";
                         $cmdArgs[] = $plugin;
                         $cmd = new \OMV\System\Process($this->omvDeveloper, $cmdArgs);
+                        $cmd->setRedirect2to1(true);
                         $cmdLine = $cmd->getCommandLine();
                         $this->exec($cmdLine, $output, $bgOutputFilename);
                     }
@@ -246,7 +248,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
 
             case "tx":
                 $configFile = "/root/.transifexrc";
-                $config = sprintf("[%s]\nhostname = %s\npassword = %s\ntoken = %s\nusername = %s\n",
+                $config = sprintf("[%s]\nrest_hostname = %s\npassword = %s\ntoken = %s\nusername = %s\n",
                     $object->get("txhostname"), $object->get("txhostname"),$object->get("txpassword"),
                     $object->get("txtoken"), $object->get("txusername")
                 );

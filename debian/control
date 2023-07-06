@@ -23,7 +23,6 @@ Depends: build-essential,
          php-curl,
          quilt,
          sshpass,
-         transifex-client,
          ${misc:Depends}
 Breaks: openmediavault (<< 6.0)
 Description: OpenMediaVault Developer plugin
