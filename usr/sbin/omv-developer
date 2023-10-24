@@ -37,6 +37,7 @@ owner=$(omv_config_get "${xpath}/owner")
 sfref=$(omv_config_get "${xpath}/sharedfolderref")
 sfpath=$(omv_get_sharedfolder_path "${sfref}")
 temppath="/tmp/"
+token=$(omv_config_get "${xpath}/txtoken")
 
 txpath=".tx"
 txbin="/srv/plugins/tx/tx"
@@ -158,12 +159,13 @@ tx()
     tx_dir="${sfpath}/.tx"
     tx_file="${tx_dir}/config"
 
+    jq .[].name /var/cache/openmediavault/dev_plugin_cache | sort | sed 's/"//g' | grep ^openmediavault | tee ${repos}
+
     mkdir -p "${tx_dir}"
 
     cat <<EOF > ${tx_file}
 [main]
-host = https://www.transifex.com
-lang_map = de: de_DE, it: it_IT, ru: ru_RU, uk: uk_UK, da: da_DA, no: no_NO, sv: sv_SV, es: es_ES, fr: fr_FR, nl: nl_NL
+host = https://app.transifex.com
 
 EOF
 
@@ -171,10 +173,13 @@ EOF
     while read repo; do
         cat <<EOF >> ${tx_file}
 [o:openmediavault-plugin-developers:p:${repo}:r:${repo}pot]
-file_filter = ${repo}/usr/share/openmediavault/locale/<lang>/${repo}.po
-source_file = ${repo}/usr/share/openmediavault/locale/${repo}.pot
-source_lang = en
-typo = PO
+file_filter            = ${repo}/usr/share/openmediavault/locale/<lang>/${repo}.po
+source_file            = ${repo}/usr/share/openmediavault/locale/${repo}.pot
+source_lang            = en
+type                   = PO
+minimum_perc           = 0
+replace_edited_strings = false
+keep_translations      = false" >> ${txconf}
 
 EOF
     done < ${repos}
@@ -240,7 +245,7 @@ pushpot()
 {
     moveto
     cd ${temppath}
-    ${txbin} push --source ${plugin}.${plugin}pot
+    TX_TOKEN=${token} ${txbin} push --source ${plugin}.${plugin}pot
     movefrom
 }
 
@@ -248,7 +253,7 @@ pullpo()
 {
     moveto
     cd ${temppath}
-    ${txbin} pull --all --force ${plugin}.${plugin}pot
+    TX_TOKEN=${token} ${txbin} pull --all --force ${plugin}.${plugin}pot
     movefrom
 }
 
