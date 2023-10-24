@@ -248,10 +248,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
 
             case "tx":
                 $configFile = "/root/.transifexrc";
-                $config = sprintf("[%s]\nrest_hostname = %s\npassword = %s\ntoken = %s\nusername = %s\n",
-                    $object->get("txhostname"), $object->get("txhostname"),$object->get("txpassword"),
-                    $object->get("txtoken"), $object->get("txusername")
-                );
+                $config = '[https://www.transifex.com]\napi_hostname = https://api.transifex.com';
                 file_put_contents($configFile, $config);
 
                 $this->fillPlugins();
