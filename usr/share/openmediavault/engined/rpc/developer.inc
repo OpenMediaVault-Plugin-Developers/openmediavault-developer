@@ -121,10 +121,12 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                             break;
                         }
                     }
-                } else {
+                } elseif (file_exists(sprintf("%s/debian/changelog", $pluginPath))) {
                     $f = fopen(sprintf("%s/debian/changelog", $pluginPath), 'r');
                     $version = fgets($f);
                     fclose($f);
+                } else {
+                    $version = 'n/a';
                 }
                 if (file_exists(sprintf("%s/.git/HEAD", $pluginPath))) {
                     $f = fopen(sprintf("%s/.git/HEAD", $pluginPath), 'r');
