@@ -180,7 +180,7 @@ source_lang            = en
 type                   = PO
 minimum_perc           = 0
 replace_edited_strings = false
-keep_translations      = false" >> ${txconf}
+keep_translations      = false
 
 EOF
     done < ${repos}
