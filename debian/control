@@ -3,7 +3,7 @@ Section: misc
 XB-Plugin-Section: utilities
 Priority: optional
 Maintainer: OpenMediaVault Plugin Developers <plugins@omv-extras.org>
-Build-Depends: debhelper (>= 12 )
+Build-Depends: debhelper (>= 13 )
 Standards-Version: 4.3.0
 Homepage: http://omv-extras.org/
 
@@ -17,13 +17,11 @@ Depends: build-essential,
          fakeroot,
          git,
          libfile-fcntllock-perl,
-         omvextras-netrc,
-         openmediavault (>= 6.0),
+         openmediavault (>= 7.0),
          php-curl,
          quilt,
          sshpass,
          ${misc:Depends}
-Breaks: openmediavault (<< 6.0)
 Description: OpenMediaVault Developer plugin
  Plugin to help developer download/ plugin code and setup system for
  plugin development.

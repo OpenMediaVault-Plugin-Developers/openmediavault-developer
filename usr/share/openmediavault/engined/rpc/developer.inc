@@ -245,7 +245,11 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 break;
 
             case "gh":
-                exec("omv-salt deploy run --quiet netrc", $output);
+                $configFile = "/root/.netrc";
+                $config = sprintf("machine github.com\nlogin %s\npassword %s\nprotocol https",
+                    $object->get("ghusername"), $object->get("ghpassword")
+                );
+                file_put_contents($configFile, $config);
                 break;
 
             case "tx":
