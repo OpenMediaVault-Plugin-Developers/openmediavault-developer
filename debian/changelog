@@ -1,3 +1,9 @@
+openmediavault-developer (7.0) stable; urgency=low
+
+  * Remove omvextras-netrc dependency
+
+ -- OpenMediaVault Plugin Developers <plugins@omv-extras.org>  Sat, 24 Feb 2024 14:55:58 -0600
+
 openmediavault-developer (6.0.3) stable; urgency=low
 
   * Improve datatable
