@@ -51,7 +51,7 @@ packagepath="${sfpath}/${plugin}"
 
 initial()
 {
-    export LANG=C
+    export LC_ALL=C
     if [ ! -d "${packagepath}" ]; then
         echo "Cloning ${plugin} from github to ${sfpath} ..."
 
@@ -90,7 +90,7 @@ remove()
 
 build()
 {
-    export LANG=C
+    export LC_ALL=C
     copylocation=$(omv_config_get "${xpath}/copylocation")
     echo "Building ${plugin}..."
     rm -f ${temppath}${plugin}*.deb
@@ -127,7 +127,7 @@ build()
 
 update()
 {
-    export LANG=C
+    export LC_ALL=C
     cd ${packagepath}
     echo "Updating ${plugin} from github..."
     git pull
@@ -265,7 +265,7 @@ install()
     version=$(ls ${search} | grep -E "_all|_${arch}")
 
     echo "Installing ${plugin} ..."
-    export LANG=C
+    export LC_ALL=C
     export DEBIAN_FRONTEND=noninteractive
     cd ${packagepath}
     dpkg -i "${version}"
@@ -472,7 +472,7 @@ dchr()
 omvgit()
 {
     echo "Installing OMV from github ..."
-    export LANG=C
+    export LC_ALL=C
     export DEBIAN_FRONTEND=noninteractive
 
     omvcode="openmediavault"
@@ -521,7 +521,7 @@ omvgit()
 
 changelog()
 {
-    export LANG=C
+    export LC_ALL=C
     cd ${packagepath}
     head debian/changelog
 }
