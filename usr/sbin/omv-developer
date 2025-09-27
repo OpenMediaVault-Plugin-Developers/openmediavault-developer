@@ -36,7 +36,6 @@ xpathlocation="${xpath}/locations/location[uuid='${location}']"
 owner=$(omv_config_get "${xpath}/owner")
 sfref=$(omv_config_get "${xpath}/sharedfolderref")
 sfpath=$(omv_get_sharedfolder_path "${sfref}")
-temppath="/tmp/"
 token=$(omv_config_get "${xpath}/txtoken")
 
 txpath=".tx"
@@ -93,16 +92,12 @@ build()
     export LC_ALL=C
     copylocation=$(omv_config_get "${xpath}/copylocation")
     echo "Building ${plugin}..."
-    rm -f ${temppath}${plugin}*.deb
-    rm -rf ${temppath}${plugin}
-    cp -r ${packagepath} ${temppath}
-    cd ${temppath}${plugin}
-    if [ -f "${temppath}${plugin}/control" ]; then
+    # Build directly in the package path
+    cd ${packagepath}
+    if [ -f "${packagepath}/control" ]; then
+        # Simple equivs package
         equivs-build control 2>&1
-        mv ${temppath}${plugin}/*.deb ${temppath}
     else
-        # debuild -b -us -uc -I
-        # debuild clean
         if grep -q "Architecture: any" debian/control; then
             for i in amd64 armhf arm64 i386; do
                 echo $i
@@ -112,16 +107,13 @@ build()
             fakeroot debian/rules clean binary 2>&1
         fi
     fi
-    rm -f ${packagepath}*.deb
-    cp -f ${temppath}${plugin}*.deb ${sfpath}/
-    rm -f ${temppath}${plugin}*.deb
-    rm -rf ${temppath}${plugin}
-    chown ${owner}:users ${packagepath}*.deb
-    if [ -n "${copylocation}" ]; then
-        if [ -d "${copylocation}" ]; then
-            echo "Copying package to ${copylocation} ..."
-            cp ${packagepath}*.deb "${copylocation}"
-        fi
+
+    # Ensure ownership and optionally copy to another location
+    chown ${owner}:users ${sfpath}/${plugin}*.deb 2>/dev/null || true
+    copylocation=$(omv_config_get "${xpath}/copylocation")
+    if [ -n "${copylocation}" ] && [ -d "${copylocation}" ]; then
+        echo "Copying package to ${copylocation} ..."
+        cp ${sfpath}/${plugin}*.deb "${copylocation}" 2>/dev/null || true
     fi
 }
 
@@ -189,34 +181,19 @@ EOF
     rm -f ${repos}
 }
 
-moveto()
-{
-    rm -rf ${temppath}${plugin}
-    rm -rf ${temppath}${txpath}
-    cp -r ${packagepath} ${temppath}
-    cp -r ${sfpath}/${txpath} ${temppath}
-}
-
-movefrom()
-{
-    cp -rf ${temppath}${plugin} ${sfpath}/
-    rm -rf ${temppath}${plugin}
-}
-
 buildpot()
 {
-    OMV_POT_DIR="${temppath}${plugin}/usr/share/openmediavault/locale"
+    OMV_POT_DIR="${packagepath}/usr/share/openmediavault/locale"
 
     OMV_XGETTEXT_ARGS=" --keyword=_ --output-dir=${OMV_POT_DIR} \
       --output=${plugin}.pot --force-po --no-location --no-wrap \
       --sort-output --package-name=${plugin} --from-code=UTF-8 \
       --join-existing"
 
-    moveto
     mkdir -p "${OMV_POT_DIR}"
     rm -f "${OMV_POT_DIR}/${plugin}.pot"
     touch "${OMV_POT_DIR}/${plugin}.pot"
-    cd "${temppath}${plugin}"
+    cd "${packagepath}"
     echo "Building PO template file ..." >&2
     mkdir -p "${OMV_POT_DIR}"
 
@@ -240,31 +217,24 @@ buildpot()
     # Remove '#, c-format' comments, otherwise manuall upload of translation
     # files confuses Transifex.
     sed --in-place '/^#, c-format/d' "${OMV_POT_DIR}/${plugin}.pot"
-    movefrom
 }
 
 pushpot()
 {
-    moveto
-    cd ${temppath}
+    cd ${sfpath}
     TX_TOKEN=${token} ${txbin} push --source ${plugin}.${plugin}pot
-    movefrom
 }
 
 pushpo()
 {
-    moveto
-    cd ${temppath}
+    cd ${sfpath}
     TX_TOKEN=${token} ${txbin} push -t ${plugin}.${plugin}pot
-    movefrom
 }
 
 pullpo()
 {
-    moveto
-    cd ${temppath}
+    cd ${sfpath}
     TX_TOKEN=${token} ${txbin} pull --all --force ${plugin}.${plugin}pot
-    movefrom
 }
 
 install()
@@ -514,13 +484,8 @@ omvgit()
     version=$(head -n 1 debian/changelog | cut -f2 -d"(" | cut -f1 -d")")
     echo "Version ${version}"
 
-    # copy files to temp path to build package
-    rm -rf ${temppath}openmediavault
-    cp -rf ${omvcodepath}/deb/openmediavault ${temppath}
-    cp -f  ${omvcodepath}/deb/openmediavault.mk ${temppath}
-
     # make git package
-    cd ${temppath}openmediavault
+    cd ${omvcodepath}/deb/openmediavault
     fakeroot debian/rules clean binary
     mv -v ../openmediavault_${version}_all.deb ${sfpath}/openmediavault_${version}-git${revision}_all.deb
 
