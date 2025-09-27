@@ -278,6 +278,10 @@ install()
     export DEBIAN_FRONTEND=noninteractive
     cd ${packagepath}
     dpkg -i "${version}"
+    if [ $? -ne 0 ]; then
+        echo "Resolving missing dependencies..."
+        apt-get -f install -y
+    fi
 }
 
 fixperms()
