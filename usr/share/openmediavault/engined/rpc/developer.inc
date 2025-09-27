@@ -177,6 +177,8 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         foreach ($data as $plugin) {
             if (empty($plugin))
                 continue;
+            if (!empty($plugin['archived']) && $plugin['archived'] === true)
+                continue;
             $this->plugins[] = $plugin["name"];
         }
         asort($this->plugins);
