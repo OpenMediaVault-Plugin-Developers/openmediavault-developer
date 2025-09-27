@@ -3,7 +3,7 @@
 # @author    Volker Theile <volker.theile@openmediavault.org>
 # @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
 # @copyright Copyright (c) 2009-2013 Volker Theile
-# @copyright Copyright (c) 2014-2025 openmediavault plugin developers
+# @copyright Copyright (c) 2014-2025 OpenMediaVault Plugin Developers
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -214,6 +214,7 @@ buildpot()
 
     moveto
     mkdir -p "${OMV_POT_DIR}"
+    rm -f "${OMV_POT_DIR}/${plugin}.pot"
     touch "${OMV_POT_DIR}/${plugin}.pot"
     cd "${temppath}${plugin}"
     echo "Building PO template file ..." >&2
@@ -250,6 +251,14 @@ pushpot()
     movefrom
 }
 
+pushpo()
+{
+    moveto
+    cd ${temppath}
+    TX_TOKEN=${token} ${txbin} push -t ${plugin}.${plugin}pot
+    movefrom
+}
+
 pullpo()
 {
     moveto
@@ -269,7 +278,6 @@ install()
     export DEBIAN_FRONTEND=noninteractive
     cd ${packagepath}
     dpkg -i "${version}"
-    apt-get --yes --force-yes --fix-missing -f install
 }
 
 fixperms()
@@ -568,6 +576,12 @@ case ${command} in
     pushpot)
         initial
         pushpot
+        fixperms
+    ;;
+
+    pushpo)
+        initial
+        pushpo
         fixperms
     ;;
 
