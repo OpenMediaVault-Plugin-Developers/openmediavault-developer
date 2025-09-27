@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+# shellcheck disable=SC1091,SC2010,SC2162,SC2086
 #
 # @author    Volker Theile <volker.theile@openmediavault.org>
 # @author    OpenMediaVault Plugin Developers <plugins@omv-extras.org>
@@ -27,8 +28,8 @@ command=$1
 plugin=$2
 location=$3
 commit=$3
-tag=$(echo ${3} | tr -d '[[:space:]]')
-message=$(echo ${4} | tr -d '[[:space:]]')
+tag=${3//[[:space:]]/}
+message=${4//[[:space:]]/}
 
 xpath="//services/developer"
 xpathlocation="${xpath}/locations/location[uuid='${location}']"
@@ -38,7 +39,6 @@ sfref=$(omv_config_get "${xpath}/sharedfolderref")
 sfpath=$(omv_get_sharedfolder_path "${sfref}")
 token=$(omv_config_get "${xpath}/txtoken")
 
-txpath=".tx"
 txbin="/srv/plugins/tx/tx"
 
 if [ -z "${sfpath}" ]; then
@@ -54,10 +54,10 @@ initial()
     if [ ! -d "${packagepath}" ]; then
         echo "Cloning ${plugin} from github to ${sfpath} ..."
 
-        cd ${sfpath}
+        cd "${sfpath}"
         git clone https://github.com/OpenMediaVault-Plugin-Developers/${plugin}.git
 
-        cd ${sfpath}/${plugin}
+        cd "${sfpath}/${plugin}"
         oIFS=${IFS}
         IFS=$'
 '
@@ -93,7 +93,7 @@ build()
     copylocation=$(omv_config_get "${xpath}/copylocation")
     echo "Building ${plugin}..."
     # Build directly in the package path
-    cd ${packagepath}
+    cd "${packagepath}"
     if [ -f "${packagepath}/control" ]; then
         # Simple equivs package
         equivs-build control 2>&1
@@ -120,7 +120,7 @@ build()
 update()
 {
     export LC_ALL=C
-    cd ${packagepath}
+    cd "${packagepath}"
     echo "Updating ${plugin} from github..."
     git pull
     git status
@@ -221,19 +221,19 @@ buildpot()
 
 pushpot()
 {
-    cd ${sfpath}
+    cd "${sfpath}"
     TX_TOKEN=${token} ${txbin} push --source ${plugin}.${plugin}pot
 }
 
 pushpo()
 {
-    cd ${sfpath}
+    cd "${sfpath}"
     TX_TOKEN=${token} ${txbin} push -t ${plugin}.${plugin}pot
 }
 
 pullpo()
 {
-    cd ${sfpath}
+    cd "${sfpath}"
     TX_TOKEN=${token} ${txbin} pull --all --force ${plugin}.${plugin}pot
 }
 
@@ -246,9 +246,8 @@ install()
     echo "Installing ${plugin} ..."
     export LC_ALL=C
     export DEBIAN_FRONTEND=noninteractive
-    cd ${packagepath}
-    dpkg -i "${version}"
-    if [ $? -ne 0 ]; then
+    cd "${packagepath}"
+    if ! dpkg -i "${version}"; then
         echo "Resolving missing dependencies..."
         apt-get -f install -y
     fi
@@ -351,14 +350,14 @@ fixperms()
 
 gitadd()
 {
-    cd ${packagepath}
+    cd "${packagepath}"
     echo "Adding all files ..."
-    git add * 2>&1
+    git add -A 2>&1
 }
 
 gitcommit()
 {
-    cd ${packagepath}
+    cd "${packagepath}"
     git commit -m "${commit}" 2>&1
 }
 
@@ -369,7 +368,7 @@ gittag()
         exit 1
     fi
 
-    cd ${packagepath}
+    cd "${packagepath}"
     git tag -a "${tag}" -m "${message}" 2>&1
     git push origin "${tag}" 2>&1
 }
@@ -381,39 +380,39 @@ gitpush()
         exit 1
     fi
 
-    cd ${packagepath}
+    cd "${packagepath}"
     git push 2>&1
 }
 
 gitstatus()
 {
-    cd ${packagepath}
+    cd "${packagepath}"
     git status 2>&1
 }
 
 gitdiff()
 {
-    cd ${packagepath}
+    cd "${packagepath}"
     git diff 2>&1
 }
 
 gitBranches()
 {
-    cd ${packagepath}
+    cd "${packagepath}"
     git branch
 }
 
 gitChangeBranch()
 {
-    cd ${packagepath}
-    git checkout ${location} 2>&1
+    cd "${packagepath}"
+    git checkout "${location}" 2>&1
 }
 
 dchi()
 {
     export DEBEMAIL="plugins@omv-extras.org"
     export DEBFULLNAME="OpenMediaVault Plugin Developers"
-    cd ${packagepath}
+    cd "${packagepath}"
     if [ -f "debian/changelog" ]; then
         echo "Increment version ..."
         dch -U --no-auto-nmu "${commit}" 2>&1
@@ -427,7 +426,7 @@ dcha()
 {
     export DEBEMAIL="plugins@omv-extras.org"
     export DEBFULLNAME="OpenMediaVault Plugin Developers"
-    cd ${packagepath}
+    cd "${packagepath}"
     if [ -f "debian/changelog" ]; then
         echo "Add changelog line ..."
         dch -U --no-auto-nmu -a "${commit}" 2>&1
@@ -440,7 +439,7 @@ dchr()
 {
     export DEBEMAIL="plugins@omv-extras.org"
     export DEBFULLNAME="OpenMediaVault Plugin Developers"
-    cd ${packagepath}
+    cd "${packagepath}"
     if [ -f "debian/changelog" ]; then
         echo "Release version ..."
         dch -U --no-auto-nmu -r "release" -u "low" 2>&1
@@ -461,10 +460,10 @@ omvgit()
     omvcodepath="${sfpath}/${omvcode}"
 
     if [ ! -d "${omvcodepath}" ]; then
-        cd ${sfpath}
+        cd "${sfpath}"
         git clone https://github.com/openmediavault/openmediavault.git
     else
-        cd ${omvcodepath}
+        cd "${omvcodepath}"
         git pull
     fi
 
@@ -475,21 +474,21 @@ omvgit()
     fi
 
     # get revision
-    cd ${omvcodepath}
+    cd "${omvcodepath}"
     revision=$(git rev-parse HEAD)
     echo "Revision ${revision}..."
 
     # get version
-    cd ${omvcodepath}/deb/openmediavault
+    cd "${omvcodepath}/deb/openmediavault"
     version=$(head -n 1 debian/changelog | cut -f2 -d"(" | cut -f1 -d")")
     echo "Version ${version}"
 
     # make git package
-    cd ${omvcodepath}/deb/openmediavault
+    cd "${omvcodepath}/deb/openmediavault"
     fakeroot debian/rules clean binary
     mv -v ../openmediavault_${version}_all.deb ${sfpath}/openmediavault_${version}-git${revision}_all.deb
 
-    dpkg --force-confold -i ${sfpath}/openmediavault_${version}-git${revision}_all.deb
+    dpkg --force-confold -i "${sfpath}/openmediavault_${version}-git${revision}_all.deb"
     apt-get --yes --force-yes --fix-missing -f install
 
     echo "Purging internal cache ..."
@@ -499,7 +498,7 @@ omvgit()
 changelog()
 {
     export LC_ALL=C
-    cd ${packagepath}
+    cd "${packagepath}"
     head debian/changelog
 }
 
