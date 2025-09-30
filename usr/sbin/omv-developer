@@ -255,97 +255,55 @@ install()
 
 fixperms()
 {
-    mkconfpath="/usr/share/openmediavault/mkconf"
-    localbinpath="/usr/local/bin"
-    sbinpath="/usr/sbin"
-    etcinitpath="/etc/init.d/"
-    etcsupportpath="/etc/omv-support.d/"
-    etcnetworkpath="/etc/network/if-up.d/"
-    etcsudoerspath="/etc/sudoers.d/"
-    sysinfopath="/usr/share/openmediavault/sysinfo/modules.d/"
-    varlibcronpath="/var/lib/openmediavault/cron.d/"
-    prepath="/usr/share/openmediavault/release-upgrade/pre.d/"
-    postpath="/usr/share/openmediavault/release-upgrade/post.d/"
-    sleeppath="/etc/pm/sleep.d/"
-    libextraspath="/usr/lib/omvextras/"
-    libsystemdsleep="/lib/systemd/system-sleep/"
+    local localbinpath="/usr/local/bin"
+    local sbinpath="/usr/sbin"
+    local etcsudoerspath="/etc/sudoers.d"
+    local sysinfopath="/usr/share/openmediavault/sysinfo/modules.d"
+    local varlibcronpath="/var/lib/openmediavault/cron.d"
+    local prepath="/usr/share/openmediavault/release-upgrade/pre.d"
+    local postpath="/usr/share/openmediavault/release-upgrade/post.d"
+    local sleeppath="/etc/pm/sleep.d"
+    local libsystemdsleep="/lib/systemd/system-sleep"
 
-    echo "Fixing permissions..."
-    find "${packagepath}" -type f -exec chmod 644 {} +
-    find "${packagepath}" -type d -exec chmod 755 {} +
+    echo "Fixing permissions in ${packagepath} ..."
 
-    find "${packagepath}" -type f -name "*.sh" -exec chmod 755 {} +
+    # Default perms: files 0644, dirs 0755 (skip symlinks)
+    find "${packagepath}" -type f -print0 | xargs -0 -r chmod 0644
+    find "${packagepath}" -type d -print0 | xargs -0 -r chmod 0755
 
-    if [ -d "${packagepath}${mkconfpath}" ]; then
-        chmod -R 755 "${packagepath}${mkconfpath}"/*
-    fi
+    # Make *.sh files executable
+    find "${packagepath}" -type f -name '*.sh' -print0 | xargs -0 -r chmod 0755
+    find "${packagepath}/debian/" -type f -name '*.service' -print0 | xargs -0 -r chmod 0755
 
-    if [ -d "${packagepath}${localbinpath}" ]; then
-        chmod 755 "${packagepath}${localbinpath}"/*
-    fi
+    # Dirs whose *files* should be executable (if present)
+    local exec_dirs=(
+        "${localbinpath}" "${sbinpath}" "${sysinfopath}" "${varlibcronpath}"
+        "${prepath}" "${postpath}" "${sleeppath}" "${libextraspath}"
+    )
+    local d
+    for d in "${exec_dirs[@]}"; do
+        if [ -d "${packagepath}${d}" ]; then
+            # Only regular files get +x; keeps subdir perms at 0755 from above
+            find "${packagepath}${d}" -maxdepth 1 -type f -print0 | xargs -0 -r chmod 0755
+        fi
+    done
 
-    if [ -d "${packagepath}${sbinpath}" ]; then
-        chmod 755 "${packagepath}${sbinpath}"/*
-    fi
-
-    if [ -d "${packagepath}${etcinitpath}" ]; then
-        chmod 755 "${packagepath}${etcinitpath}"/*
-    fi
-
-    if [ -d "${packagepath}${etcsupportpath}" ]; then
-        chmod 755 "${packagepath}${etcsupportpath}"/*
-    fi
-
-    if [ -d "${packagepath}${etcnetworkpath}" ]; then
-        chmod 755 "${packagepath}${etcnetworkpath}"/*
+    if [ -d "${packagepath}${libsystemdsleep}" ]; then
+        find "${packagepath}${libsystemdsleep}" -maxdepth 1 -type f -print0 | xargs -0 -r chmod +x
     fi
 
     if [ -d "${packagepath}${etcsudoerspath}" ]; then
-        chmod 0440 "${packagepath}${etcsudoerspath}"/*
-        chown root:root "${packagepath}${etcsudoerspath}"/*
+        find "${packagepath}${etcsudoerspath}" -maxdepth 1 -type f -print0 | xargs -0 -r chmod 0440
+        find "${packagepath}${etcsudoerspath}" -maxdepth 1 -type f -print0 | xargs -0 -r chown root:root
     fi
 
-    if [ -d "${packagepath}${sysinfopath}" ]; then
-        chmod 755 "${packagepath}${sysinfopath}"/*
-    fi
-
-    if [ -d "${packagepath}${varlibcronpath}" ]; then
-        chmod 755 "${packagepath}${varlibcronpath}"/*
-    fi
-
+    # Debian build helpers (if present)
     if [ -f "${packagepath}/debian/rules" ]; then
-        chmod 755 "${packagepath}/debian/rules"
+        chmod 0755 "${packagepath}/debian/rules"
     fi
 
-    if [ -f "${packagepath}/debian/${plugin}.init" ]; then
-        chmod 755 "${packagepath}/debian/${plugin}.init"
-    fi
-
-    if [ -f "${packagepath}/debian/${plugin}.service" ]; then
-        chmod 755 "${packagepath}/debian/${plugin}.service"
-    fi
-
-    if [ -d "${packagepath}${prepath}" ]; then
-        chmod 755 "${packagepath}${prepath}"/*
-    fi
-
-    if [ -d "${packagepath}${postpath}" ]; then
-        chmod 755 "${packagepath}${postpath}"/*
-    fi
-
-    if [ -d "${packagepath}${sleeppath}" ]; then
-        chmod 755 "${packagepath}${sleeppath}"/*
-    fi
-
-    if [ -d "${packagepath}${libextraspath}" ]; then
-        chmod 755 "${packagepath}${libextraspath}"/*
-    fi
-
-    if [ -d "${packagepath}${libsystemdsleep}" ]; then
-        chmod +x "${packagepath}${libsystemdsleep}"/*
-    fi
-
-    chown -R ${owner}:users "${packagepath}"
+    # Final ownership sweep (skip symlinks)
+    chown -R -- "${owner}:users" "${packagepath}"
 }
 
 gitadd()
