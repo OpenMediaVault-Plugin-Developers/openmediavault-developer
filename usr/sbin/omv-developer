@@ -94,6 +94,7 @@ build()
     echo "Building ${plugin}..."
     # Build directly in the package path
     cd "${packagepath}"
+    rm -fv ../${plugin}*.deb
     if [ -f "${packagepath}/control" ]; then
         # Simple equivs package
         equivs-build control 2>&1
@@ -241,7 +242,7 @@ install()
 {
     arch="$(dpkg --print-architecture)"
     search="${packagepath}_*"
-    version=$(ls ${search} | grep -E "_all|_${arch}")
+    version=$(ls ${search} | grep -E "_all|_${arch}" | sort -h | tail -n1)
 
     echo "Installing ${plugin} ..."
     export LC_ALL=C
