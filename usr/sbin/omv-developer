@@ -267,6 +267,9 @@ fixperms()
 
     echo "Fixing permissions in ${packagepath} ..."
 
+    # Final ownership sweep (skip symlinks)
+    chown -R -- "${owner}:users" "${packagepath}"
+
     # Default perms: files 0644, dirs 0755 (skip symlinks)
     find "${packagepath}" -type f -print0 | xargs -0 -r chmod 0644
     find "${packagepath}" -type d -print0 | xargs -0 -r chmod 0755
@@ -302,8 +305,9 @@ fixperms()
         chmod 0755 "${packagepath}/debian/rules"
     fi
 
-    # Final ownership sweep (skip symlinks)
-    chown -R -- "${owner}:users" "${packagepath}"
+    chmod 0644 "${packagepath}/.gitattributes"
+    chmod 0644 "${packagepath}/.gitignore"
+    chmod 0644 "${packagepath}/README.md"
 }
 
 gitadd()
