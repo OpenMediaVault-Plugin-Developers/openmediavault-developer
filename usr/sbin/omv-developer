@@ -116,6 +116,10 @@ build()
         echo "Copying package to ${copylocation} ..."
         cp ${sfpath}/${plugin}*.deb "${copylocation}" 2>/dev/null || true
     fi
+    if [ -n "${packagepath}" ] && [ ! "${packagepath}" = "/" ] && [ -n "${plugin}" ]; then
+      echo "Cleaning up build files..."
+      rm -rf "${packagepath}/debian/${plugin}"
+    fi
 }
 
 update()
