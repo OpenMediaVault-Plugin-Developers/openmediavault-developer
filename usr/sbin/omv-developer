@@ -24,6 +24,8 @@ set -e
 . /etc/default/openmediavault
 . /usr/share/openmediavault/scripts/helper-functions
 
+export LC_ALL=C
+
 command=$1
 plugin=$2
 location=$3
@@ -61,33 +63,80 @@ initial()
     fi
 }
 
-checkoutBranches()
-{
-    export LC_ALL=C
-    if [ -d "${packagepath}" ]; then
-        echo "Updating branches for ${plugin} ..."
+checkoutBranches() {
+    [ -d "${packagepath}" ] || return 0
 
-        cd "${sfpath}/${plugin}"
-        git pull
-        oIFS=${IFS}
-        IFS=$'
-'
-        remote_branches=$(git branch -r | grep -v HEAD | grep -Ev "(master|main)$")
+    local repo="${sfpath}/${plugin}"
+    if [ ! -d "${repo}/.git" ]; then
+        echo "Not a git repo: ${repo}" >&2
+        return 1
+    fi
 
-        if [ -n "${remote_branches}" ]; then
-            for rbranch in ${remote_branches}; do
-                current=$(echo ${rbranch} | cut -d'/' -f2)
-                git checkout -b ${current} origin/${current}
-            done
-            if git branch -r | grep master; then
-                git checkout master
-            else
-                git checkout main
-            fi
+    echo "Syncing branches for ${plugin} in ${repo} ..."
+    pushd "${repo}" >/dev/null || return 1
+
+    git fetch --prune --tags origin
+
+    # Discover default branch via origin/HEAD (fallback to main/master)
+    local default_branch
+    default_branch="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | cut -d/ -f2)"
+    if [ -z "${default_branch}" ]; then
+        if   git show-ref --verify --quiet refs/remotes/origin/main;   then default_branch="main"
+        elif git show-ref --verify --quiet refs/remotes/origin/master; then default_branch="master"
+        else
+            default_branch="$(git for-each-ref --format='%(refname:short)' refs/remotes/origin \
+                              | sed -E 's|^origin/||' | head -n1)"
+        fi
+    fi
+
+    # Build a clean list of remote branch names (without the origin/ prefix)
+    # and skip HEAD, default branch, and any weird/empty entries.
+    local -a branches=()
+    while IFS= read -r ref; do
+        # ref like "origin/foo/bar"
+        local name="${ref#origin/}"
+        # Ensure it still exists exactly as a remote ref
+        git show-ref --verify --quiet "refs/remotes/origin/${name}" || continue
+        # Skip HEAD and default
+        [ "${name}" = "HEAD" ] && continue
+        [ "${name}" = "${default_branch}" ] && continue
+        # Skip obviously bogus entry "origin" (would make origin/origin)
+        [ "${name}" = "origin" ] && continue
+        branches+=("${name}")
+    done < <(git for-each-ref --format='%(refname:short)' refs/remotes/origin)
+
+    # Create or fast-forward local tracking branches safely
+    local b
+    for b in "${branches[@]}"; do
+        # Double-check the remote exists to avoid origin/origin issues.
+        if ! git show-ref --verify --quiet "refs/remotes/origin/${b}"; then
+            echo "Skipping missing remote ref: origin/${b}" >&2
+            continue
         fi
 
-        IFS=${oIFS}
+        if git show-ref --verify --quiet "refs/heads/${b}"; then
+            git branch --set-upstream-to="origin/${b}" "${b}" 2>/dev/null || true
+            git switch -q "${b}" || continue
+            git merge --ff-only "origin/${b}" >/dev/null 2>&1 || true
+        else
+            git switch -c "${b}" --track "origin/${b}" || {
+                echo "Failed to create local branch for origin/${b}, skipping" >&2
+                continue
+            }
+        fi
+    done
+
+    # Land on the default branch and fast-forward it
+    if [ -n "${default_branch}" ]; then
+        if git show-ref --verify --quiet "refs/heads/${default_branch}"; then
+            git switch -q "${default_branch}"
+        elif git show-ref --verify --quiet "refs/remotes/origin/${default_branch}"; then
+            git switch -c "${default_branch}" --track "origin/${default_branch}"
+        fi
+        git merge --ff-only "origin/${default_branch}" >/dev/null 2>&1 || true
     fi
+
+    popd >/dev/null
 }
 
 remove()
