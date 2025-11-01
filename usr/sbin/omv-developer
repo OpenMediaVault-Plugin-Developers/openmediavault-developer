@@ -57,7 +57,18 @@ initial()
         cd "${sfpath}"
         git clone https://github.com/OpenMediaVault-Plugin-Developers/${plugin}.git
 
+        checkoutBranches
+    fi
+}
+
+checkoutBranches()
+{
+    export LC_ALL=C
+    if [ -d "${packagepath}" ]; then
+        echo "Updating branches for ${plugin} ..."
+
         cd "${sfpath}/${plugin}"
+        git pull
         oIFS=${IFS}
         IFS=$'
 '
@@ -467,6 +478,9 @@ changelog()
     head debian/changelog
 }
 
+echo "Command :: ${command}"
+echo "Package path :: ${packagepath}"
+
 case ${command} in
     update)
         initial
@@ -577,6 +591,12 @@ case ${command} in
         initial
         fixperms
         gitChangeBranch
+    ;;
+
+    checkoutbranches)
+        initial
+        fixperms
+        checkoutBranches
     ;;
 
     dchi)
