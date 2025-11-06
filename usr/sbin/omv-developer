@@ -315,7 +315,7 @@ install()
     cd "${packagepath}"
     if ! dpkg -i "${version}"; then
         echo "Resolving missing dependencies..."
-        apt-get -f install -y
+        apt-get --fix-broken --no-install-recommends install -y
     fi
 }
 
