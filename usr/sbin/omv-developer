@@ -160,7 +160,7 @@ build()
         equivs-build control 2>&1
     else
         if grep -q "Architecture: any" debian/control; then
-            for i in amd64 armhf arm64 i386; do
+            for i in amd64 arm64; do
                 echo $i
                 dpkg-buildpackage -b -a $i
             done
