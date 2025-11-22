@@ -155,15 +155,18 @@ build()
     # Build directly in the package path
     cd "${packagepath}"
     rm -fv ../${plugin}*.deb
+    rm -f ../${plugin}*.changes
+    rm -f ../${plugin}*.buildinfo
     if [ -f "${packagepath}/control" ]; then
         # Simple equivs package
         equivs-build control 2>&1
     else
         if grep -q "Architecture: any" debian/control; then
-            for i in amd64 arm64; do
-                echo $i
-                dpkg-buildpackage -b -a $i
-            done
+            echo -e "\n\nBuilding for amd64 ..."
+            fakeroot debian/rules clean binary
+            fakeroot debian/rules clean
+            echo -e "\n\nBuilding for arm64 ..."
+            DEB_BUILD_OPTIONS=nocheck dpkg-architecture -aarm64 -c fakeroot debian/rules clean binary
         else
             fakeroot debian/rules clean binary 2>&1
         fi
