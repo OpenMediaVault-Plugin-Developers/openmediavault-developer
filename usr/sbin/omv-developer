@@ -320,6 +320,14 @@ install()
         echo "Resolving missing dependencies..."
         apt-get --fix-broken --no-install-recommends install -y
     fi
+    changed_files=$(find ${packagepath}/srv/salt -type f -mmin -30)
+    if [ -n "${changed_files}" ]; then
+        echo "Recent changes detected:"
+        echo "${changed_files}"
+        echo -e "\n\nClearing salt cache..."
+        /opt/saltstack/salt/salt-call --local saltutil.clear_cache
+        omv-salt stage run prepare
+    fi
 }
 
 fixperms()
