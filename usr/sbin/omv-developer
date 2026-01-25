@@ -689,6 +689,12 @@ case ${command} in
         changelog
     ;;
 
+    fixperms)
+        initial
+        fixperms
+    ;;
+
+
     *)
     ;;
 esac
