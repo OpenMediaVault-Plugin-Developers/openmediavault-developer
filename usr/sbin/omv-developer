@@ -461,6 +461,12 @@ dchi()
     cd "${packagepath}"
     if [ -f "debian/changelog" ]; then
         echo "Increment version ..."
+        if [ -z "${commit}" ]; then
+            read -p "Enter change: " commit
+        fi
+        if [ -z "${commit}" ]; then
+            commit="CHANGE ME"
+        fi
         dch -U --no-auto-nmu "${commit}" 2>&1
         head -n 1 debian/changelog
     else
