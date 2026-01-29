@@ -48,6 +48,11 @@ if [ -z "${sfpath}" ]; then
     exit 1
 fi
 
+if [ -z "${plugin}" ]; then
+    echo "Error - no plugin specified."
+    exit 1
+fi
+
 packagepath="${sfpath}/${plugin}"
 
 initial()
