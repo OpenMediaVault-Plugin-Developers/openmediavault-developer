@@ -397,6 +397,12 @@ fixperms()
     chmod 0644 "${packagepath}/.gitattributes"
     chmod 0644 "${packagepath}/.gitignore"
     chmod 0644 "${packagepath}/README.md"
+
+    if [ -d "${packagepath}/usr/share" ]; then
+        echo "Fixing ${packagepath}/usr/share/*/scripts/ ..."
+        find "${packagepath}/usr/share" -path "*/scripts/*" -type f -print0 -exec chmod 0755 {} +
+    fi
+    echo
 }
 
 gitadd()
