@@ -311,6 +311,35 @@ pullpo()
     TX_TOKEN=${token} ${txbin} pull --all --force ${plugin}.${plugin}pot
 }
 
+updatelocales()
+{
+    if [ ! -f "/root/.netrc" ]; then
+        echo ".netrc not found"
+        exit 1
+    fi
+
+    buildpot
+    pushpot
+    pullpo
+
+    cd "${packagepath}"
+
+    if [ -z "$(git status --porcelain)" ]; then
+        echo "No locale changes to commit."
+        return 0
+    fi
+
+    local msg="${commit}"
+    if [ -z "${msg}" ]; then
+        msg="update locales"
+    fi
+
+    echo "Committing locale changes ..."
+    git add -A 2>&1
+    git commit -m "${msg}" --signoff 2>&1
+    git push 2>&1
+}
+
 install()
 {
     arch="$(dpkg --print-architecture)"
@@ -617,6 +646,12 @@ case ${command} in
         initial
         pullpo
         fixperms
+    ;;
+
+    updatelocales)
+        initial
+        fixperms
+        updatelocales
     ;;
 
     install)
