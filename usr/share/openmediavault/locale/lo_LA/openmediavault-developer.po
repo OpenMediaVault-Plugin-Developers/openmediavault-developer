@@ -1,0 +1,186 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the openmediavault-developer package.
+# 
+# Translators:
+msgid ""
+msgstr ""
+"Project-Id-Version: openmediavault-developer\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-31 00:57+0000\n"
+"PO-Revision-Date: 2016-01-02 16:05+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Lao (Laos) (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-developer/language/lo_LA/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: lo_LA\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Add"
+msgstr "ເພີ່ມ"
+
+msgid "Adding all files to commit ..."
+msgstr "ກຳລັງເພີ່ມໄຟລ໌ທັງໝົດເພື່ອຄອມມິດ (commit) ..."
+
+msgid "Branch"
+msgstr "ບຣານຊ໌ (Branch)"
+
+msgid "Build"
+msgstr "ບິລດ໌ (Build)"
+
+msgid "Build ..."
+msgstr "ກຳລັງບິລດ໌ ..."
+
+msgid "Building locale file ..."
+msgstr "ກຳລັງສ້າງໄຟລ໌ພາສາ ..."
+
+msgid "Change branch"
+msgstr "ປ່ຽນບຣານຊ໌"
+
+msgid "Changelog"
+msgstr "ບັນທຶກການປ່ຽນແປງ"
+
+msgid "Commit"
+msgstr "ຄອມມິດ (Commit)"
+
+msgid "Developer"
+msgstr "ນັກພັດທະນາ"
+
+msgid "Diff"
+msgstr "ດິຟ (Diff)"
+
+msgid "Email"
+msgstr "ອີເມວ"
+
+msgid "Folder Exists"
+msgstr "ໂຟນເດີມີຢູ່ແລ້ວ"
+
+msgid "GPG-key passphrase"
+msgstr "ວະລີຜ່ານຄີ GPG"
+
+msgid "Git"
+msgstr "Git"
+
+msgid "GitHub"
+msgstr "GitHub"
+
+msgid "Github config"
+msgstr "ການຕັ້ງຄ່າ GitHub"
+
+msgid "Hostname"
+msgstr "ຊື່ໂຮສຕ໌"
+
+msgid "Install"
+msgstr "ຕິດຕັ້ງ"
+
+msgid "Installing ..."
+msgstr "ກຳລັງຕິດຕັ້ງ ..."
+
+msgid "Name"
+msgstr "ຊື່"
+
+msgid "Owner"
+msgstr "ເຈົ້າຂອງ"
+
+msgid "Package"
+msgstr "ແພັກເກດ"
+
+msgid "Password"
+msgstr "ລະຫັດຜ່ານ"
+
+msgid "Plugins"
+msgstr "ປລັກອິນ"
+
+msgid "Pull"
+msgstr "ພູລ (Pull)"
+
+msgid "Pulling locale files from Transifex ..."
+msgstr "ກຳລັງດຶງໄຟລ໌ພາສາຈາກ Transifex ..."
+
+msgid "Push"
+msgstr "ພຸດຊ໌ (Push)"
+
+msgid "Pushing locale file to Transifex ..."
+msgstr "ກຳລັງສົ່ງໄຟລ໌ພາສາໄປ Transifex ..."
+
+msgid "Pushing to Github ..."
+msgstr "ກຳລັງສົ່ງໄປ GitHub ..."
+
+msgid "Reset"
+msgstr "ຣີເຊັດ"
+
+msgid "Reset ..."
+msgstr "ກຳລັງຣີເຊັດ ..."
+
+msgid "Root ref"
+msgstr "ການອ້າງອີງ Root"
+
+msgid "Settings"
+msgstr "ການຕັ້ງຄ່າ"
+
+msgid "Shared Folder"
+msgstr "ໂຟນເດີທີ່ໃຊ້ຮ່ວມກັນ"
+
+msgid "Show changelog"
+msgstr "ສະແດງບັນທຶກການປ່ຽນແປງ"
+
+msgid "Showing changelog ..."
+msgstr "ກຳລັງສະແດງບັນທຶກການປ່ຽນແປງ ..."
+
+msgid "Showing diff ..."
+msgstr "ກຳລັງສະແດງສ່ວນຕ່າງ (diff) ..."
+
+msgid "Status"
+msgstr "ສະຖານະ"
+
+msgid "Status ..."
+msgstr "ສະຖານະ ..."
+
+msgid "Token"
+msgstr "ໂທເຄັນ (Token)"
+
+msgid "Transifex"
+msgstr "Transifex"
+
+msgid "Transifex config"
+msgstr "ການຕັ້ງຄ່າ Transifex"
+
+msgid "Update"
+msgstr "ອັບເດດ"
+
+msgid "Update all"
+msgstr "ອັບເດດທັງໝົດ"
+
+msgid "Update all plugins from Github ..."
+msgstr "ກຳລັງອັບເດດທຸກປລັກອິນຈາກ GitHub ..."
+
+msgid "Update from Github"
+msgstr "ອັບເດດຈາກ GitHub"
+
+msgid "Updated Developer settings."
+msgstr "ອັບເດດການຕັ້ງຄ່ານັກພັດທະນາແລ້ວ."
+
+msgid "Username"
+msgstr "ຊື່ຜູ້ໃຊ້"
+
+msgid "Version"
+msgstr "ເວີຊັນ"
+
+msgid "dch -a"
+msgstr "dch -a"
+
+msgid "dch -i"
+msgstr "dch -i"
+
+msgid "dch -r"
+msgstr "dch -r"
+
+msgid "git config"
+msgstr "ການຕັ້ງຄ່າ git"
+
+msgid "gpg config"
+msgstr "ການຕັ້ງຄ່າ gpg"
+
+msgid "path"
+msgstr "ເສັ້ນທາງ (path)"

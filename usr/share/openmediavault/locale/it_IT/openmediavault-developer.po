@@ -4,12 +4,12 @@
 # 
 # Translators:
 # Giovanni Scafora <scafora.giovanni@gmail.com>, 2025
-# Paolo Velati <paolo.velati@gmail.com>, 2016
+# d5316b6b4d283a9cbe4ea704ae8abe02_b972f24 <bd82b27c045fcb3aa6bd04640e5224c5_36908>, 2016
 msgid ""
 msgstr ""
 "Project-Id-Version: openmediavault-developer\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-27 09:36-0500\n"
+"POT-Creation-Date: 2026-05-31 00:57+0000\n"
 "PO-Revision-Date: 2016-01-02 16:05+0000\n"
 "Last-Translator: Giovanni Scafora <scafora.giovanni@gmail.com>, 2025\n"
 "Language-Team: Italian (http://app.transifex.com/openmediavault-plugin-developers/openmediavault-developer/language/it/)\n"
