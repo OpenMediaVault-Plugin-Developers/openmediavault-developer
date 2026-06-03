@@ -378,6 +378,7 @@ fixperms()
     local postpath="/usr/share/openmediavault/release-upgrade/post.d"
     local sleeppath="/etc/pm/sleep.d"
     local libsystemdsleep="/lib/systemd/system-sleep"
+    local optcterm="/opt/omv_cterm"
 
     echo "Fixing permissions in ${packagepath} ..."
 
@@ -411,6 +412,10 @@ fixperms()
 
     if [ -d "${packagepath}${libsystemdsleep}" ]; then
         find "${packagepath}${libsystemdsleep}" -maxdepth 1 -type f -print0 | xargs -0 -r chmod +x
+    fi
+
+    if [ -d "${packagepath}${optcterm}" ]; then
+        find "${packagepath}${optcterm}" -maxdepth 1 -type f -name "*.py" -print0 | xargs -0 -r chmod +x
     fi
 
     if [ -d "${packagepath}${etcsudoerspath}" ]; then
