@@ -321,6 +321,7 @@ updatelocales()
     buildpot
     pushpot
     pullpo
+    fixperms
 
     cd "${packagepath}"
 
