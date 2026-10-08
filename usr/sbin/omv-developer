@@ -380,6 +380,7 @@ fixperms()
     local sleeppath="/etc/pm/sleep.d"
     local libsystemdsleep="/lib/systemd/system-sleep"
     local optcterm="/opt/omv_cterm"
+    local toolsdir="/tools"
 
     echo "Fixing permissions in ${packagepath} ..."
 
@@ -397,7 +398,7 @@ fixperms()
     # Dirs whose *files* should be executable (if present)
     local exec_dirs=(
         "${localbinpath}" "${sbinpath}" "${sysinfopath}" "${varlibcronpath}"
-        "${prepath}" "${postpath}" "${sleeppath}"
+        "${prepath}" "${postpath}" "${sleeppath}" "${toolsdir}"
     )
     local d
     for d in "${exec_dirs[@]}"; do
@@ -436,6 +437,11 @@ fixperms()
     if [ -d "${packagepath}/usr/share" ]; then
         echo "Fixing ${packagepath}/usr/share/*/scripts/ ..."
         find "${packagepath}/usr/share" -path "*/scripts/*" -type f -print0 -exec chmod 0755 {} +
+    fi
+
+    if [ -d "${packagepath}/etc/kernel/postinst.d/" ]; then
+        echo "Fixing ${packagepath}/etc/kernel/postinst.d/ ..."
+        find "${packagepath}/etc/kernel/postinst.d/" -type f -print0 -exec chmod 0755 {} +
     fi
     echo
 }
