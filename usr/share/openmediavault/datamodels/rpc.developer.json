@@ -79,7 +79,7 @@
 			"command": {
 				"type": "string",
 				"enum": [
-					"build","update","upload",
+					"build","update",
 					"install","reset","changelog",
 					"buildpot","pushpot","pullpo"
 				],

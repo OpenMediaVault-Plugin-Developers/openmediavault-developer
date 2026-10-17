@@ -30,11 +30,10 @@ command=$1
 plugin=$2
 location=$3
 commit=$3
-tag=${3//[[:space:]]/}
-message=${4//[[:space:]]/}
+tag=${4//[[:space:]]/}
+message=$5
 
 xpath="//services/developer"
-xpathlocation="${xpath}/locations/location[uuid='${location}']"
 
 owner=$(omv_config_get "${xpath}/owner")
 sfref=$(omv_config_get "${xpath}/sharedfolderref")
@@ -48,10 +47,17 @@ if [ -z "${sfpath}" ]; then
     exit 1
 fi
 
-if [ -z "${plugin}" ]; then
-    echo "Error - no plugin specified."
-    exit 1
-fi
+# tx and omvgit do not operate on a single plugin
+case "${command}" in
+    tx|omvgit)
+    ;;
+    *)
+        if [ -z "${plugin}" ]; then
+            echo "Error - no plugin specified."
+            exit 1
+        fi
+    ;;
+esac
 
 packagepath="${sfpath}/${plugin}"
 
@@ -84,7 +90,8 @@ checkoutBranches() {
 
     # Discover default branch via origin/HEAD (fallback to main/master)
     local default_branch
-    default_branch="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | cut -d/ -f2)"
+    default_branch="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null || true)"
+    default_branch="${default_branch#origin/}"
     if [ -z "${default_branch}" ]; then
         if   git show-ref --verify --quiet refs/remotes/origin/main;   then default_branch="main"
         elif git show-ref --verify --quiet refs/remotes/origin/master; then default_branch="master"
@@ -148,7 +155,7 @@ remove()
 {
     if [ -d "${packagepath}" ]; then
         echo "Removing old files ..."
-        rm -rfv ${packagepath}
+        rm -rfv "${packagepath}"
     fi
 }
 
@@ -159,9 +166,9 @@ build()
     echo "Building ${plugin}..."
     # Build directly in the package path
     cd "${packagepath}"
-    rm -fv ../${plugin}*.deb
-    rm -f ../${plugin}*.changes
-    rm -f ../${plugin}*.buildinfo
+    rm -fv ../${plugin}_*.deb
+    rm -f ../${plugin}_*.changes
+    rm -f ../${plugin}_*.buildinfo
     if [ -f "${packagepath}/control" ]; then
         # Simple equivs package
         equivs-build control 2>&1
@@ -178,13 +185,15 @@ build()
     fi
 
     # Ensure ownership and optionally copy to another location
-    chown ${owner}:users ${sfpath}/${plugin}*.deb 2>/dev/null || true
+    chown ${owner}:users "${sfpath}/${plugin}"_*.deb 2>/dev/null || true
     copylocation=$(omv_config_get "${xpath}/copylocation")
     if [ -n "${copylocation}" ] && [ -d "${copylocation}" ]; then
         echo "Copying package to ${copylocation} ..."
-        cp ${sfpath}/${plugin}*.deb "${copylocation}" 2>/dev/null || true
+        cp "${sfpath}/${plugin}"_*.deb "${copylocation}" 2>/dev/null || true
     fi
-    fakeroot debian/rules clean
+    if [ -f debian/rules ]; then
+        fakeroot debian/rules clean
+    fi
     if [ -n "${packagepath}" ] && [ ! "${packagepath}" = "/" ] && [ -n "${plugin}" ]; then
       echo "Cleaning up build files..."
       rm -rf "${packagepath}/debian/${plugin}"
@@ -198,25 +207,6 @@ update()
     echo "Updating ${plugin} from github..."
     git pull
     git status
-}
-
-upload()
-{
-    remotehost=$(omv_config_get "${xpathlocation}/remotehost")
-    remotepath=$(omv_config_get "${xpathlocation}/remotepath")
-    port=$(omv_config_get "${xpathlocation}/port")
-    username=$(omv_config_get "${xpathlocation}/username")
-    password=$(omv_config_get "${xpathlocation}/password")
-
-    search="${packagepath}_*"
-    version=$(ls ${search})
-
-    echo "Uploading ${version} to ${remotehost} ..."
-    if [ -n "${password}" ]; then
-        sshpass -p ${password} scp -P ${port} -o StrictHostKeyChecking=no "${version}" ${username}@${remotehost}:"${remotepath}"
-    else
-        su - ${owner} -c "scp -P ${port} -o StrictHostKeyChecking=no \"${version}\" ${username}@${remotehost}:\"${remotepath}\""
-    fi
 }
 
 tx()
@@ -344,8 +334,11 @@ updatelocales()
 install()
 {
     arch="$(dpkg --print-architecture)"
-    search="${packagepath}_*"
-    version=$(ls ${search} | grep -E "_all|_${arch}" | sort -h | tail -n1)
+    version=$(ls "${packagepath}"_*.deb 2>/dev/null | grep -E "_(all|${arch})\.deb$" | sort -V | tail -n1 || true)
+    if [ -z "${version}" ]; then
+        echo "Error - no package found for ${arch}."
+        exit 1
+    fi
 
     echo "Installing ${plugin} ..."
     export LC_ALL=C
@@ -381,6 +374,11 @@ fixperms()
     local libsystemdsleep="/lib/systemd/system-sleep"
     local optcterm="/opt/omv_cterm"
     local toolsdir="/tools"
+
+    if [ ! -d "${packagepath}" ]; then
+        echo "${packagepath} not found, skipping permission fix."
+        return 0
+    fi
 
     echo "Fixing permissions in ${packagepath} ..."
 
@@ -430,18 +428,21 @@ fixperms()
         chmod 0755 "${packagepath}/debian/rules"
     fi
 
-    chmod 0644 "${packagepath}/.gitattributes"
-    chmod 0644 "${packagepath}/.gitignore"
-    chmod 0644 "${packagepath}/README.md"
+    local f
+    for f in .gitattributes .gitignore README.md; do
+        if [ -f "${packagepath}/${f}" ]; then
+            chmod 0644 "${packagepath}/${f}"
+        fi
+    done
 
     if [ -d "${packagepath}/usr/share" ]; then
         echo "Fixing ${packagepath}/usr/share/*/scripts/ ..."
-        find "${packagepath}/usr/share" -path "*/scripts/*" -type f -print0 -exec chmod 0755 {} +
+        find "${packagepath}/usr/share" -path "*/scripts/*" -type f -exec chmod 0755 {} +
     fi
 
     if [ -d "${packagepath}/etc/kernel/postinst.d/" ]; then
         echo "Fixing ${packagepath}/etc/kernel/postinst.d/ ..."
-        find "${packagepath}/etc/kernel/postinst.d/" -type f -print0 -exec chmod 0755 {} +
+        find "${packagepath}/etc/kernel/postinst.d/" -type f -exec chmod 0755 {} +
     fi
     echo
 }
@@ -587,7 +588,7 @@ omvgit()
     mv -v ../openmediavault_${version}_all.deb ${sfpath}/openmediavault_${version}-git${revision}_all.deb
 
     dpkg --force-confold -i "${sfpath}/openmediavault_${version}-git${revision}_all.deb"
-    apt-get --yes --force-yes --fix-missing -f install
+    apt-get --yes --fix-missing -f install
 
     echo "Purging internal cache ..."
     omv_purge_internal_cache
@@ -600,8 +601,11 @@ changelog()
     head debian/changelog
 }
 
-echo "Command :: ${command}"
-echo "Package path :: ${packagepath}"
+# branches output is parsed by the RPC, so keep it clean
+if [ "${command}" != "branches" ]; then
+    echo "Command :: ${command}"
+    echo "Package path :: ${packagepath}"
+fi
 
 case ${command} in
     update)
@@ -622,14 +626,6 @@ case ${command} in
         fixperms
         build
         fixperms
-    ;;
-
-    upload)
-        initial
-        fixperms
-        build
-        fixperms
-        upload
     ;;
 
     tx)

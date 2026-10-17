@@ -24,6 +24,7 @@ require_once("openmediavault/functions.inc");
 class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
 {
     private $omvDeveloper = "/usr/sbin/omv-developer";
+    private $githubURL = "https://github.com/OpenMediaVault-Plugin-Developers";
 
     private $packageCache = "/var/cache/openmediavault/dev_package_cache";
     private $pluginCache  = "/var/cache/openmediavault/dev_plugin_cache";
@@ -111,7 +112,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             $pluginPath = sprintf("%s/%s", $sfPath, $plugin);
             $exists  = file_exists($pluginPath);
             $version = "n/a";
-            $branch  = [ "", "", "n/a" ];
+            $branch  = "n/a";
 
             if ($exists) {
                 if (file_exists(sprintf("%s/control", $pluginPath))) {
@@ -123,22 +124,25 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                     }
                 } elseif (file_exists(sprintf("%s/debian/changelog", $pluginPath))) {
                     $f = fopen(sprintf("%s/debian/changelog", $pluginPath), 'r');
-                    $version = fgets($f);
+                    $version = trim(fgets($f));
                     fclose($f);
                 } else {
                     $version = 'n/a';
                 }
                 if (file_exists(sprintf("%s/.git/HEAD", $pluginPath))) {
-                    $f = fopen(sprintf("%s/.git/HEAD", $pluginPath), 'r');
-                    $branch = explode("/", fgets($f));
-                    fclose($f);
+                    $head = trim(file_get_contents(sprintf("%s/.git/HEAD", $pluginPath)));
+                    if (0 === strpos($head, "ref: refs/heads/")) {
+                        $branch = substr($head, strlen("ref: refs/heads/"));
+                    } else {
+                        $branch = sprintf("detached (%s)", substr($head, 0, 7));
+                    }
                 }
             }
             $objects[] = [
                 "name"     => $plugin,
                 "url"      => sprintf("%s/%s", $this->githubURL, $plugin),
                 "exists"   => $exists,
-                "branch"   => $branch[2],
+                "branch"   => $branch,
                 "version"  => $version
             ];
         }
@@ -163,17 +167,34 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             ]);
             $list = [];
             for ($i = 1; $i <= 3; $i++) {
-                $json = file_get_contents(
+                $json = @file_get_contents(
                     'https://api.github.com/orgs/openmediavault-plugin-developers/repos?per_page=100&page=' . $i,
                     false, $context
                 );
-                $list = array_merge($list, json_decode($json));
+                $page = (false === $json) ? null : json_decode($json, true);
+                // Request failed, rate limited or returned an error object
+                if (!is_array($page) || !array_is_list($page)) {
+                    $list = null;
+                    break;
+                }
+                $list = array_merge($list, $page);
+                if (count($page) < 100)
+                    break;
             }
-            // Get repos info and put in cache file
-            file_put_contents($this->pluginCache, json_encode($list));
+            if (!empty($list)) {
+                // Get repos info and put in cache file
+                file_put_contents($this->pluginCache, json_encode($list));
+            } elseif (file_exists($this->pluginCache)) {
+                // Keep the stale cache and retry later instead of every call
+                touch($this->pluginCache);
+            }
         }
         $this->plugins = [];
+        if (!file_exists($this->pluginCache))
+            return;
         $data = json_decode(file_get_contents($this->pluginCache), true);
+        if (!is_array($data))
+            return;
         foreach ($data as $plugin) {
             if (empty($plugin))
                 continue;
@@ -197,9 +218,9 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             use ($params) {
                 if ($params['plugin'] != "all") {
                     $cmdArgs = [];
-                    $cmdArgs[] = $params['command'];
-                    $cmdArgs[] = $params['plugin'];
-                    $cmdArgs[] = sprintf("\"%s\"", $params['location']);
+                    $cmdArgs[] = escapeshellarg($params['command']);
+                    $cmdArgs[] = escapeshellarg($params['plugin']);
+                    $cmdArgs[] = escapeshellarg($params['location'] ?? "");
                     $cmd = new \OMV\System\Process($this->omvDeveloper, $cmdArgs);
                     $cmd->setRedirect2to1(true);
                     $cmdLine = $cmd->getCommandLine();
@@ -209,7 +230,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                     foreach ($this->plugins as $plugin) {
                         $cmdArgs = [];
                         $cmdArgs[] = "update";
-                        $cmdArgs[] = $plugin;
+                        $cmdArgs[] = escapeshellarg($plugin);
                         $cmd = new \OMV\System\Process($this->omvDeveloper, $cmdArgs);
                         $cmd->setRedirect2to1(true);
                         $cmdLine = $cmd->getCommandLine();
@@ -251,18 +272,25 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
                 $config = sprintf("machine github.com\nlogin %s\npassword %s\nprotocol https",
                     $object->get("ghusername"), $object->get("ghpassword")
                 );
+                // Restrict permissions before writing credentials
+                touch($configFile);
+                chmod($configFile, 0600);
                 file_put_contents($configFile, $config);
                 break;
 
             case "tx":
                 $configFile = "/root/.transifexrc";
-                $config = '[https://www.transifex.com]\napi_hostname = https://api.transifex.com';
+                $config = sprintf("[https://app.transifex.com]\nrest_hostname = https://rest.api.transifex.com\ntoken = %s\n",
+                    $object->get("txtoken")
+                );
+                touch($configFile);
+                chmod($configFile, 0600);
                 file_put_contents($configFile, $config);
 
                 $this->fillPlugins();
                 file_put_contents("/root/.repos", implode(PHP_EOL, $this->plugins));
 
-                $cmd = sprintf("export lang=c; %s tx", $this->omvDeveloper);
+                $cmd = sprintf("export LC_ALL=C; %s tx", $this->omvDeveloper);
                 exec($cmd, $output);
                 break;
         }
@@ -280,11 +308,11 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         return $this->execBgProc(function($bgStatusFilename, $bgOutputFilename)
             use ($params) {
                 $cmdArgs = [];
-                $cmdArgs[] = $params['command'];
-                $cmdArgs[] = $params['plugin'];
-                $cmdArgs[] = sprintf("\"%s\"", $params['commit']);
-                $cmdArgs[] = sprintf("\"%s\"", $params['tag']);
-                $cmdArgs[] = sprintf("\"%s\"", $params['message']);
+                $cmdArgs[] = escapeshellarg($params['command']);
+                $cmdArgs[] = escapeshellarg($params['plugin']);
+                $cmdArgs[] = escapeshellarg($params['commit'] ?? "");
+                $cmdArgs[] = escapeshellarg($params['tag'] ?? "");
+                $cmdArgs[] = escapeshellarg($params['message'] ?? "");
                 $cmd = new \OMV\System\Process($this->omvDeveloper, $cmdArgs);
                 $cmdLine = $cmd->getCommandLine();
                 $this->exec($cmdLine, $output, $bgOutputFilename);
@@ -306,8 +334,8 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
             use ($params) {
                 $cmdArgs = [];
                 $cmdArgs[] = "changebranch";
-                $cmdArgs[] = $params['plugin'];
-                $cmdArgs[] = trim(str_replace("*", "", $params['branch']));
+                $cmdArgs[] = escapeshellarg($params['plugin']);
+                $cmdArgs[] = escapeshellarg(trim(str_replace("*", "", $params['branch'])));
                 $cmd = new \OMV\System\Process($this->omvDeveloper, $cmdArgs);
                 $cmdLine = $cmd->getCommandLine();
                 $this->exec($cmdLine, $output, $bgOutputFilename);
@@ -326,7 +354,8 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
 
         // Get configuration object
         $objects = [];
-        $cmd = sprintf("%s branches %s", $this->omvDeveloper, $params['plugin']);
+        $cmd = sprintf("%s branches %s", $this->omvDeveloper,
+            escapeshellarg($params['plugin']));
         exec($cmd, $output);
 
         foreach ($output as $branch) {
@@ -349,9 +378,9 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         return $this->execBgProc(function($bgStatusFilename, $bgOutputFilename)
             use ($params) {
                 $cmdArgs = [];
-                $cmdArgs[] = $params['command'];
-                $cmdArgs[] = $params['plugin'];
-                $cmdArgs[] = sprintf("\"%s\"", $params['commit']);
+                $cmdArgs[] = escapeshellarg($params['command']);
+                $cmdArgs[] = escapeshellarg($params['plugin']);
+                $cmdArgs[] = escapeshellarg($params['commit']);
                 $cmd = new \OMV\System\Process($this->omvDeveloper, $cmdArgs);
                 $cmdLine = $cmd->getCommandLine();
                 $this->exec($cmdLine, $output, $bgOutputFilename);
@@ -381,6 +410,7 @@ class OMVRpcServiceDeveloper extends \OMV\Rpc\ServiceAbstract
         // Validate the RPC caller context.
         $this->validateMethodContext($context, ["role" => OMV_ROLE_ADMINISTRATOR]);
 
-        unlink($this->pluginCache);
+        if (file_exists($this->pluginCache))
+            unlink($this->pluginCache);
     }
 }

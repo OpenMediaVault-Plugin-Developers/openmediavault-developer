@@ -37,7 +37,7 @@
 		},
 		"txhostname": {
 			"type": "string",
-			"default": ""
+			"default": "https://app.transifex.com"
 		},
 		"txpassword": {
 			"type": "string",
