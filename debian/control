@@ -20,7 +20,6 @@ Depends: build-essential,
          openmediavault (>= 8.0),
          php-curl,
          quilt,
-         sshpass,
          ${misc:Depends}
 Description: OpenMediaVault Developer plugin
  Plugin to help developer download/ plugin code and setup system for
